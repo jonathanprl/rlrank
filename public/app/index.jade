@@ -2,7 +2,7 @@ doctype html
 html
   head
     base(href="/")
-    title Pianobase
+    title Rocket Leauge Rank - View anyone's Rocket League ranks
     meta(name="viewport" content="width=device-width, initial-scale=1")
     //- inject:css
     link(rel="stylesheet", href="/css/base.css")
@@ -15,20 +15,16 @@ html
     //- bower:js
     script(src="/vendor/angular/angular.js")
     script(src="/vendor/jquery/dist/jquery.js")
-    script(src="/vendor/angular-audio/app/angular.audio.js")
-    script(src="/vendor/angular-hotkeys/build/hotkeys.js")
     script(src="/vendor/angular-route/angular-route.js")
     script(src="/vendor/bootstrap/dist/js/bootstrap.js")
     //- endinject
     
-    script(src="/app/pianobase-templates.js")
+    script(src="/app/rlrank-templates.js")
     
     //- app:js
     script(src="/app/app.js")
-    script(src="/app/pianobase-templates.js")
     script(src="/app/home/home.ctrl.js")
-    script(src="/app/play/play.ctrl.js")
-    script(src="/app/play/play.svc.js")
+    script(src="/app/home/rank.svc.js")
     script(src="/app/_core/directives.js")
     script(src="/app/_core/filters.js")
     //- endinject

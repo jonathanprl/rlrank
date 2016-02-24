@@ -1,5 +1,5 @@
 angular
-  .module('app', ['pianobase-templates', 'ngRoute', 'ngAudio', 'cfp.hotkeys'])
+  .module('app', ['rlrank-templates', 'ngRoute'])
   .config(function($routeProvider, $locationProvider) {
       'use strict';
 

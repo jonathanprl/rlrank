@@ -1,1 +1,21 @@
+input(ng-model="vm.user.id")
+input(ng-model="vm.user.name")
+br
+button(ng-click="vm.authorise()") Auth
+br
+button(ng-click="vm.getPlayerRanks()") Ranks
 
+div
+  {{ vm.ranks }}
+  
+.container
+  .row
+    .col-md-4
+      form
+        .form-group
+          input.form-control(ng-model="vm.user.id" placeholder="Steam Community Link")
+        .form-group
+          input.form-control(ng-model="vm.user.name" placeholder="name")
+        button.btn.btn.warning(ng-click="vm.authorise()")
+          | Auth
+        button.btn.btn-primary(ng-click="vm.getPlayerRanks()")
