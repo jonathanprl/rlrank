@@ -1,0 +1,20 @@
+{
+  "name": "rlrank",
+  "version": "0.0.0",
+  "authors": [
+    "Jonathan Lambert <jonathan@swiftping.co.uk>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "",
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "angular-route": "~1.4.8",
+    "angular": "~1.4.8",
+    "bootstrap": "~3.3.6",
+    "angular-audio": "^1.7.1",
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.6.0"
+  }
+}
