@@ -8,6 +8,6 @@ module.exports = {
       }
     },
     mongodb: {
-      connection: 'mongodb://localhost:27017/skibase'
+      connection: 'mongodb://localhost:27017/rlrank'
     }
 };

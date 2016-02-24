@@ -9,16 +9,11 @@
           getPlayerRanks: getPlayerRanks
         };
 
-        function authorise(id, name, callback)
+        function authorise(url, callback)
         {
-          $http.post('/api/auth', {
-            id: id,
-            name: name,
-            platform: 'Steam'
-          }).then(function(response)
+          $http.post('/api/auth', {url: url}).then(function(response)
           {
-            console.log(response);
-            callback(null, response.data.token);
+            callback(null, response.data);
           });
         }
 
@@ -28,21 +23,17 @@
             token: token
           }).then(function(response)
           {
-            console.log(response);
             callback(null, response);
           });
         }
 
         function getPlayerRanks(id, token, callback)
         {
-          $http.post('/api/ranks', {
-            id: id,
-            token: token,
-            platform: 'Steam'
+          $http.post('/api/ranks/' + id, {
+            token: token
           }).then(function(response)
           {
-            console.log(response);
-            callback(null, response);
+            callback(null, response.data.results);
           });
         }
     });

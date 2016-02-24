@@ -1,7 +1,7 @@
 var psyonix = require('./services/psyonix');
 var rank = require('./controllers/rank');
 var leaderboard = require('./controllers/leaderboard');
-var stats = require('./controllers/stats')
+var stats = require('./controllers/stats');
 
 module.exports = function(app)
 {
@@ -11,10 +11,9 @@ module.exports = function(app)
 
   app.post('/api/auth', psyonix.auth);
   // app.get('/api/ranks', rank.getRanks);
-  app.get('/api/ranks/:id', rank.getPlayerRank);
+  app.post('/api/ranks/:id', rank.getPlayerRanks);
   app.get('/api/leaderboards', leaderboard.getLeaderboards);
   app.get('/api/stats/:id', stats.getStats);
-
 
   app.get('/views/*', function(req, res)
   {

@@ -1,10 +1,10 @@
 var db = require('../db');
 var swiftping = require('../helpers/swiftping');
-var psyonix = require('./services/psyonix');
+var psyonix = require('../services/psyonix');
 
 module.exports = {
-  getPlayerStats: getPlayerStats,
-  getPlayerStat: getPlayerStat
+  getStats: getStats,
+  getStat: getStat
 };
 
 /**
@@ -12,7 +12,7 @@ module.exports = {
  * @param {object} req - Express request
  * @param {object} res - Express response
  */
-function getPlayerStat(req, res)
+function getStat(req, res)
 {
   // Todo: get specific type of stat
   psyonix.getPlayerStats(req.body.token, function(err, result)
@@ -31,7 +31,7 @@ function getPlayerStat(req, res)
  * @param {object} req - Express request
  * @param {object} res - Express response
  */
-function getPlayerStats(req, res)
+function getStats(req, res)
 {
   psyonix.getPlayerStats(req.body.token, function(err, result)
   {

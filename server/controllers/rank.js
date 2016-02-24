@@ -1,9 +1,8 @@
 var db = require('../db');
 var swiftping = require('../helpers/swiftping');
-var psyonix = require('./services/psyonix');
+var psyonix = require('../services/psyonix');
 
 module.exports = {
-  getRanks: getRanks,
   getPlayerRanks: getPlayerRanks
 };
 
@@ -23,10 +22,15 @@ function getPlayerRanks(req, res)
   //   swiftping.apiResponse('error', res, err);
   // });
 
-  psyonix.getPlayerRanks(req.body.id, req.body.token, function(err, result)
+  psyonix.getPlayerRanks(req.params.id, req.body.token, function(err, result)
   {
     if (err)
     {
+      if (err == 'SessionNotActive')
+      {
+
+      }
+      
       return swiftping.apiResponse('error', res, err);
     }
 

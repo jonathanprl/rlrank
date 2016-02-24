@@ -8,19 +8,19 @@
 
         vm.authorise = authorise;
         vm.getPlayerRanks = getPlayerRanks;
-        vm.user = {};
 
         function authorise()
         {
-          RankSvc.authorise(vm.user.id, vm.user.name, function(err, token)
+          RankSvc.authorise(vm.steamProfileUrl, function(err, auth)
           {
-            vm.token = token;
+            vm.profile = auth.profile;
+            vm.token = auth.token;
           });
         }
 
         function getPlayerRanks()
         {
-          RankSvc.getPlayerRanks(vm.user.id, vm.token, function(err, ranks)
+          RankSvc.getPlayerRanks(vm.profile.steamid, vm.token, function(err, ranks)
           {
             vm.playerRanks = ranks;
           });
@@ -28,7 +28,7 @@
 
         function getLeaderboards()
         {
-          RankSvc.getLeaderboards(vm.token, function(err, leaderboards)
+          RankSvc.getLeaderboards(vm.profile.steamid, vm.token, function(err, leaderboards)
           {
             vm.leaderboards = leaderboards;
           });

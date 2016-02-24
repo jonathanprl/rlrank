@@ -1,6 +1,6 @@
 var db = require('../db');
 var swiftping = require('../helpers/swiftping');
-var psyonix = require('./services/psyonix');
+var psyonix = require('../services/psyonix');
 
 module.exports = {
   getPlaylists: getPlaylists

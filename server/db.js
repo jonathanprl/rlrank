@@ -3,15 +3,18 @@ var mongodb = require('mongojs')(config.mongodb.connection);
 
 module.exports = {
   find: find,
+  findWhere: findWhere,
+  findOne: findOne,
   insert: insert,
   upsert: upsert,
   update: update,
+  modify: modify,
   remove: remove,
   drop: drop
 };
 
 /**
- * Finds all records in the employee collection
+ * Finds all records in the collection
  * @param {string} collectionName - MongoDB collection name
  * @param {function} callback - Success or error callback function
  */
@@ -22,11 +25,51 @@ function find(collectionName, callback)
     if (err)
     {
       console.log(err);
-      callback(null, err);
+      callback(err, null);
       return;
     }
 
-    callback(docs, null);
+    callback(null, docs);
+  });
+}
+
+/**
+ * Finds record in the collection where
+ * @param {string} collectionName - MongoDB collection name
+ * @param {function} callback - Success or error callback function
+ */
+function findWhere(collectionName, query, callback)
+{
+  mongodb.collection(collectionName).find(query, function (err, docs)
+  {
+    if (err)
+    {
+      console.log(err);
+      callback(err, null);
+      return;
+    }
+
+    callback(null, docs);
+  });
+}
+
+/**
+ * Finds one record in the collection
+ * @param {string} collectionName - MongoDB collection name
+ * @param {function} callback - Success or error callback function
+ */
+function findOne(collectionName, query, callback)
+{
+  mongodb.collection(collectionName).findOne(query, function (err, docs)
+  {
+    if (err)
+    {
+      console.log(err);
+      callback(err, null);
+      return;
+    }
+
+    callback(null, docs);
   });
 }
 
@@ -43,11 +86,32 @@ function insert(collectionName, doc, callback)
     if (err)
     {
       console.log(err);
-      callback(null, err);
+      callback(err, null);
       return;
     }
 
-    callback(docs, null);
+    callback(null, docs);
+  });
+}
+
+/**
+ * Modify doc in the collection
+ * @param {string} collectionName - MongoDB collection name
+ * @param {function} callback - Success or error callback function
+ */
+function modify(collectionName, query, update, callback)
+{
+  console.log(update);
+  mongodb.collection(collectionName).findAndModify({query: query, update: update}, function (err, docs)
+  {
+    if (err)
+    {
+      console.log(err);
+      callback(err, null);
+      return;
+    }
+
+    callback(null, docs);
   });
 }
 
@@ -65,11 +129,11 @@ function upsert(collectionName, query, doc, callback)
     if (err)
     {
       console.log(err);
-      callback(null, err);
+      callback(err, null);
       return;
     }
 
-    callback(docs, null);
+    callback(null, docs);
   });
 }
 
@@ -87,7 +151,7 @@ function update(collectionName, query, doc, callback)
     if (err)
     {
       console.log(err);
-      callback(null, err);
+      callback(err, null);
       return;
     }
 
@@ -108,7 +172,7 @@ function remove(collectionName, query, callback)
     if (err)
     {
       console.log(err);
-      callback(null, err);
+      callback(err, null);
       return;
     }
 
@@ -128,7 +192,7 @@ function drop(collectionName, callback)
     if (err)
     {
       console.log(err);
-      callback(null, err);
+      callback(err, null);
       return;
     }
 
