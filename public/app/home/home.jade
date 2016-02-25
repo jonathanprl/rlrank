@@ -4,11 +4,14 @@
       form
         .form-group
           input.form-control(ng-model="vm.steamProfileUrl" placeholder="Steam Community Link")
-        button.btn.btn.warning(ng-click="vm.authorise()")
-          | Auth
-        button.btn.btn-primary(ng-click="vm.getPlayerRanks()")
+        button.btn.btn-primary(ng-click="vm.authorise()")
           | Get Ranks
       h4(ng-if="vm.profile")
         | Hello {{ vm.profile.personaname }}!
       p
-        | {{ vm.playerRanks }}
+      ul.list-group
+        li.list-group-item(ng-repeat="playlist in vm.playlists")
+          span {{ playlist.Playlist | rlPlaylist }} |&nbsp;
+          span {{ playlist.Tier | rlTier }} |&nbsp;
+          span(ng-if="playlist.MatchesPlayed") Matches played: {{ playlist.MatchesPlayed }} |&nbsp; 
+          span(ng-if="playlist.MMR") MMR: {{ playlist.MMR }}

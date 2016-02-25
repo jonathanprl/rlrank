@@ -11,27 +11,35 @@
 
         function authorise()
         {
-          RankSvc.authorise(vm.steamProfileUrl, function(err, auth)
-          {
-            vm.profile = auth.profile;
-            vm.token = auth.token;
-          });
+          RankSvc.authorise(vm.steamProfileUrl)
+            .then(function(response)
+            {
+              vm.profile = response.data.profile;
+              vm.token = response.data.token;
+
+              getPlayerRanks();
+            }
+          );
         }
 
         function getPlayerRanks()
         {
-          RankSvc.getPlayerRanks(vm.profile.steamid, vm.token, function(err, ranks)
-          {
-            vm.playerRanks = ranks;
-          });
+          RankSvc.getPlayerRanks(vm.profile.steamid, vm.token)
+            .then(function(response)
+            {
+              vm.playlists = response.data.results;
+            }
+          );
         }
 
         function getLeaderboards()
         {
-          RankSvc.getLeaderboards(vm.profile.steamid, vm.token, function(err, leaderboards)
-          {
-            vm.leaderboards = leaderboards;
-          });
+          RankSvc.getLeaderboards(vm.profile.steamid, vm.token)
+            .then(function(leaderboards)
+            {
+              vm.leaderboards = leaderboards;
+            }
+          );
         }
     });
 })();

@@ -15,6 +15,11 @@ module.exports = {
  */
 function getDetailsFromURL(url, callback)
 {
+  if (!url)
+  {
+    callback({authed: false, message: "Missing Steam URL"});
+  }
+
   rest.get(url)
     .on('complete', function(result)
     {

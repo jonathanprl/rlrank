@@ -9,31 +9,22 @@
           getPlayerRanks: getPlayerRanks
         };
 
-        function authorise(url, callback)
+        function authorise(url)
         {
-          $http.post('/api/auth', {url: url}).then(function(response)
-          {
-            callback(null, response.data);
-          });
+          return $http.post('/api/auth', {url: url});
         }
 
-        function getLeaderboards(id, token, callback)
+        function getLeaderboards(id, token)
         {
-          $http.post('/api/leaderboards', {
+          return $http.post('/api/leaderboards', {
             token: token
-          }).then(function(response)
-          {
-            callback(null, response);
           });
         }
 
         function getPlayerRanks(id, token, callback)
         {
-          $http.post('/api/ranks/' + id, {
+          return $http.post('/api/ranks/' + id, {
             token: token
-          }).then(function(response)
-          {
-            callback(null, response.data.results);
           });
         }
     });

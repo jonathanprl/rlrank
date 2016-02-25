@@ -1,33 +1,39 @@
 'use strict';
 
 angular.module('app')
-  .filter('propsFilter', function() {
-    return function(items, props) {
-      var out = [];
+  .filter('rlPlaylist', function()
+  {
+    return function(input)
+    {
+      var playlists = {
+        '10': '1v1',
+        '11': '2v2',
+        '12': '3v3 Solo',
+        '13': '3v3 Team'
+      };
 
-      if (angular.isArray(items)) {
-        items.forEach(function(item) {
-          var itemMatches = false;
+      return playlists[input];
+    };
+  })
+  .filter('rlTier', function()
+  {
+    return function(input)
+    {
+      var tiers = {
+        '1': 'Prospect I',
+        '2': 'Prospect II',
+        '3': 'Prospect III',
+        '4': 'Prospect Elite',
+        '5': 'Challenger I',
+        '6': 'Challenger II',
+        '7': 'Challenger III',
+        '8': 'Challenger Elite',
+        '9': 'Rising Star',
+        '10': 'All-Star',
+        '11': 'Superstar',
+        '12': 'Champion'
+      };
 
-          var keys = Object.keys(props);
-          for (var i = 0; i < keys.length; i++) {
-            var prop = keys[i];
-            var text = props[prop].toLowerCase();
-            if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-              itemMatches = true;
-              break;
-            }
-          }
-
-          if (itemMatches) {
-            out.push(item);
-          }
-        });
-      } else {
-        // Let the output be the input untouched
-        out = items;
-      }
-
-      return out;
+      return tiers[input] || 'Unranked';
     };
   });

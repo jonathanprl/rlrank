@@ -29,25 +29,27 @@ function getPlayerRanks(req, res)
       return swiftping.apiResponse('error', res, err);
     }
 
-    var ranks = {};
+    var ranks = [];
 
     var playlists = result.split(/\r?\n/);
+
+    playlists.splice(0, 1);
 
     playlists.forEach(function(playlist)
     {
       var rankedStats = playlist.split('&');
+
+      var playlistStats = {};
       rankedStats.forEach(function(rankedStat)
       {
         rankedStat = rankedStat.split('=');
-        var playlistId = rankedStat[1];
-
-        if (rankedStat.indexOf('Playlist') > -1)
-        {
-          ranks[playlistId] = {};
-        }
-        console.log(rankedStat);
-        ranks[playlistId][rankedStat[0]] = rankedStat[1] || null;
+        playlistStats[rankedStat[0]] = rankedStat[1];
       });
+
+      if (rankedStats.length > 1)
+      {
+        ranks.push(playlistStats);
+      }
     });
 
     console.log(ranks);
