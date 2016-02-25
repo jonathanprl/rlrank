@@ -18,7 +18,7 @@ function getDetailsFromURL(url, callback)
   rest.get(url)
     .on('complete', function(result)
     {
-      $ = cheerio.load(result);
+      var $ = cheerio.load(result);
 
       var targetScript = $('.responsive_page_template_content script').html();
 

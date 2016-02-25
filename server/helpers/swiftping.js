@@ -10,7 +10,7 @@ function apiResponse(type, res, data)
       _ok(res, data);
     break;
     case 'error':
-      _error(res, err);
+      _error(res, data);
     break;
   }
 }

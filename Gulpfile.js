@@ -22,7 +22,7 @@ gulp.task('less', function() {
   gulp.src(['./public/app/themes/default/base.less'])
     .pipe(inject(gulp.src(['./public/app/**/*.less', '!./public/app/themes/**/*.less'], {read: false}), { relative: true }))
     .pipe(less())
-    .pipe(minifyCss())
+    // .pipe(minifyCss())
     .pipe(gulp.dest('./public/css'));
 });
 
