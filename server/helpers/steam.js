@@ -25,6 +25,7 @@ function getDetailsFromURL(url, callback)
       if (!targetScript)
       {
         callback({authed: false, message: "Profile not found"});
+        return false;
       }
 
       targetScript = targetScript.split('=');

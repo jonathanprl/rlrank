@@ -26,14 +26,32 @@ function getPlayerRanks(req, res)
   {
     if (err)
     {
-      if (err == 'SessionNotActive')
-      {
-
-      }
-      
       return swiftping.apiResponse('error', res, err);
     }
 
-    swiftping.apiResponse('ok', res, result);
+    var ranks = {};
+
+    var playlists = result.split(/\r?\n/);
+
+    playlists.forEach(function(playlist)
+    {
+      var rankedStats = playlist.split('&');
+      rankedStats.forEach(function(rankedStat)
+      {
+        rankedStat = rankedStat.split('=');
+        var playlistId = rankedStat[1];
+
+        if (rankedStat.indexOf('Playlist') > -1)
+        {
+          ranks[playlistId] = {};
+        }
+        console.log(rankedStat);
+        ranks[playlistId][rankedStat[0]] = rankedStat[1] || null;
+      });
+    });
+
+    console.log(ranks);
+
+    swiftping.apiResponse('ok', res, ranks);
   });
 }
