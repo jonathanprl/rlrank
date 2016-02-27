@@ -9,32 +9,9 @@
         vm.authorise = authorise;
         vm.getPlayerRanks = getPlayerRanks;
 
-        vm.leaderboards = [
-          [
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"}
-          ],
-          [
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"}
-          ],
-          [
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"}
-          ],
-          [
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"},
-            {name: "Jonnerz", mmr: "1800"}
-          ]
-        ]
+        vm.leaderboards = {};
+
+        getAllLeaderboards()
 
         function authorise()
         {
@@ -42,7 +19,6 @@
             .then(function(response)
             {
               vm.profile = response.data.profile;
-              vm.token = response.data.token;
 
               getPlayerRanks();
             }
@@ -51,7 +27,7 @@
 
         function getPlayerRanks()
         {
-          RankSvc.getPlayerRanks(vm.profile.steamid, vm.token)
+          RankSvc.getPlayerRanks(vm.profile.steamid)
             .then(function(response)
             {
               vm.playlists = response.data.results;
@@ -59,14 +35,22 @@
           );
         }
 
-        function getLeaderboards()
+        function getLeaderboard(playlist)
         {
-          RankSvc.getLeaderboards(vm.profile.steamid, vm.token)
-            .then(function(leaderboards)
+          RankSvc.getLeaderboard(playlist)
+            .then(function(response)
             {
-              vm.leaderboards = leaderboards;
+              vm.leaderboards[playlist] = response.data.results;
             }
           );
+        }
+
+        function getAllLeaderboards()
+        {
+          getLeaderboard(10);
+          getLeaderboard(11);
+          getLeaderboard(12);
+          getLeaderboard(13);
         }
     });
 })();

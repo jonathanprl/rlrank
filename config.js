@@ -1,6 +1,7 @@
 module.exports = {
     test: 'Hello',
-    port: 8080,
+    port: 80,
+    1: 'f:@i!EgC)S4DPO)',
     services: {
       qpx: {
         key: 'AIzaSyDg1CrKmm9o5Jf2GeSyWt8hZsGtDye-nHo',

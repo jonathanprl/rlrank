@@ -11,8 +11,18 @@
               | Get Ranks & Stats
           h4(ng-if="vm.profile")
             | Hello {{ vm.profile.personaname }}!
-          ul.list-group
-            li.list-group-item(ng-repeat="playlist in vm.playlists")
+          table.table.table-responsive
+            tr
+            td
+              strong Pos
+            td
+              strong Rank
+            td
+              strong Username
+            td
+              strong MMR
+          tr
+            td(ng-repeat="playlist in vm.playlists")
               span {{ playlist.Playlist | rlPlaylist }} |&nbsp;
               span {{ playlist.Tier | rlTier }} |&nbsp;
               span(ng-if="playlist.MatchesPlayed") Matches played: {{ playlist.MatchesPlayed }} |&nbsp; 
@@ -20,20 +30,24 @@
     .sp__leaderboards
       h2 Live Global Leaderboards
       .row
-        .col-md-3(ng-repeat="leaderboard in vm.leaderboards")
-          h3 {{ $index + 10 | rlPlaylist }}
-          table.table
+        .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
+          h3 {{ playlist | rlPlaylist }}
+          table.table.table-responsive
             tr
               td
-                strong Position
-              td
-                strong Name
+                strong Pos
               td
                 strong Rank
+              td
+                strong Username
+              td
+                strong MMR
             tr(ng-repeat="player in leaderboard")
               td
                 strong {{ '#' + ($index + 1) }}
               td
-                span(ng-if="player.name") {{ player.name }}
+                img.img-responsive(ng-src="/img/ranks/{{ player.Value }}_w.png" ng-title="player.Value | rlPlaylist")
               td
-                span(ng-if="player.mmr") {{ player.mmr }} 
+                span(ng-if="player.UserName" ng-title="player.UserName") {{ player.UserName }}
+              td
+                span(ng-if="player.MMR") {{ player.MMR }}

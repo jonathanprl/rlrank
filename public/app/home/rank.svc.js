@@ -5,8 +5,9 @@
         'use strict';
 
         return {
-          authorise: authorise,
-          getPlayerRanks: getPlayerRanks
+          authorise,
+          getPlayerRanks,
+          getLeaderboard
         };
 
         function authorise(url)
@@ -14,18 +15,14 @@
           return $http.post('/api/auth', {url: url});
         }
 
-        function getLeaderboards(id, token)
+        function getLeaderboard(playlist)
         {
-          return $http.post('/api/leaderboards', {
-            token: token
-          });
+          return $http.get('/api/leaderboard/' + playlist);
         }
 
-        function getPlayerRanks(id, token, callback)
+        function getPlayerRanks(id, callback)
         {
-          return $http.post('/api/ranks/' + id, {
-            token: token
-          });
+          return $http.get('/api/ranks/' + id);
         }
     });
 })();
