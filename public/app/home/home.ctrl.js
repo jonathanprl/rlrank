@@ -9,6 +9,33 @@
         vm.authorise = authorise;
         vm.getPlayerRanks = getPlayerRanks;
 
+        vm.leaderboards = [
+          [
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"}
+          ],
+          [
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"}
+          ],
+          [
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"}
+          ],
+          [
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"},
+            {name: "Jonnerz", mmr: "1800"}
+          ]
+        ]
+
         function authorise()
         {
           RankSvc.authorise(vm.steamProfileUrl)
