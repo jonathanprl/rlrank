@@ -6,7 +6,6 @@
 
         var vm = this;
 
-        vm.goToProfile = goToProfile;
         vm.leaderboards = {};
         vm.router = RouteSvc;
 

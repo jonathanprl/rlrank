@@ -30,7 +30,7 @@
             .then(function(response)
             {
               vm.profile = response.data.profile;
-              return getPlayerRanks(vm.profile.steamid);
+              getPlayerRanks(vm.profile.steamid);
             }
           );
         }
