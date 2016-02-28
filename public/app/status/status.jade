@@ -1,0 +1,24 @@
+.sp__wrapper
+  .container
+    .row
+      .col-md-8
+        h1 Rocket League Server Status
+      .col-md-4
+        .sp__mini-rank-form
+          form.sp__rank-form
+            .form-group
+              label.control-label Enter a Steam Profile URL
+              input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
+            button.btn.btn-primary.btn-block(ng-click="vm.router.goToProfile(vm.steamProfileUrl)")
+              | Get Ranks & Stats
+    .row
+      .col-md-4
+        table.table.table-responsive.sp__table
+          thead
+            tr
+              th Region
+              th Status
+          tbody
+            tr(ng-repeat="region in vm.regions")
+              td {{ region.name }}
+              td {{ region.online }}

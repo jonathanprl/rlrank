@@ -12,6 +12,11 @@ angular
           controller: 'LeaderboardController as vm',
           activeSection: 'leaderboard'
         })
+        .when('/status', {
+          templateUrl: '/views/status/status',
+          controller: 'StatusController as vm',
+          activeSection: 'status'
+        })
         .when('/:steam', {
           templateUrl: '/views/profile/profile',
           controller: 'ProfileController as vm',

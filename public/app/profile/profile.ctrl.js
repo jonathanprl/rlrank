@@ -44,5 +44,15 @@
             }
           );
         }
+
+        function getPlayerStats(id)
+        {
+          ApiSvc.getPlayerStats(id)
+            .then(function(response)
+            {
+              vm.stats = response.data.results;
+            }
+          );
+        }
     });
 })();

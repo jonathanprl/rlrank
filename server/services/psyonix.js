@@ -36,7 +36,7 @@ function getPlayerRanks(id, callback)
     'P0P[]': id
   };
 
-  callProc(procData, function(err, data)
+  callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
   {
     if (err)
     {
@@ -55,7 +55,7 @@ function getLeaderboard(playlist, callback)
     'P0P[]': playlist
   };
 
-  callProc(procData, function(err, data)
+  callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
   {
     if (err)
     {
@@ -67,7 +67,63 @@ function getLeaderboard(playlist, callback)
   });
 }
 
-function callProc(procData, callback)
+function getStat(id, stat, callback)
+{
+  var procData = {
+    'Proc[]': 'GetLeaderboardValueForUserSteam',
+    'P0P[]': id, // SteamID
+    'P0P[]': stat // Wins, Goals, MVPs, Saves, Shots, Assists
+  };
+
+  callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+  {
+    if (err)
+    {
+      return callback(err);
+    }
+
+    var data = parseResults(data);
+    callback(null, data);
+  });
+}
+
+function getServers()
+{
+  var procData = {
+    'Proc[]': 'GetGameServerPingList'
+  };
+
+  callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+  {
+    if (err)
+    {
+      return callback(err);
+    }
+
+    var data = parseResults(data);
+    callback(null, data);
+  });
+}
+
+function getPopulation()
+{
+  var procData = {
+    'Proc[]': 'GetGameServerPingList'
+  };
+
+  callProc('https://psyonix-rl.appspot.com/Population/GetPopulation/', procData, function(err, data)
+  {
+    if (err)
+    {
+      return callback(err);
+    }
+
+    var data = parseResults(data);
+    callback(null, data);
+  });
+}
+
+function callProc(procUrl, procData, callback)
 {
   db.findOne('config', {name: 'token'}, function(err, doc)
   {
@@ -81,7 +137,7 @@ function callProc(procData, callback)
       'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
     };
 
-    restler.post('https://psyonix-rl.appspot.com/callproc105/', {data: procData, headers: headers})
+    restler.post(procUrl, {data: procData, headers: headers})
       .on('complete',
       function(data, res)
       {
@@ -95,7 +151,7 @@ function callProc(procData, callback)
               'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
             };
 
-            restler.post('https://psyonix-rl.appspot.com/callproc105/', {data: procData, headers: headers})
+            restler.post(procUrl, {data: procData, headers: headers})
               .on('complete',
               function(data, res)
               {

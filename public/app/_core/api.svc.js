@@ -10,7 +10,9 @@
           cache,
           authorise,
           getPlayerRanks,
-          getLeaderboard
+          getLeaderboard,
+          getStatus,
+          getStats
         };
 
         function authorise(url)
@@ -26,6 +28,16 @@
         function getPlayerRanks(id, callback)
         {
           return $http.get('/api/ranks/' + id);
+        }
+
+        function getStatus(callback)
+        {
+          return $http.get('/api/status/' + id);
+        }
+
+        function getStats(id, callback)
+        {
+          return $http.get('/api/stats/' + id);
         }
     });
 })();
