@@ -40,3 +40,15 @@ body {
 .sp__leaderboards h3 {
   color: #fff;
 }
+
+.sp__table {
+  color: @text-color;
+  > tbody > tr > td,
+  > tbody > tr > th {
+    max-width: 124px;
+    white-space: pre;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+}
