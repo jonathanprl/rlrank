@@ -8,6 +8,11 @@ angular
 
       $routeProvider
         .when('/:steam', {
+          templateUrl: '/views/profile/profile',
+          controller: 'ProfileController as vm',
+          activeSection: 'profile'
+        })
+        .when('/', {
           templateUrl: '/views/home/home',
           controller: 'HomeController as vm',
           activeSection: 'home'

@@ -1,54 +1,36 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', function(RankSvc, $routeParams, $location) {
+    .controller('HomeController', function(RankSvc, $routeParams, $location, $cacheFactory) {
         'use strict';
 
         var vm = this;
 
-        vm.authorise = authorise;
-        vm.getPlayerRanks = getPlayerRanks;
-
+        vm.goToProfile = goToProfile;
         vm.leaderboards = {};
-        vm.shareUrl = $location.absUrl();
-
-        getAllLeaderboards();
 
         (function()
         {
-          if ($routeParams.steam)
-          {
-            if (!isNaN(parseFloat($routeParams.steam)) && isFinite($routeParams.steam) && $routeParams.steam.length == 17)
-            {
-              authorise("https://steamcommunity.com/profiles/" + $routeParams.steam);
-            }
-            else
-            {
-              authorise("https://steamcommunity.com/id/" + $routeParams.steam);
-            }
-          }
+          getAllLeaderboards();
         })();
 
-        function authorise(url)
+        function goToProfile(url)
         {
-          url = url || vm.steamProfileUrl;
-
           RankSvc.authorise(url)
             .then(function(response)
             {
-              vm.profile = response.data.profile;
+              var profile = response.data.profile;
 
-              getPlayerRanks();
-            }
-          );
-        }
+              var url = trimTrailingSlash(profile.url);
 
-        function getPlayerRanks()
-        {
-          RankSvc.getPlayerRanks(vm.profile.steamid)
-            .then(function(response)
-            {
-              vm.playlists = response.data.results;
+              if (url.indexOf('/id/') > -1)
+              {
+                $location.path(url.split('/').pop());
+              }
+              else
+              {
+                $location.path(profile.steamid);
+              }
             }
           );
         }
@@ -69,6 +51,19 @@
           getLeaderboard(11);
           getLeaderboard(12);
           getLeaderboard(13);
+        }
+
+        function trimTrailingSlash(s)
+        {
+          if (s[s.length - 1] == "/")
+          {
+            s = s.slice(0, -1);
+            return trimTrailingSlash(s);
+          }
+          else
+          {
+            return s;
+          }
         }
     });
 })();

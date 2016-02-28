@@ -1,21 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600,300);
 
 body {
-  background: url(/img/bg.jpg);
-  background-size: contain;
+  background: url('/img/bg.jpg') no-repeat #000;
+  // background-size: contain;
   font-weight: 300;
+  background-size: 100%;
 }
-
-// body::after {
-//   content: ' ';
-//   position: absolute;
-//   left: 0;
-//   right: 0;
-//   top: 0;
-//   bottom: 0;
-//   background-color: rgba(0,0,0,.5);
-// }
-
 
 // Layout
 .sp__wrapper {
@@ -46,9 +36,11 @@ body {
   > tbody > tr > td,
   > tbody > tr > th {
     max-width: 124px;
-    white-space: pre;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
     vertical-align: middle;
+    span {
+      white-space: pre;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }

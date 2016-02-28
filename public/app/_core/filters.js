@@ -20,6 +20,7 @@ angular.module('app')
     return function(input)
     {
       var tiers = {
+        '0': 'Unranked',
         '1': 'Prospect I',
         '2': 'Prospect II',
         '3': 'Prospect III',

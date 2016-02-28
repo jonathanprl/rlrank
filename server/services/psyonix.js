@@ -85,7 +85,6 @@ function callProc(procData, callback)
       .on('complete',
       function(data, res)
       {
-        console.log(data);
         if (data.indexOf('SessionNotActive') > -1)
         {
           console.log("Refreshing Psyonix token...");

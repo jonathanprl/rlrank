@@ -32,7 +32,7 @@ function getPlayerRanks(req, res)
     db.upsert('ranks', {steamId: req.params.id}, {$set: {playlists: results}},
       function(err, doc)
       {
-        console.log(doc);
+
       }
     );
 

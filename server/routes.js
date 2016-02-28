@@ -2,21 +2,10 @@ var psyonix = require('./services/psyonix');
 var rank = require('./controllers/rank');
 var leaderboard = require('./controllers/leaderboard');
 var stats = require('./controllers/stats');
-
-var trueskill = require('trueskill');
+var cron = require('./services/cron');
 
 module.exports = function(app)
 {
-  // player = new gaussian(2.5, 111.894);
-
-  // var p1 = [2.5, 111.894];19.55422095912203 20.95905894974807
-  // var p2 = [2.5, 102.377];20.98127509108491 22.63983894937656
-  //
-  // var rating = new trueskill(p1[1], p1[0]);
-  //
-  // console.log(rating);
-
-
   app.get('/', function(req, res) {
       res.render('index');
   });
