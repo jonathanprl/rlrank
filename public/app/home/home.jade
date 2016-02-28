@@ -29,8 +29,8 @@
               td
                 strong {{ '#' + ($index + 1) }}
               td
-                img.img-responsive(ng-src="/img/ranks/{{ player.Value }}_w.png" ng-title="player.Value | rlPlaylist")
+                img.img-responsive(ng-src="/img/ranks/{{ player.Value }}_w.png" title="{{ player.Value | rlTier }}")
               td
-                a(ng-if="player.UserName" ng-title="player.UserName" ng-href="/{{ player.SteamID }}") {{ player.UserName }}
+                a(ng-if="player.UserName" title="{{ player.UserName }}" ng-href="/{{ player.SteamID }}") {{ player.UserName }}
               td
                 span(ng-if="player.MMR") {{ player.MMR }}
