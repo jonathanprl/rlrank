@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', function(RankSvc) {
+    .controller('HomeController', function(RankSvc, $routeParams) {
         'use strict';
 
         var vm = this;
@@ -11,11 +11,21 @@
 
         vm.leaderboards = {};
 
-        getAllLeaderboards()
+        getAllLeaderboards();
 
-        function authorise()
+        (function()
         {
-          RankSvc.authorise(vm.steamProfileUrl)
+          if ($routeParams.steamName)
+          {
+            authorise("https://steamcommunity.com/id/" + $routeParams.steamName);
+          }
+        })();
+
+        function authorise(url)
+        {
+          url = url || vm.steamProfileUrl;
+
+          RankSvc.authorise(url)
             .then(function(response)
             {
               vm.profile = response.data.profile;

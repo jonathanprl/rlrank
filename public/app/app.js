@@ -7,7 +7,7 @@ angular
       $locationProvider.html5Mode(true);
 
       $routeProvider
-        .when('/', {
+        .when('/:steamName', {
           templateUrl: '/views/home/home',
           controller: 'HomeController as vm',
           activeSection: 'home'
