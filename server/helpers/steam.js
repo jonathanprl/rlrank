@@ -33,7 +33,7 @@ function getDetailsFromURL(url, callback)
         return false;
       }
 
-      targetScript = targetScript.split('=');
+      targetScript = targetScript.split('g_rgProfileData =');
       targetScript = targetScript[1].split(';');
       targetScript = targetScript[0].trim();
 

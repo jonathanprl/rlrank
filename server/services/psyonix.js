@@ -90,7 +90,18 @@ function callProc(procData, callback)
           console.log("Refreshing Psyonix token...");
           refreshToken(function(err, token)
           {
-            console.log("New token:", token);
+            var headers = {
+              'SessionID': doc.value,
+              'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
+            };
+
+            restler.post('https://psyonix-rl.appspot.com/callproc105/', {data: procData, headers: headers})
+              .on('complete',
+              function(data, res)
+              {
+                callback(null, data);
+              }
+            );
           });
         }
         else
