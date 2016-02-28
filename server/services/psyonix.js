@@ -91,7 +91,7 @@ function callProc(procData, callback)
           refreshToken(function(err, token)
           {
             var headers = {
-              'SessionID': doc.value,
+              'SessionID': token,
               'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
             };
 
