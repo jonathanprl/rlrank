@@ -52,9 +52,12 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .sp__table {
-  color: @text-color;
+  color: #D6D6D6;
+  background-color: rgba(0, 0, 0, 0.6);
+
   > tbody > tr > td,
   > tbody > tr > th {
+    border-top: 1px solid #3E3E3E;
     max-width: 124px;
     vertical-align: middle;
     span {
@@ -63,6 +66,12 @@ h1,h2,h3,h4,h5,h6 {
       text-overflow: ellipsis;
     }
   }
+
+  > thead > tr > th {
+    text-align: center;
+  }
+
+
 }
 
 footer {

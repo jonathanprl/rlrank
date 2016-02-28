@@ -5,26 +5,28 @@
       .row
         .col-md-4.col-md-offset-4
           table.table.table-responsive.sp__table
-            tr(ng-if="vm.playlists")
-              td
-                strong Mode
-              td(colspan="2")
-                strong Rank
-              td
-                strong Matches Played
-              td
-                strong MMR
-            tr(ng-repeat="playlist in vm.playlists" ng-if="playlist.Playlist")
-              td 
-                span {{ playlist.Playlist | rlPlaylist }}
-              td 
-                img(ng-src="/img/ranks/{{ playlist.Tier || 0 }}_w.png" title="{{ playlist.Tier | rlTier }}" style="width:36px;")
-              td.text-left 
-                span {{ playlist.Tier | rlTier }}
-              td
-                span(ng-if="playlist.MatchesPlayed") {{ playlist.MatchesPlayed }} 
-              td
-                span(ng-if="playlist.MMR") {{ playlist.MMR }}
+            thead
+              tr(ng-if="vm.playlists")
+                th
+                  | Mode
+                th(colspan="2")
+                  | Rank
+                th
+                  | # Played
+                th
+                  | MMR
+            tbody
+              tr(ng-repeat="playlist in vm.playlists" ng-if="playlist.Playlist")
+                td 
+                  span {{ playlist.Playlist | rlPlaylist }}
+                td 
+                  img(ng-src="/img/ranks/{{ playlist.Tier || 0 }}_w.png" title="{{ playlist.Tier | rlTier }}" style="width:36px;")
+                td.text-left 
+                  span {{ playlist.Tier | rlTier }}
+                td
+                  span(ng-if="playlist.MatchesPlayed") {{ playlist.MatchesPlayed }} 
+                td
+                  span(ng-if="playlist.MMR") {{ playlist.MMR }}
           .sp__share(ng-if="vm.playlists")
             h4 Share
             .row
