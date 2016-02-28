@@ -20,6 +20,15 @@ form {
 
 }
 
+.form-control::-webkit-input-placeholder { color: @input-color-placeholder; }
+.form-control:-moz-placeholder { color: @input-color-placeholder; }
+.form-control::-moz-placeholder { color: @input-color-placeholder; }
+.form-control:-ms-input-placeholder { color: @input-color-placeholder; }
+
+.form-control[readonly]
+{
+  background-color: @input-bg;
+}
 // App
 
 // Forms

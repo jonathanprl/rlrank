@@ -23,9 +23,14 @@
                 span(ng-if="playlist.MatchesPlayed") {{ playlist.MatchesPlayed }} 
               td
                 span(ng-if="playlist.MMR") {{ playlist.MMR }}
+          .form-group(ng-if="vm.playlists")
+            label.control-label Share URL
+            input.form-control(ng-model="vm.shareUrl" readonly)
+          hr(ng-if="vm.playlists")
           form.sp__rank-form
             .form-group
-              input.form-control(ng-model="vm.steamProfileUrl" placeholder="Steam Community Link")
+              label.control-label Enter a Steam Profile URL
+              input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
             button.btn.btn-primary.btn-block(ng-click="vm.authorise()")
               | Get Ranks & Stats
     .sp__leaderboards

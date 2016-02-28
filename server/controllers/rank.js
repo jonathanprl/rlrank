@@ -29,6 +29,13 @@ function getPlayerRanks(req, res)
       return swiftping.apiResponse('error', res, err);
     }
 
+    db.upsert('ranks', {steamId: req.params.id}, {$set: {playlists: results}},
+      function(err, doc)
+      {
+        console.log(doc);
+      }
+    );
+
     swiftping.apiResponse('ok', res, results);
   });
 }

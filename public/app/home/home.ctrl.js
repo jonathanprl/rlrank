@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', function(RankSvc, $routeParams) {
+    .controller('HomeController', function(RankSvc, $routeParams, $location) {
         'use strict';
 
         var vm = this;
@@ -10,14 +10,22 @@
         vm.getPlayerRanks = getPlayerRanks;
 
         vm.leaderboards = {};
+        vm.shareUrl = $location.absUrl();
 
         getAllLeaderboards();
 
         (function()
         {
-          if ($routeParams.steamName)
+          if ($routeParams.steam)
           {
-            authorise("https://steamcommunity.com/id/" + $routeParams.steamName);
+            if (!isNaN(parseFloat($routeParams.steam)) && isFinite($routeParams.steam) && $routeParams.steam.length == 17)
+            {
+              authorise("https://steamcommunity.com/profiles/" + $routeParams.steam);
+            }
+            else
+            {
+              authorise("https://steamcommunity.com/id/" + $routeParams.steam);
+            }
           }
         })();
 
