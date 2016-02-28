@@ -25,13 +25,19 @@
                 span(ng-if="playlist.MatchesPlayed") {{ playlist.MatchesPlayed }} 
               td
                 span(ng-if="playlist.MMR") {{ playlist.MMR }}
-          .form-group(ng-if="vm.playlists")
-            label.control-label Share URL
-            input.form-control(ng-model="vm.shareUrl" readonly)
+          .sp__share(ng-if="vm.playlists")
+            h4 Share
+            .row
+              .col-md-8
+                .form-group(ng-if="vm.playlists")
+                  input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
+              .col-md-4
+              a.twitter-share-button(ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague" target="_blank") Tweet
+              a(target="_blank" ng-href="http://www.facebook.com/sharer/sharer.php?u={{ vm.shareUrl }}") Facebook
           hr(ng-if="vm.playlists")
           form.sp__rank-form
             .form-group
               label.control-label Enter a Steam Profile URL
               input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
-            button.btn.btn-primary.btn-block(ng-click="vm.authorise()")
+            button.btn.btn-primary.btn-block(ng-click="vm.router.goToProfile(url)")
               | Get Ranks & Stats

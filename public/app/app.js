@@ -7,6 +7,11 @@ angular
       $locationProvider.html5Mode(true);
 
       $routeProvider
+        .when('/leaderboards', {
+          templateUrl: '/views/leaderboard/leaderboard',
+          controller: 'LeaderboardController as vm',
+          activeSection: 'leaderboard'
+        })
         .when('/:steam', {
           templateUrl: '/views/profile/profile',
           controller: 'ProfileController as vm',

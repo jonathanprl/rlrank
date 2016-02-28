@@ -1,10 +1,10 @@
 (function() {
   angular
     .module('app')
-    .factory('ProfileSvc', function($http, $cacheFactory) {
+    .factory('ApiSvc', function($http, $cacheFactory) {
         'use strict';
 
-        var cache = $cacheFactory('profile');
+        var cache = $cacheFactory('rank');
 
         return {
           cache,

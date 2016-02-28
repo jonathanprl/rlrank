@@ -1,34 +1,54 @@
 @import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600,300);
 
+* {
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
 body {
   background: url('/img/bg.jpg') no-repeat #000;
-  // background-size: contain;
+  background-size: cover;
   font-weight: 300;
   background-size: 100%;
 }
 
+.wrapper {
+  min-height: 100%;
+}
+
+section#main {
+  overflow: auto;
+	padding-bottom: 50px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  color: #fff;
+}
+
 // Layout
 .sp__wrapper {
-  margin-top: 50px;
+  margin-top: 15px;
 }
 
 .sp__hero {
   text-align: center;
   color: #fff;
-  padding: 10px 0 50px 0;
+  padding: 50px 0;
 
   h1 {
-    margin-bottom: 10px;
+    padding: 20px 0;
   }
 }
 
 .sp__rank-form {
-  padding-top: 30px;
+  color: #fff;
 }
 
-.sp__leaderboards h2,
-.sp__leaderboards h3 {
-  color: #fff;
+.sp__leaderboards table > tbody > tr > td > img {
+  width: 40px;
 }
 
 .sp__table {
@@ -43,4 +63,16 @@ body {
       text-overflow: ellipsis;
     }
   }
+}
+
+footer {
+  position: relative;
+	margin-top: -50px; /* negative value of footer height */
+	height: 50px;
+	clear:both;
+  background-color: #fff;
+}
+
+.sp__footer {
+  padding: 15px;
 }

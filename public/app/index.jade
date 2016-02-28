@@ -9,9 +9,17 @@ html
     //- endinject
     link(rel="stylesheet", href="/vendor/ng-scrollbar/dist/ng-scrollbar.min.css")
   body(ng-app="app")
-    header(ng-include="'/views/navbar/navbar'")
-    section#main(ng-view)
-
+    .wrapper
+      header(ng-include="'/views/navbar/navbar'")
+      section#main(ng-view)
+    footer
+      .container
+        .sp__footer
+          .row
+            .col-sm-4
+              | &copy; Jonnerz 2016
+            .col-sm-8.text-right
+              |  This website is not affiliated with <a href="psyonix.com">Psyonix</a>.
     //- bower:js
     script(src="/vendor/angular/angular.js")
     script(src="/vendor/jquery/dist/jquery.js")
@@ -24,8 +32,12 @@ html
     //- app:js
     script(src="/app/app.js")
     script(src="/app/home/home.ctrl.js")
-    script(src="/app/home/rank.svc.js")
+    script(src="/app/leaderboard/leaderboard.ctrl.js")
     script(src="/app/profile/profile.ctrl.js")
-    script(src="/app/profile/profile.svc.js")
+    script(src="/app/_core/api.svc.js")
     script(src="/app/_core/filters.js")
+    script(src="/app/_core/route.svc.js")
     //- endinject
+    
+    script.
+      !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');

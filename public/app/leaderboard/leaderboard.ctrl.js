@@ -1,12 +1,11 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
+    .controller('LeaderboardController', function(ApiSvc, RouteSvc) {
         'use strict';
 
         var vm = this;
 
-        vm.goToProfile = goToProfile;
         vm.leaderboards = {};
         vm.router = RouteSvc;
 

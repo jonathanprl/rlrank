@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', function(ProfileSvc, $routeParams, $location, $cacheFactory) {
+    .controller('ProfileController', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
         'use strict';
 
         var vm = this;
@@ -10,6 +10,7 @@
         vm.getPlayerRanks = getPlayerRanks;
         vm.leaderboards = {};
         vm.shareUrl = $location.absUrl();
+        vm.router = RouteSvc;
 
         (function()
         {
@@ -25,7 +26,7 @@
 
         function authorise(url)
         {
-          ProfileSvc.authorise(url)
+          ApiSvc.authorise(url)
             .then(function(response)
             {
               vm.profile = response.data.profile;
@@ -36,25 +37,12 @@
 
         function getPlayerRanks(id)
         {
-          ProfileSvc.getPlayerRanks(id)
+          ApiSvc.getPlayerRanks(id)
             .then(function(response)
             {
               vm.playlists = response.data.results;
             }
           );
-        }
-
-        function trimTrailingSlash(s)
-        {
-          if (s[s.length - 1] == "/")
-          {
-            s = s.slice(0, -1);
-            return trimTrailingSlash(s);
-          }
-          else
-          {
-            return s;
-          }
         }
     });
 })();

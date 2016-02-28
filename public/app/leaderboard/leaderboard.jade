@@ -1,9 +1,10 @@
 .sp__wrapper
   .container
-    .sp__hero
-      h1 View & share your Rocket League rank
-      .row
-        .col-md-4.col-md-offset-4
+    .row
+      .col-md-8
+        h1 Global Leaderboards
+      .col-md-4
+        .sp__mini-rank-form
           form.sp__rank-form
             .form-group
               label.control-label Enter a Steam Profile URL
@@ -11,7 +12,6 @@
             button.btn.btn-primary.btn-block(ng-click="vm.router.goToProfile(vm.steamProfileUrl)")
               | Get Ranks & Stats
     .sp__leaderboards
-      h2 Global Leaderboards
       .row
         .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
           h3 {{ playlist | rlPlaylist }}
@@ -25,7 +25,7 @@
                 strong Username
               td
                 strong MMR
-            tr(ng-repeat="player in leaderboard | limitTo:10")
+            tr(ng-repeat="player in leaderboard")
               td
                 strong {{ '#' + ($index + 1) }}
               td
