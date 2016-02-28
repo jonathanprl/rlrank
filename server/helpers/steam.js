@@ -17,7 +17,33 @@ function getDetailsFromURL(url, callback)
 {
   if (!url)
   {
-    callback({authed: false, message: "Missing Steam URL"});
+    return callback({authed: false, message: "Missing Steam URL"});
+  }
+
+  var urlArray = url.split('/');
+
+  console.log(urlArray);
+
+  if (urlArray[0] == "http:" || urlArray[0] == "https:")
+  {
+    if (urlArray[2] == "steamcommunity.com" || urlArray[2] == "www.steamcommunity.com")
+    {
+      if (urlArray[3] != "id" && urlArray[3] != "profiles")
+      {
+        return callback({authed: false, message: "Invalid URL"});
+      }
+    }
+    else
+    {
+      return callback({authed: false, message: "Invalid URL"});
+    }
+  }
+  else if (urlArray[0] == "steamcommunity.com" || urlArray[0] == "www.steamcommunity.com")
+  {
+    if (urlArray[1] != "id" || urlArray[1] != "profiles")
+    {
+      return callback({authed: false, message: "Invalid URL"});
+    }
   }
 
   rest.get(url)
@@ -33,9 +59,12 @@ function getDetailsFromURL(url, callback)
         return false;
       }
 
-      targetScript = targetScript.split('g_rgProfileData =');
-      targetScript = targetScript[1].split(';');
+      targetScript = targetScript.split('g_rgProfileData =');console.log(targetScript);
+      targetScript = targetScript[1].split('"};');console.log(targetScript);
       targetScript = targetScript[0].trim();
+      targetScript += "\"}";
+
+      console.log(targetScript);
 
       var profileData = JSON.parse(targetScript);
 
