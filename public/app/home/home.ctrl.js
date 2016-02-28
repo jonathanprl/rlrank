@@ -20,6 +20,9 @@
             .then(function(response)
             {
               vm.leaderboards[playlist] = response.data.results;
+            }, function(err)
+            {
+              console.log(err.code);
             }
           );
         }
@@ -34,12 +37,15 @@
 
         function goToProfile(url)
         {
-          if (url.indexOf('://steamcommunity.com') > -1)
-          {
-            RouteSvc.goToProfile(url);
-            vm.showLoader = true;
-            vm.profileError = "URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>";
-          }
+          vm.showLoader = true;
+
+          RouteSvc.goToProfile(url,
+            function(err)
+            {
+              vm.profileError = err.message;
+              vm.showLoader = false;
+            }
+          );
         }
     });
 })();

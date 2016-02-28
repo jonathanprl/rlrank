@@ -8,7 +8,7 @@
           goToProfile
         };
 
-        function goToProfile(url)
+        function goToProfile(url, callback)
         {
           ApiSvc.authorise(url)
             .then(function(response)
@@ -25,6 +25,10 @@
               {
                 $location.path(profile.steamid);
               }
+            },
+            function(err)
+            {
+              callback(err.data);
             }
           );
         }
