@@ -25,7 +25,7 @@ gulp.task('inject-production', ['concat-app'], function() {
   var vendorStream = gulp.src(['./public/js/rlrank-vendor-min.js'], {read: false});
   var appStream = gulp.src(['./public/js/rlrank-min.js', './public/js/rlrank-templates-min.js'], {read: false});
 
-  var stream = gulp.src(['./public/app/index.jade'])
+  var stream = gulp.src(['./public/app/index/index.jade'])
     .pipe(inject(series(vendorStream, appStream), {name: 'app', ignorePath: '/public'}))
     .pipe(inject(gulp.src(['./public/css/*.css']), {ignorePath: '/public'}))
     .pipe(gulp.dest('./public/app'));
@@ -36,10 +36,11 @@ gulp.task('inject', ['templates'], function() {
   var vendorStream = gulp.src(bowerFiles(), {read: false, cwd: __dirname + '/public'});
   var appStream = gulp.src(['./public/app/**/*.js', '!./public/vendor/**/*.js', './public/js/rlrank-templates.js'], {read: false});
 
-  gulp.src(['./public/app/index/index.jade'])
+  var stream = gulp.src(['./public/app/index/index.jade'])
     .pipe(inject(series(vendorStream, appStream), {name: 'app', ignorePath: '/public'}))
     .pipe(inject(gulp.src(['./public/css/*.css'], {read: false}), {ignorePath: '/public'}))
     .pipe(gulp.dest('./public/app'));
+  return stream;
 });
 
 gulp.task('concat-app', ['concat-vendor'], function() {
