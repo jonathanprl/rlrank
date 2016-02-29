@@ -36,7 +36,7 @@ gulp.task('inject', ['templates'], function() {
   var vendorStream = gulp.src(bowerFiles(), {read: false, cwd: __dirname + '/public'});
   var appStream = gulp.src(['./public/app/**/*.js', '!./public/vendor/**/*.js', './public/js/rlrank-templates.js'], {read: false});
 
-  gulp.src(['./public/app/index.jade'])
+  gulp.src(['./public/app/index/index.jade'])
     .pipe(inject(series(vendorStream, appStream), {name: 'app', ignorePath: '/public'}))
     .pipe(inject(gulp.src(['./public/css/*.css'], {read: false}), {ignorePath: '/public'}))
     .pipe(gulp.dest('./public/app'));
@@ -102,6 +102,7 @@ gulp.task('watch', function () {
       './public/app/**/*.js',
       '!./public/js/*.js',
       '!./public/app/index.jade',
+      '!./public/app/rlrank-templates.js'
     ], ['build']);
 
     gulp.watch([
@@ -140,4 +141,4 @@ gulp.task('daemon-production', ['inject-production'], function () {
 gulp.task('default', ['build']);
 gulp.task('build', ['inject', 'less']);
 gulp.task('production', ['less', 'daemon-production'])
-gulp.task('serve', ['daemon', 'inject', 'less', 'watch']);
+gulp.task('serve', ['daemon', 'less', 'inject', 'watch']);
