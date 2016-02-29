@@ -1,27 +1,12 @@
 (function() {
   angular
     .module('app')
-    .controller('StatusController', ['ApiSvc', 'RouteSvc', function(ApiSvc, RouteSvc) {
+    .controller('PagesController', ['RouteSvc', function(RouteSvc) {
         'use strict';
 
         var vm = this;
 
         vm.goToProfile = goToProfile;
-
-        (function()
-        {
-          getStatus();
-        })();
-
-        function getStatus()
-        {
-          ApiSvc.getStatus()
-            .then(function(response)
-            {
-              vm.regions = response.data.results;
-            }
-          );
-        }
 
         function goToProfile(url)
         {

@@ -3,7 +3,7 @@
     .sp__header
       .row
         .col-md-8
-          h1 Rocket League Server Status
+          h1 About
         .col-md-4
           .sp__mini-rank-form
             form.sp__rank-form
@@ -17,14 +17,4 @@
                 span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
     .row
       .col-md-4
-        .sp__spinner(ng-if="!vm.regions")
-        table.table.table-responsive.sp__table(ng-if="vm.regions")
-          thead
-            tr
-              th Region
-              th Status
-          tbody
-            tr(ng-repeat="region in vm.regions | orderBy:'name'")
-              td {{ region.region | rlRegion }}
-              td
-                span.sp__indicator(ng-class="{'online': region.online, 'offline': !region.online}") {{ region.online ? 'Online' : 'Offline' }}
+        | Coming soon.

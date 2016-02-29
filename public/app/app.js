@@ -17,6 +17,16 @@ angular
           controller: 'StatusController as vm',
           activeSection: 'status'
         })
+        .when('/about', {
+          templateUrl: '/views/pages/about',
+          controller: 'PagesController as vm',
+          activeSection: 'about'
+        })
+        .when('/contact', {
+          templateUrl: '/views/pages/contact',
+          controller: 'PagesController as vm',
+          activeSection: 'contact'
+        })
         .when('/:steam', {
           templateUrl: '/views/profile/profile',
           controller: 'ProfileController as vm',

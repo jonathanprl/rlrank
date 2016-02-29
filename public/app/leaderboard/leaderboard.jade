@@ -9,8 +9,11 @@
             .form-group
               label.control-label Enter a Steam Profile URL
               input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
-            button.btn.btn-primary.btn-block(ng-click="vm.router.goToProfile(vm.steamProfileUrl)")
+              p.help-block(ng-if="vm.profileError")
+                | {{ vm.profileError }}
+            button.btn.btn-primary.btn-block(ng-click="vm.goToProfile(vm.steamProfileUrl)")
               | Get Ranks & Stats
+              span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
     .sp__leaderboards
       .row
         .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
