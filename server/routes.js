@@ -11,6 +11,12 @@ module.exports = function(app)
       res.render('index');
   });
 
+  app.get('/robots.txt', function(req, res)
+  {
+    res.set('Content-Type', 'text/plain');
+    res.send('User-agent: *\nAllow: /');
+  });
+
   app.post('/api/auth', psyonix.auth);
 
   app.get('/api/ranks/:id', rank.getPlayerRanks);
