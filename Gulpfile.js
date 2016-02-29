@@ -140,5 +140,5 @@ gulp.task('daemon-production', ['inject-production'], function () {
 
 gulp.task('default', ['build']);
 gulp.task('build', ['inject', 'less']);
-gulp.task('production', ['less', 'daemon-production'])
+gulp.task('production', ['less', 'inject-production'])
 gulp.task('serve', ['daemon', 'less', 'inject', 'watch']);
