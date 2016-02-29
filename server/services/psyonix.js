@@ -8,6 +8,8 @@ var restler = require('restler');
 module.exports = {
   auth,
   getPlayerRanks,
+  getPlayerStat,
+  getServers,
   refreshToken,
   getLeaderboard
 };
@@ -67,13 +69,15 @@ function getLeaderboard(playlist, callback)
   });
 }
 
-function getStat(id, stat, callback)
+function getPlayerStat(id, stat, callback)
 {
   var procData = {
     'Proc[]': 'GetLeaderboardValueForUserSteam',
     'P0P[]': id, // SteamID
     'P0P[]': stat // Wins, Goals, MVPs, Saves, Shots, Assists
   };
+
+  var procData = 'Proc[]=GetLeaderboardValueForUserSteam&P0P[]=' + id + '&P0P[]=' + stat;
 
   callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
   {
@@ -83,11 +87,11 @@ function getStat(id, stat, callback)
     }
 
     var data = parseResults(data);
-    callback(null, data);
+    callback(null, data[0]);
   });
 }
 
-function getServers()
+function getServers(callback)
 {
   var procData = {
     'Proc[]': 'GetGameServerPingList'
@@ -105,7 +109,7 @@ function getServers()
   });
 }
 
-function getPopulation()
+function getPopulation(callback)
 {
   var procData = {
     'Proc[]': 'GetGameServerPingList'

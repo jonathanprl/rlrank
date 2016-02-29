@@ -1,11 +1,11 @@
 (function() {
   angular
     .module('app')
-    .factory('RouteSvc', function(ApiSvc, $location) {
+    .factory('RouteSvc', ['ApiSvc', '$location', function(ApiSvc, $location) {
         'use strict';
 
         return {
-          goToProfile
+          goToProfile: goToProfile
         };
 
         function goToProfile(url, callback)
@@ -45,5 +45,5 @@
             return s;
           }
         }
-    });
+    }]);
 })();

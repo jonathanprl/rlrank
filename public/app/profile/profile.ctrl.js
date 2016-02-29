@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
+    .controller('ProfileController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', '$cacheFactory', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
         'use strict';
 
         var vm = this;
@@ -31,6 +31,7 @@
             {
               vm.profile = response.data.profile;
               getPlayerRanks(vm.profile.steamid);
+              getPlayerStats(vm.profile.steamid);
             }
           );
         }
@@ -54,5 +55,5 @@
             }
           );
         }
-    });
+    }]);
 })();

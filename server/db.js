@@ -101,7 +101,6 @@ function insert(collectionName, doc, callback)
  */
 function modify(collectionName, query, update, callback)
 {
-  console.log(update);
   mongodb.collection(collectionName).findAndModify({query: query, update: update}, function (err, docs)
   {
     if (err)

@@ -22,8 +22,6 @@ function getDetailsFromURL(url, callback)
 
   var urlArray = url.split('/');
 
-  console.log(urlArray);
-
   if (urlArray[0] == "http:" || urlArray[0] == "https:")
   {
     if (urlArray[2] == "steamcommunity.com" || urlArray[2] == "www.steamcommunity.com")
@@ -67,8 +65,6 @@ function getDetailsFromURL(url, callback)
       targetScript = targetScript[1].split('"};');console.log(targetScript);
       targetScript = targetScript[0].trim();
       targetScript += "\"}";
-
-      console.log(targetScript);
 
       var profileData = JSON.parse(targetScript);
 

@@ -40,4 +40,38 @@ angular.module('app')
 
       return tiers[input] || 'Unranked';
     };
+  })
+  .filter('rlRegion', function()
+  {
+    return function(input)
+    {
+      var regions = {
+        'ASC': 'Asia SE Mainland',
+        'EU': 'Europe',
+        'JPN': 'Japan',
+        'ME': 'Middle East',
+        'nrt': 'Asia East',
+        'OCE': 'Oceania',
+        'SAM': 'South America',
+        'USE': 'US East',
+        'USW': 'US West'
+      };
+
+      return regions[input] || input;
+    };
+  })
+  .filter('roman', function()
+  {
+    return function(input)
+    {
+      var regions = {
+        '1': 'I',
+        '2': 'II',
+        '3': 'III',
+        '4': 'IV',
+        '5': 'V'
+      };
+
+      return regions[input] || input;
+    };
   });

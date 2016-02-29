@@ -1,24 +1,27 @@
 .sp__wrapper
   .container
+    .sp__header
+      .row
+        .col-md-8
+          h1 Rocket League Server Status
+        .col-md-4
+          .sp__mini-rank-form
+            form.sp__rank-form
+              .form-group
+                label.control-label Enter a Steam Profile URL
+                input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
+              button.btn.btn-primary.btn-block(ng-click="vm.router.goToProfile(vm.steamProfileUrl)")
+                | Get Ranks & Stats
     .row
-      .col-md-8
-        h1 Rocket League Server Status
       .col-md-4
-        .sp__mini-rank-form
-          form.sp__rank-form
-            .form-group
-              label.control-label Enter a Steam Profile URL
-              input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
-            button.btn.btn-primary.btn-block(ng-click="vm.router.goToProfile(vm.steamProfileUrl)")
-              | Get Ranks & Stats
-    .row
-      .col-md-4
-        table.table.table-responsive.sp__table
+        .sp__spinner(ng-if="!vm.regions")
+        table.table.table-responsive.sp__table(ng-if="vm.regions")
           thead
             tr
               th Region
               th Status
           tbody
-            tr(ng-repeat="region in vm.regions")
-              td {{ region.name }}
-              td {{ region.online }}
+            tr(ng-repeat="region in vm.regions | orderBy:'name'")
+              td {{ region.region | rlRegion }}
+              td
+                span.sp__indicator(ng-class="{'online': region.online, 'offline': !region.online}") {{ region.online ? 'Online' : 'Offline' }}

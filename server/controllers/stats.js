@@ -15,7 +15,7 @@ module.exports = {
 function getStat(req, res)
 {
   // Todo: get specific type of stat
-  psyonix.getPlayerStats(req.body.token, function(err, result)
+  psyonix.getPlayerStat(req.params.id, req.params.stat, function(err, result)
   {
     if (err)
     {
@@ -33,13 +33,36 @@ function getStat(req, res)
  */
 function getStats(req, res)
 {
-  psyonix.getPlayerStats(req.body.token, function(err, result)
-  {
-    if (err)
-    {
-      return swiftping.apiResponse('error', res, err);
-    }
+  var stats = ['Wins', 'Goals', 'MVPs', 'Saves', 'Shots', 'Assists'];
 
-    return swiftping.apiResponse('ok', res, result);
-  });
+  var promises = [];
+
+  stats.forEach(
+    function(stat)
+    {
+      promises.push(new Promise(
+        function(resolve, reject)
+        {
+          psyonix.getPlayerStat(req.params.id, stat,
+            function(err, result)
+            {
+              if (err)
+              {
+                reject(err);
+              }
+
+              resolve({name: result.LeaderboardID, value: result.Value});
+            }
+          )
+        }
+      ));
+    }
+  );
+
+  Promise.all(promises)
+    .then(function(results)
+    {
+      return swiftping.apiResponse('ok', res, results);
+    }
+  );
 }

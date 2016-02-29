@@ -1,18 +1,18 @@
 (function() {
   angular
     .module('app')
-    .factory('ApiSvc', function($http, $cacheFactory) {
+    .factory('ApiSvc', ['$http', '$cacheFactory', function($http, $cacheFactory) {
         'use strict';
 
         var cache = $cacheFactory('rank');
 
         return {
-          cache,
-          authorise,
-          getPlayerRanks,
-          getLeaderboard,
-          getStatus,
-          getStats
+          cache: cache,
+          authorise: authorise,
+          getPlayerRanks: getPlayerRanks,
+          getLeaderboard: getLeaderboard,
+          getStatus: getStatus,
+          getPlayerStats: getPlayerStats
         };
 
         function authorise(url)
@@ -32,12 +32,12 @@
 
         function getStatus(callback)
         {
-          return $http.get('/api/status/' + id);
+          return $http.get('/api/status/');
         }
 
-        function getStats(id, callback)
+        function getPlayerStats(id, callback)
         {
           return $http.get('/api/stats/' + id);
         }
-    });
+    }]);
 })();

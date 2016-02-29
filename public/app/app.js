@@ -1,6 +1,6 @@
 angular
   .module('app', ['rlrank-templates', 'ngRoute'])
-  .config(function($routeProvider, $locationProvider) {
+  .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
       'use strict';
 
       // Remove hashes from URL
@@ -27,4 +27,4 @@ angular
           controller: 'HomeController as vm',
           activeSection: 'home'
         });
-  });
+  }]);

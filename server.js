@@ -10,8 +10,15 @@ var cron = require('./server/services/cron.js');
   setInterval(
     function()
     {
-      console.log("Updating leaderboards..."); // INFO
-      cron.hourlyLeaderboards();
+      cron.serverStatus();
+    },
+    '60000'
+  );
+
+  setInterval(
+    function()
+    {
+      cron.leaderboards();
     },
     '3600000'
   );

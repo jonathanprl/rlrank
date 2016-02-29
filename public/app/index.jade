@@ -8,8 +8,6 @@ html
     link(rel="stylesheet", href="/css/base.css")
     //- endinject
     link(rel="stylesheet", href="/vendor/ng-scrollbar/dist/ng-scrollbar.min.css")
-    
-    script(async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
     script.
       !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
     script.
@@ -27,23 +25,36 @@ html
               | &copy; Jonnerz 2016
             .col-sm-8.text-right
               |  This website is not affiliated with <a href="psyonix.com">Psyonix</a>.
-    //- bower:js
-    script(src="/vendor/angular/angular.js")
-    script(src="/vendor/jquery/dist/jquery.js")
-    script(src="/vendor/angular-route/angular-route.js")
-    script(src="/vendor/bootstrap/dist/js/bootstrap.js")
-    //- endinject
-    
-    script(src="/app/rlrank-templates.js")
-    
+            
     //- app:js
+
+    script(src="/vendor/angular/angular.js")
+
+    script(src="/vendor/jquery/dist/jquery.js")
+
+    script(src="/vendor/angular-route/angular-route.js")
+
+    script(src="/vendor/bootstrap/dist/js/bootstrap.js")
+
     script(src="/app/app.js")
-    script(src="/app/home/home.ctrl.js")
+
     script(src="/app/leaderboard/leaderboard.ctrl.js")
+
+    script(src="/app/home/home.ctrl.js")
+
     script(src="/app/profile/profile.ctrl.js")
+
     script(src="/app/status/status.ctrl.js")
+
     script(src="/app/_core/api.svc.js")
+
     script(src="/app/_core/filters.js")
+
     script(src="/app/_core/route.svc.js")
+
+    script(src="/js/rlrank-templates.js")
+
     //- endinject
+    
+    script(async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
   

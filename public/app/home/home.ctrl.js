@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', '$cacheFactory', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
         'use strict';
 
         var vm = this;
@@ -47,5 +47,5 @@
             }
           );
         }
-    });
+    }]);
 })();

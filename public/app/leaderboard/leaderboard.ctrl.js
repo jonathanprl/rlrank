@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('LeaderboardController', function(ApiSvc, RouteSvc) {
+    .controller('LeaderboardController', ['ApiSvc', 'RouteSvc', function(ApiSvc, RouteSvc) {
         'use strict';
 
         var vm = this;
@@ -31,5 +31,5 @@
           getLeaderboard(12);
           getLeaderboard(13);
         }
-    });
+    }]);
 })();
