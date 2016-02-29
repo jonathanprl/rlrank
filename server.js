@@ -11,6 +11,7 @@ var cron = require('./server/services/cron.js');
     function()
     {
       cron.serverStatus();
+      cron.population();
     },
     '60000'
   );

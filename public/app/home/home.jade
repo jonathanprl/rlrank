@@ -13,6 +13,16 @@
             button.btn.btn-primary.btn-block(ng-click="vm.goToProfile(vm.steamProfileUrl)")
               | Get Ranks & Stats
               span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+      h2 Players Online: {{ vm.totalPopulation }}
+      //- table.table.table-responsive.sp__table.profile__stats
+      //-   thead
+      //-     tr
+      //-       th(ng-repeat="playlist in vm.playlistPopulation")
+      //-         | {{ playlist.playlist | rlPlaylist }}
+      //-   tbody
+      //-     tr
+      //-       td(ng-repeat="playlist in vm.playlistPopulation")
+      //-        | {{ playlist.players }}
     .sp__advert.text-center
       ins.adsbygoogle(style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-1249925481918023" data-ad-slot="3603457193")
         script.

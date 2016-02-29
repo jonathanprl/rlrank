@@ -12,6 +12,7 @@
           getPlayerRanks: getPlayerRanks,
           getLeaderboard: getLeaderboard,
           getStatus: getStatus,
+          getPopulation: getPopulation,
           getPlayerStats: getPlayerStats
         };
 
@@ -33,6 +34,11 @@
         function getStatus(callback)
         {
           return $http.get('/api/status/');
+        }
+
+        function getPopulation(callback)
+        {
+          return $http.get('/api/population');
         }
 
         function getPlayerStats(id, callback)

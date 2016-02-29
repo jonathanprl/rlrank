@@ -12,6 +12,7 @@
         (function()
         {
           getAllLeaderboards();
+          getPopulation();
         })();
 
         function getLeaderboard(playlist)
@@ -33,6 +34,24 @@
           getLeaderboard(11);
           getLeaderboard(12);
           getLeaderboard(13);
+        }
+
+        function getPopulation()
+        {
+          ApiSvc.getPopulation().then(
+            function(response)
+            {
+              vm.playlistPopulation = response.data.results;
+
+              vm.totalPopulation = 0;
+              angular.forEach(vm.playlistPopulation,
+                function(playlist)
+                {
+                  vm.totalPopulation += parseInt(playlist.players);
+                }
+              );
+            }
+          )
         }
 
         function goToProfile(url)

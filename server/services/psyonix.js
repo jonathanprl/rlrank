@@ -11,7 +11,8 @@ module.exports = {
   getPlayerStat,
   getServers,
   refreshToken,
-  getLeaderboard
+  getLeaderboard,
+  getPopulation
 };
 
 function auth(req, res)
@@ -112,7 +113,7 @@ function getServers(callback)
 function getPopulation(callback)
 {
   var procData = {
-    'Proc[]': 'GetGameServerPingList'
+    'Proc[]': 'GetPopulationAllPlaylists'
   };
 
   callProc('https://psyonix-rl.appspot.com/Population/GetPopulation/', procData, function(err, data)

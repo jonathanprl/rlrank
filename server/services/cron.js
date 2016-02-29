@@ -4,7 +4,8 @@ var ping = require('ping');
 
 module.exports = {
   leaderboards,
-  serverStatus
+  serverStatus,
+  population
 };
 
 function leaderboards()
@@ -16,7 +17,7 @@ function leaderboards()
 
   playlists.forEach(
     function(playlist)
-    {
+    { 
       psyonix.getLeaderboard(playlist, function(err, results)
       {
         if (err)
@@ -58,6 +59,31 @@ function serverStatus()
                 console.log("Updated server status from Psyonix", region); // info
               }
             );
+          }
+        );
+      }
+    );
+  });
+}
+
+function population()
+{
+  console.log("Updating population..."); // info
+
+  psyonix.getPopulation(function(err, playlists)
+  {
+    if (err)
+    {
+      return swiftping.apiResponse('error', res, err);
+    }
+
+    playlists.forEach(
+      function(playlist)
+      {
+        db.upsert('population', {playlist: playlist.PlaylistID}, {playlist: playlist.PlaylistID, players: playlist.NumPlayers},
+          function(err, doc)
+          {
+            console.log("Updated population from Psyonix", playlist); // info
           }
         );
       }

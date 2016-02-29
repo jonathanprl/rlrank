@@ -37,13 +37,15 @@ function getStatus(req, res)
  */
 function getPopulation(req, res)
 {
-  psyonix.getPopulation(function(err, result)
-  {
-    if (err)
+  db.find('population',
+    function(err, doc)
     {
-      return swiftping.apiResponse('error', res, err);
-    }
+      if (err)
+      {
+        return swiftping.apiResponse('error', res, err);
+      }
 
-    return swiftping.apiResponse('ok', res, result);
-  });
+      return swiftping.apiResponse('ok', res, doc);
+    }
+  );
 }

@@ -22,6 +22,8 @@ module.exports = function(app)
 
   app.get('/api/status', status.getStatus);
 
+  app.get('/api/population', status.getPopulation);
+
   app.get('/views/*', function(req, res)
   {
     res.render('../public/views/' + req.params[0]);
