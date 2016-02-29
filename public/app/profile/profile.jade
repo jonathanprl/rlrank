@@ -1,6 +1,6 @@
 .sp__wrapper
-  .sp__spinner(ng-if="!vm.playlists")
-  .container(ng-if="vm.playlists")
+  .sp__spinner(ng-hide="vm.playlists")
+  .container(ng-show="vm.playlists")
     .row
       .col-md-4.col-md-offset-1
         h1 {{ vm.profile.personaname }}
@@ -22,7 +22,7 @@
               th
                 | MMR
           tbody
-            tr(ng-repeat="playlist in vm.playlists" ng-if="playlist.Playlist")
+            tr(ng-repeat="playlist in vm.playlists")
               td 
                 span {{ playlist.Playlist | rlPlaylist }}
               td 
@@ -48,11 +48,13 @@
         .sp__share
           h4 Share
           .row
-            .col-md-8
+            .col-md-7
               .form-group
                 input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
-            .col-md-4
-            a.twitter-share-button(ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague" target="_blank") Tweet
-            a(target="_blank" ng-href="http://www.facebook.com/sharer/sharer.php?u={{ vm.shareUrl }}") Facebook
+            .col-md-5
+              .sp__share-btn
+                | <a class="twitter-share-button" ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague">Tweet</a>
+              .sp__share-btn
+                | <div class="fb-share-button" data-href="{{ vm.shareUrl }}" data-layout="button"></div>
         hr
         

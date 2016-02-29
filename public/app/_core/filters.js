@@ -6,6 +6,11 @@ angular.module('app')
     return function(input)
     {
       var playlists = {
+        '0': 'Normal (All)',
+        '1': '1v1 (Normal)',
+        '2': '2v2 (Normal)',
+        '3': '3v3 (Normal)',
+        '4': '4v4 (Normal)',
         '10': '1v1',
         '11': '2v2',
         '12': '3v3 Solo',

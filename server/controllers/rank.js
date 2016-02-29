@@ -29,7 +29,29 @@ function getPlayerRanks(req, res)
       return swiftping.apiResponse('error', res, err);
     }
 
-    db.upsert('ranks', {steamId: req.params.id}, {$set: {playlists: results}},
+    var filteredResults = [];
+
+    results.forEach(
+      function(result)
+      {
+        if (result.Playlist === '0')
+        {
+          result.MMR = result.Mu - (3 * result.Sigma);
+        }
+
+        filteredResults.push({
+          playlist: result.Playlist,
+          mu: result.Mu,
+          sigma: result.Sigma,
+          tier: result.Tier,
+          division: result.Division,
+          matches_played: result.MatchesPlayed,
+          mmr: result.MMR
+          });
+      }
+    );
+
+    db.upsert('ranks', {steamId: req.params.id}, {$set: {playlists: filteredResults}},
       function(err, doc)
       {
 
