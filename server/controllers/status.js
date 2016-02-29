@@ -17,7 +17,7 @@ module.exports = {
  */
 function getStatus(req, res)
 {
-  db.find('status',
+  db.findWhere('status', {}, { _id: 0 },
     function(err, doc)
     {
       if (err)
@@ -37,7 +37,7 @@ function getStatus(req, res)
  */
 function getPopulation(req, res)
 {
-  db.find('population',
+  db.findWhere('population', {}, { _id: 0 },
     function(err, doc)
     {
       if (err)

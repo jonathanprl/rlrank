@@ -38,9 +38,9 @@ function find(collectionName, callback)
  * @param {string} collectionName - MongoDB collection name
  * @param {function} callback - Success or error callback function
  */
-function findWhere(collectionName, query, callback)
+function findWhere(collectionName, query, projection, callback)
 {
-  mongodb.collection(collectionName).find(query, function (err, docs)
+  mongodb.collection(collectionName).find(query, projection, function (err, docs)
   {
     if (err)
     {

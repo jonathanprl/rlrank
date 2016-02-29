@@ -19,21 +19,23 @@
         .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
           h3 {{ playlist | rlPlaylist }}
           table.table.table-responsive.sp__table
-            tr
-              td
-                strong Pos
-              td
-                strong Rank
-              td
-                strong Username
-              td
-                strong MMR
-            tr(ng-repeat="player in leaderboard")
-              td
-                strong {{ '#' + ($index + 1) }}
-              td
-                img.img-responsive(ng-src="/img/ranks/{{ player.Value }}_w.png" ng-title="player.Value | rlPlaylist")
-              td
-                a(ng-if="player.UserName" ng-title="player.UserName" ng-href="/{{ player.SteamID }}") {{ player.UserName }}
-              td
-                span(ng-if="player.MMR") {{ player.MMR }}
+            thead
+              tr
+                th
+                  a(ng-click="vm.sortLeaderboard(playlist, '$index')" href="#") Pos
+                th
+                  a(ng-click="vm.sortLeaderboard(playlist, 'Value')" href="#") Rank
+                th
+                  a(ng-click="vm.sortLeaderboard(playlist, 'UserName')" href="#") Username
+                th
+                  a(ng-click="vm.sortLeaderboard(playlist, 'MMR')" href="#") MMR
+            tbody
+              tr(ng-repeat="player in leaderboard | orderBy:vm.sort[playlist]")
+                td
+                  strong {{ '#' + ($index + 1) }}
+                td
+                  img.img-responsive(ng-src="/img/ranks/{{ player.Value }}_w.png" ng-title="player.Value | rlPlaylist")
+                td
+                  a(ng-if="player.UserName" ng-title="player.UserName" ng-href="/{{ player.SteamID }}") {{ player.UserName }}
+                td
+                  span(ng-if="player.MMR") {{ player.MMR }}

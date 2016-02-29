@@ -8,6 +8,8 @@
 
         vm.goToProfile = goToProfile;
         vm.leaderboards = {};
+        vm.sort = {};
+        vm.sortLeaderboard = sortLeaderboard;
 
         (function()
         {
@@ -16,6 +18,7 @@
 
         function getLeaderboard(playlist)
         {
+          vm.sort[playlist] = "";
           ApiSvc.getLeaderboard(playlist)
             .then(function(response)
             {
@@ -43,6 +46,20 @@
               vm.showLoader = false;
             }
           );
+        }
+
+        function sortLeaderboard(playlist, column)
+        {
+          if (vm.sort[playlist] == column && vm.sort[playlist].indexOf('-') === -1)
+          {
+            vm.sort[playlist] = '-' + column;
+          }
+          else
+          {
+            vm.sort[playlist] = column;
+          }
+
+          console.log(vm.sort);
         }
     }]);
 })();

@@ -22,29 +22,9 @@ function getLeaderboard(req, res)
         return swiftping.apiResponse('error', res, err);
       }
 
-      if (doc)
-      {
-        return swiftping.apiResponse('ok', res, doc.leaderboard);
-      }
+      console.log(doc);
 
-      console.log("No leaderboard found in DB, fetching from Psyonix..."); // warning
-
-      psyonix.getLeaderboard(req.params.playlist, function(err, results)
-      {
-        if (err)
-        {
-          return swiftping.apiResponse('error', res, err);
-        }
-
-        db.upsert('leaderboards', {playlist: req.params.playlist}, {$set: {leaderboard: results}},
-          function(err, doc)
-          {
-
-          }
-        );
-
-        return swiftping.apiResponse('ok', res, results);
-      });
+      return swiftping.apiResponse('ok', res, doc.leaderboard);
     }
   );
 }

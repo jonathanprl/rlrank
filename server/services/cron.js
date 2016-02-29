@@ -17,7 +17,7 @@ function leaderboards()
 
   playlists.forEach(
     function(playlist)
-    { 
+    {
       psyonix.getLeaderboard(playlist, function(err, results)
       {
         if (err)
@@ -25,7 +25,23 @@ function leaderboards()
           console.log("Could not fetch leaderboard from Psyonix -", playlist, err); // error
         }
 
-        db.upsert('leaderboards', {playlist: playlist}, {playlist: playlist, leaderboard: results},
+        var filteredResults = [];
+
+        results.forEach(
+          function(result, index)
+          {
+            filteredResults[index] = {
+              position: index + 1,
+              username: result.UserName,
+              mmr: result.MMR,
+              tier: result.Value,
+              platform: result.Platform,
+              steamid: result.SteamID
+            };
+          }
+        );
+
+        db.upsert('leaderboards', {playlist: playlist}, {playlist: playlist, leaderboard: filteredResults},
           function(err, doc)
           {
             console.log("Updated leaderboard from Psyonix -", playlist); // info
@@ -56,7 +72,7 @@ function serverStatus()
             db.upsert('status', {region: region.name}, {region: region.name, online: region.online},
               function(err, doc)
               {
-                console.log("Updated server status from Psyonix", region); // info
+                console.log("Updated server status from Psyonix -", region); // info
               }
             );
           }
