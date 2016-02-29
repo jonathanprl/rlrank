@@ -7,7 +7,9 @@
         var vm = this;
 
         vm.goToProfile = goToProfile;
+        vm.increaseLeaderboard = increaseLeaderboard;
         vm.leaderboards = {};
+        vm.limit = 50;
         vm.sort = {};
         vm.sortLeaderboard = sortLeaderboard;
 
@@ -58,8 +60,14 @@
           {
             vm.sort[playlist] = column;
           }
+        }
 
-          console.log(vm.sort);
+        function increaseLeaderboard()
+        {
+          if (vm.limit < 200)
+          {
+            vm.limit += 50;
+          }
         }
     }]);
 })();

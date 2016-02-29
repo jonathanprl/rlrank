@@ -22,20 +22,22 @@
             thead
               tr
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, '$index')" href="#") Pos
+                  a(ng-click="vm.sortLeaderboard(playlist, 'position')" href="#") Pos
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, 'Value')" href="#") Rank
+                  a(ng-click="vm.sortLeaderboard(playlist, 'tier')" href="#") Rank
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, 'UserName')" href="#") Username
+                  a(ng-click="vm.sortLeaderboard(playlist, 'username')" href="#") Username
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, 'MMR')" href="#") MMR
+                  a(ng-click="vm.sortLeaderboard(playlist, 'mmr')" href="#") MMR
             tbody
-              tr(ng-repeat="player in leaderboard | orderBy:vm.sort[playlist]")
+              tr(ng-repeat="player in leaderboard | limitTo: vm.limit | orderBy: vm.sort[playlist]")
                 td
-                  strong {{ '#' + ($index + 1) }}
+                  strong {{ '#' + player.position }}
                 td
-                  img.img-responsive(ng-src="/img/ranks/{{ player.Value }}_w.png" ng-title="player.Value | rlPlaylist")
+                  img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
                 td
-                  a(ng-if="player.UserName" ng-title="player.UserName" ng-href="/{{ player.SteamID }}") {{ player.UserName }}
+                  a(ng-if="player.username" ng-title="player.username" ng-href="/{{ player.steamid }}") {{ player.username }}
                 td
-                  span(ng-if="player.MMR") {{ player.MMR }}
+                  span(ng-if="player.mmr") {{ player.mmr }}
+                  
+      button.btn.btn-info.btn-block(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More

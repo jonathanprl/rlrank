@@ -33,7 +33,7 @@ function leaderboards()
             filteredResults[index] = {
               position: index + 1,
               username: result.UserName,
-              mmr: result.MMR,
+              mmr: parseFloat(result.MMR),
               tier: result.Value,
               platform: result.Platform,
               steamid: result.SteamID

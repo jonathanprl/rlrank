@@ -36,7 +36,7 @@ function getPlayerRanks(req, res)
       {
         if (result.Playlist === '0')
         {
-          result.MMR = result.Mu - (3 * result.Sigma);
+          result.MMR = (result.Mu - (3 * result.Sigma)).toFixed(4);
         }
 
         filteredResults.push({
@@ -46,7 +46,7 @@ function getPlayerRanks(req, res)
           tier: result.Tier,
           division: result.Division,
           matches_played: result.MatchesPlayed,
-          mmr: result.MMR
+          mmr: parseFloat(result.MMR)
           });
       }
     );

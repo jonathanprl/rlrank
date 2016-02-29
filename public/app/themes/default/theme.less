@@ -12,7 +12,6 @@ body {
   background: url('/img/bg.jpg') no-repeat #000;
   background-size: cover;
   font-weight: 300;
-  background-size: 100%;
 }
 
 .wrapper {
@@ -89,17 +88,37 @@ h1,h2,h3,h4,h5,h6 {
     margin-right: 10px;
   }
 }
- 
+
 footer {
   position: relative;
-	margin-top: -50px; /* negative value of footer height */
+	margin-top: -20px;
 	height: 50px;
 	clear:both;
-  background-color: #fff;
+  background-color: #45B29D;
 }
 
 .sp__footer {
   padding: 15px;
+  color: #fff;
+
+  a {
+    color: #284842;
+  }
+
+  a:focus, a:hover {
+    color: #1c2e2b;
+    text-decoration: underline;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
 }
 
 .sp__spinner {

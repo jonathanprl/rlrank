@@ -13,16 +13,13 @@ module.exports = {
  */
 function getLeaderboard(req, res)
 {
-
-  db.findOne('leaderboards', {playlist: req.params.playlist},
+  db.findOne('leaderboards', {playlist: parseInt(req.params.playlist)},
     function(err, doc)
     {
       if (err)
       {
         return swiftping.apiResponse('error', res, err);
       }
-
-      console.log(doc);
 
       return swiftping.apiResponse('ok', res, doc.leaderboard);
     }

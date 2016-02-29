@@ -1,7 +1,7 @@
 .sp__wrapper
   .container
     .sp__hero
-      h1 View & share your Rocket League rank
+      h1 Find out your Rocket League MMR!
       .row
         .col-md-4.col-md-offset-4
           form.sp__rank-form
@@ -14,15 +14,15 @@
               | Get Ranks & Stats
               span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
       h2 Players Online: {{ vm.totalPopulation }}
-      table.table.table-responsive.sp__table.profile__stats
-        thead
-          tr
-            th(ng-repeat="playlist in vm.playlistPopulation | orderBy:playlist")
-              | {{ playlist.playlist | rlPlaylist }}
-        tbody
-          tr
-            td(ng-repeat="playlist in vm.playlistPopulation")
-             | {{ playlist.players }}
+      //- table.table.table-responsive.sp__table.profile__stats
+      //-   thead
+      //-     tr
+      //-       th(ng-repeat="playlist in vm.playlistPopulation | orderBy:playlist")
+      //-         | {{ playlist.playlist | rlPlaylist }}
+      //-   tbody
+      //-     tr
+      //-       td(ng-repeat="playlist in vm.playlistPopulation")
+      //-        | {{ playlist.players }}
     .sp__leaderboards
       h2 Global Leaderboards
       .row
@@ -40,13 +40,13 @@
                 strong MMR
             tr(ng-repeat="player in leaderboard | limitTo:10")
               td
-                strong {{ '#' + ($index + 1) }}
+                strong {{ '#' + player.position }}
               td
-                img.img-responsive(ng-src="/img/ranks/{{ player.Value }}_w.png" title="{{ player.Value | rlTier }}")
+                img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
               td
-                a(ng-if="player.UserName" title="{{ player.UserName }}" ng-href="/{{ player.SteamID }}") {{ player.UserName }}
+                a(ng-if="player.username" title="{{ player.username }}" ng-href="/{{ player.steamid }}") {{ player.username }}
               td
-                span(ng-if="player.MMR") {{ player.MMR }}
+                span(ng-if="player.mmr") {{ player.mmr }}
                 
     .sp__advert.text-center
       ins.adsbygoogle(style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-1249925481918023" data-ad-slot="3603457193")
