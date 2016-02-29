@@ -4,11 +4,11 @@
       .row
         .col-md-4
           h1 About
-        .col-md-5
+        .col-md-4
           .sp__advert
             ins.adsbygoogle(style="display:block" data-ad-client="ca-pub-1249925481918023" data-ad-slot="5056510793" data-ad-format="auto")
-        .col-md-3
-          .sp__mini-rank-form
+        .col-md-4
+          .sp__mini-rank-form.hidden-xs.hidden-sm
             form.sp__rank-form
               .form-group
                 label.control-label Enter a Steam Profile URL
@@ -20,4 +20,16 @@
                 span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
     .row
       .col-md-4
-        | Coming soon.
+        .panel
+          .panel-body
+            | Coming soon.
+    .sp__mini-rank-form.visible-xs.visible-sm
+      form.sp__rank-form
+        .form-group
+          label.control-label Enter a Steam Profile URL
+          input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
+          p.help-block(ng-if="vm.profileError")
+            | {{ vm.profileError }}
+        button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
+          | Get Ranks & Stats
+          span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")

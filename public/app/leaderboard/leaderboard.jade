@@ -1,22 +1,26 @@
 .sp__wrapper
   .container
     .row
-      .col-md-8
+      .col-md-4
         h1 Global Leaderboards
+        span.sp__sub-header Updated every hour
+      .col-md-4
+        .sp__advert
+          ins.adsbygoogle(style="display:block" data-ad-client="ca-pub-1249925481918023" data-ad-slot="5056510793" data-ad-format="auto")
       .col-md-4
         .sp__mini-rank-form
           form.sp__rank-form
             .form-group
               label.control-label Enter a Steam Profile URL
-              input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
+              input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
               p.help-block(ng-if="vm.profileError")
                 | {{ vm.profileError }}
-            button.btn.btn-primary.btn-block(ng-click="vm.goToProfile(vm.steamProfileUrl)")
+            button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
               | Get Ranks & Stats
               span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
     .sp__leaderboards
       .row
-        .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
+        .col-lg-3.col-md-4.col-sm-6(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
           h3 {{ playlist | rlPlaylist }}
           table.table.table-responsive.sp__table
             thead
@@ -40,4 +44,6 @@
                 td
                   span(ng-if="player.mmr") {{ player.mmr }}
                   
-      button.btn.btn-info.btn-block(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More
+          button.btn.btn-info.btn-block.visible-xs.visible-sm(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More
+                  
+      button.btn.btn-info.btn-block.hidden-xs.hidden-sm(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More

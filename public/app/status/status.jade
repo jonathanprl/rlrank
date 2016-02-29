@@ -2,17 +2,21 @@
   .container
     .sp__header
       .row
-        .col-md-8
-          h1 Rocket League Server Status
         .col-md-4
-          .sp__mini-rank-form
+          h1 Server Status
+          span.sp__sub-header Status of the official Rocket League servers
+        .col-md-4
+          .sp__advert
+            ins.adsbygoogle(style="display:block" data-ad-client="ca-pub-1249925481918023" data-ad-slot="5056510793" data-ad-format="auto")
+        .col-md-4
+          .sp__mini-rank-form.hidden-xs.hidden-sm
             form.sp__rank-form
               .form-group
                 label.control-label Enter a Steam Profile URL
-                input.form-control(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
+                input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
                 p.help-block(ng-if="vm.profileError")
                   | {{ vm.profileError }}
-              button.btn.btn-primary.btn-block(ng-click="vm.goToProfile(vm.steamProfileUrl)")
+              button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
                 | Get Ranks & Stats
                 span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
     .row
@@ -28,3 +32,13 @@
               td {{ region.region | rlRegion }}
               td
                 span.sp__indicator(ng-class="{'online': region.online, 'offline': !region.online}") {{ region.online ? 'Online' : 'Offline' }}
+    .sp__mini-rank-form.visible-xs.visible-sm
+      form.sp__rank-form
+        .form-group
+          label.control-label Enter a Steam Profile URL
+          input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
+          p.help-block(ng-if="vm.profileError")
+            | {{ vm.profileError }}
+        button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
+          | Get Ranks & Stats
+          span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
