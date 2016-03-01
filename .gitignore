@@ -5,3 +5,4 @@ public/css/
 public/js/
 public/app/index.jade
 public/app/rlrank-templates.js
+config.js
