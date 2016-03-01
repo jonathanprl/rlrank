@@ -27,7 +27,7 @@ angular
           controller: 'PagesController as vm',
           activeSection: 'contact'
         })
-        .when('/:steam', {
+        .when('/u/:steam', {
           templateUrl: '/views/profile/profile',
           controller: 'ProfileController as vm',
           activeSection: 'profile'

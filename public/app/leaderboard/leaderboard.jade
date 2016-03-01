@@ -40,7 +40,7 @@
                 td
                   img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
                 td
-                  a(ng-if="player.username" ng-title="player.username" ng-href="/{{ player.steamid }}") {{ player.username }}
+                  a(ng-if="player.username" ng-title="player.username" ng-href="/u/{{ player.steamid }}") {{ player.username }}
                 td
                   span(ng-if="player.mmr") {{ player.mmr }}
                   
