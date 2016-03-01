@@ -48,6 +48,41 @@ function getDetailsFromURL(url, callback)
     return callback({code: "invalid_url",message: "URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>"});
   }
 
+  db.findOneWhere('steamProfiles', {url: url}, { _id: 0 },
+    function(err, doc)
+    {
+      if (err)
+      {
+        return callback({code: "not_found", message: "Steam profile missing - could not be retrieved."});
+      }
+
+      console.log(doc);
+
+      if (!doc)
+      {
+        sniffFromSteam(url, function(err, result)
+        {
+          if (err)
+          {
+            return callback(err);
+          }
+
+          callback(null, result)
+        });
+      }
+      else
+      {
+        console.log(doc);
+        callback(null, doc.profileData);
+      }
+    }
+  );
+}
+
+function sniffFromSteam(url, callback)
+{
+  console.log("[STEAM] Getting Steam ID from", url); // INFO
+
   rest.get(url)
     .on('complete', function(result)
     {
@@ -57,18 +92,29 @@ function getDetailsFromURL(url, callback)
 
       if (!targetScript)
       {
+        console.log("[STEAM] Steam ID could not be retrieved from", url); // INFO
         callback({code: "not_found",message: "No Steam profile could be found"});
         return false;
       }
 
-      targetScript = targetScript.split('g_rgProfileData =');console.log(targetScript);
-      targetScript = targetScript[1].split('"};');console.log(targetScript);
+      targetScript = targetScript.split('g_rgProfileData =');
+      targetScript = targetScript[1].split('"};');
       targetScript = targetScript[0].trim();
       targetScript += "\"}";
 
       var profileData = JSON.parse(targetScript);
 
       callback(null, profileData);
+
+      db.upsert('steamProfiles', {url: url}, {url: url, profileData: profileData},
+        function(err, doc)
+        {
+          if (err)
+          {
+            console.log("[STEAM] Could not save profile to database", url); // ERROR
+          }
+        }
+      );
     }
   );
 }

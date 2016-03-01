@@ -2,15 +2,16 @@ var config = require('../config');
 var mongodb = require('mongojs')(config.mongodb.connection);
 
 module.exports = {
-  find: find,
-  findWhere: findWhere,
-  findOne: findOne,
-  insert: insert,
-  upsert: upsert,
-  update: update,
-  modify: modify,
-  remove: remove,
-  drop: drop
+  find,
+  findWhere,
+  findOne,
+  findOneWhere,
+  insert,
+  upsert,
+  update,
+  modify,
+  remove,
+  drop
 };
 
 /**
@@ -71,6 +72,28 @@ function findOne(collectionName, query, callback)
 
     callback(null, docs);
   });
+}
+
+/**
+ * Finds record in the collection where
+ * @param {string} collectionName - MongoDB collection name
+ * @param {function} callback - Success or error callback function
+ */
+function findOneWhere(collectionName, query, projection, callback)
+{
+  mongodb.collection(collectionName).findOne(query, projection,
+    function (err, docs)
+    {
+      if (err)
+      {
+        console.log(err);
+        callback(err, null);
+        return;
+      }
+
+      callback(null, docs);
+    }
+  );
 }
 
 /**
