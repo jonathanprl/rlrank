@@ -19,11 +19,11 @@
 
               if (url.indexOf('/id/') > -1)
               {
-                $location.path(url.split('/').pop());
+                $location.path('u/' + url.split('/').pop());
               }
               else
               {
-                $location.path(profile.steamid);
+                $location.path('u/' + profile.steamid);
               }
             },
             function(err)
