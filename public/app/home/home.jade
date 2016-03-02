@@ -38,7 +38,7 @@
                 strong Username
               td
                 strong MMR
-            tr(ng-repeat="player in leaderboard | limitTo:10 | orderBy:mmr")
+            tr(ng-repeat="player in leaderboard | limitTo:10 | orderBy:'-mmr'")
               td
                 strong {{ '#' + player.position }}
               td

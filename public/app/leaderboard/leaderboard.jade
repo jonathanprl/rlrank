@@ -34,7 +34,7 @@
                 th
                   a(ng-click="vm.sortLeaderboard(playlist, 'mmr')" href="#") MMR
             tbody
-              tr(ng-repeat="player in leaderboard | limitTo: vm.limit | orderBy: vm.sort[playlist]")
+              tr(ng-repeat="player in leaderboard | orderBy: vm.sort[playlist] | limitTo: vm.limit")
                 td
                   strong {{ '#' + player.position }}
                 td
