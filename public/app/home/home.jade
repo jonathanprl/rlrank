@@ -38,13 +38,13 @@
                 strong Username
               td
                 strong MMR
-            tr(ng-repeat="player in leaderboard | limitTo:10")
+            tr(ng-repeat="player in leaderboard | limitTo:10 | orderBy:mmr")
               td
                 strong {{ '#' + player.position }}
               td
                 img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
               td
-                a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.steamid }}") {{ player.username }}
+                a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
               td
                 span(ng-if="player.mmr") {{ player.mmr }}
                 

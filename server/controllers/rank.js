@@ -52,6 +52,17 @@ function getPlayerRanks(req, res)
       }
     );
 
+    if (!results)
+    {
+      filteredResults = [
+        {playlist: 0, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+        {playlist: 10, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+        {playlist: 11, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+        {playlist: 12, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+        {playlist: 13, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0}
+      ];
+    }
+
     db.upsert('ranks', {rlrank_id: req.params.id}, {$set: {playlists: filteredResults}},
       function(err, doc)
       {

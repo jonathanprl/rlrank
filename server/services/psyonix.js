@@ -18,36 +18,46 @@ module.exports = {
   getPopulation
 };
 
+// LogoutUser
+
 function auth(req, res)
 {
-  if (req.body.platform == 'steam')
+  if (req.body.url.indexOf('steamcommunity.com') === -1 && /[A-Za-z0-9\-\_]$/g.test(req.body.url))
   {
-    steam.getDetailsFromURL(req.body.url, function(err, steamProfile)
-    {
-      if (err)
-      {
-          return res.status(500).send(err);
-      }
+    console.log("PSN User... Skipping steam"); // INFO;
 
-      res.send({
-        profile: {
-          steam_url: steamProfile.url,
-          steam_id: steamProfile.steamid,
-          rlrank_id: steamProfile.steamid,
-          username: steamProfile.personaname
-        }
-      });
+    return res.send({
+      profile: {
+        steam_url: null,
+        steam_id: null,
+        rlrank_id: req.body.url,
+        username: req.body.url,
+        platform: 'PSN'
+      }
     });
   }
-  else
+  else if (req.body.url.indexOf('steamcommunity.com') === -1 && !/[A-Za-z0-9\-\_]$/g.test(req.body.url))
   {
+    return res.status(500).send({code: "invalid_psn", message: "Invalid PSN username."});
+  }
+
+  steam.getDetailsFromURL(req.body.url, function(err, steamProfile)
+  {
+    if (err)
+    {
+        return res.status(500).send(err);
+    }
+
     res.send({
       profile: {
-        rlrank_id: req.body.url,
-        username: req.body.url
+        steam_url: steamProfile.url,
+        steam_id: steamProfile.steamid,
+        rlrank_id: steamProfile.steamid,
+        username: steamProfile.personaname,
+        platform: 'Steam'
       }
     });
-  }
+  });
 }
 
 // 1v1:10, 2v2:11, 3v3S:12, 3v3:13
@@ -63,9 +73,12 @@ function getPlayerRanks(id, platform, callback)
       'P0P[]': id
     };
   }
-  else
+  else if (platform == 'PSN')
   {
-    procData = 'Proc[]=GetSkillLeaderboardValueForUserPSN&P0P[]=' + id + '&P0P[]=10';
+    procData = {
+      'Proc[]': 'GetPlayerSkillPS4',
+      'P0P[]': id
+    };
   }
 
   callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
@@ -74,7 +87,6 @@ function getPlayerRanks(id, platform, callback)
     {
       return callback(err);
     }
-    console.log(data);
 
     var data = parseResults(data);
     callback(null, data);
@@ -102,7 +114,16 @@ function getLeaderboard(playlist, callback)
 
 function getPlayerStat(id, platform, stat, callback)
 {
-  var procData = 'Proc[]=GetLeaderboardValueForUser' + platform + '&P0P[]=' + id + '&P0P[]=' + stat;
+  var procData;
+
+  if (platform == 'Steam')
+  {
+    procData = 'Proc[]=GetLeaderboardValueForUser' + platform + '&P0P[]=' + id + '&P0P[]=' + stat;
+  }
+  else if (platform == 'PSN')
+  {
+    procData = 'Proc[]=GetLeaderboardValueForUserPS4&P0P[]=' + id + '&P0P[]=' + stat;
+  }
 
   callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
   {
@@ -111,6 +132,9 @@ function getPlayerStat(id, platform, stat, callback)
       return callback(err);
     }
 
+
+    console.log(procData);
+    console.log(data);
     var data = parseResults(data);
     callback(null, data[0]);
   });

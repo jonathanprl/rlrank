@@ -12,29 +12,25 @@
         vm.shareUrl = $location.absUrl();
         vm.router = RouteSvc;
 
-        (function()
-        {
-          if (!isNaN(parseFloat($routeParams.rlrank_id)) && isFinite($routeParams.rlrank_id) && $routeParams.rlrank_id.length == 17)
-          {
-            authorise($routeParams.rlrank_id, 'Steam');
-          }
-          else
-          {
-            authorise($routeParams.rlrank_id, 'PSN');
-          }
-        })();
+        authorise($routeParams.rlrank_id);
 
-        function authorise(id, platform)
+        function authorise(input)
         {
-          ApiSvc.authorise(id, platform)
-            .then(function(response)
-            {
-              vm.profile = response.data.profile;
-              getPlayerRanks(id, platform);
-              getPlayerStats(id, platform);
-              // getPlayerRating(vm.profile.rlrank_id, platform);
-            }
-          );
+          ApiSvc.authorise(input)
+            .then(
+              function(response)
+              {
+                vm.profile = response.data.profile;
+                getPlayerRanks(vm.profile.rlrank_id, vm.profile.platform);
+                getPlayerStats(vm.profile.rlrank_id, vm.profile.platform);
+                // getPlayerRating(vm.profile.rlrank_id, platform);
+              })
+            .catch(
+              function(err)
+              {
+                $location.path('/');
+              }
+            );
         }
 
         function getPlayerRanks(id, platform)

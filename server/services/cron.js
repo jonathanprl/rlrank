@@ -28,46 +28,56 @@ function leaderboards()
         var leadersPSN = [];
         var leaders = [];
 
+        var filteredResults = [];
+
         results.forEach(
           function(result, index)
           {
-            if (result.Platform == 'Steam')
-            {
-              leadersSteam.push(result.SteamID);
-            }
-            else
-            {
-              leadersPSN.push(result.UserName);
-            }
-
-            if ('Value' in result)
-            {
-              leaders.push({
-                username: result.UserName,
-                mmr: parseFloat(result.MMR),
-                tier: result.Value,
-                platform: result.Platform,
-                rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
-              });
-            }
+            filteredResults.push({
+              username: result.UserName,
+              mmr: parseFloat(result.MMR),
+              tier: result.Value,
+              platform: result.Platform,
+              rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
+            });
+            // if (result.Platform == 'Steam')
+            // {
+            //   leadersSteam.push(result.SteamID);
+            // }
+            // else
+            // {
+            //   leadersPSN.push(result.UserName);
+            // }
+            //
+            // if ('Value' in result)
+            // {
+            //   leaders.push({
+            //     username: result.UserName,
+            //     mmr: parseFloat(result.MMR),
+            //     tier: result.Value,
+            //     platform: result.Platform,
+            //     rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
+            //   });
+            // }
           }
         );
+        console.log(filteredResults);
 
-        var promises = [];
-
-        promises.push(new Promise(
-          function (resolve, reject)
-          {
-            psyonix.getPlayerRatingSteam(leadersSteam[0], playlist,
-              function(err, ratings)
-              {
-                console.log(leadersSteam[0]);
-                console.log(ratings);
-                resolve(ratings);
-              }
-            );
-          }
-        ));
+        // var promises = [];
+        //
+        // promises.push(new Promise(
+        //   function (resolve, reject)
+        //   {
+        //     psyonix.getPlayerRatingSteam(leadersSteam[0], playlist,
+        //       function(err, ratings)
+        //       {
+        //         console.log(leadersSteam[0]);
+        //         console.log(ratings);
+        //         resolve(ratings);
+        //       }
+        //     );
+        //   }
+        // ));
         //
         // promises.push(new Promise(
         //   function (resolve, reject)
@@ -81,38 +91,38 @@ function leaderboards()
         //   }
         // ));
 
-        Promise.all(promises)
-          .then(function(ratings)
-          {
-            ratings = ratings[0].concat(ratings[1]);
+        // Promise.all(promises)
+        //   .then(function(ratings)
+        //   {
+        //     ratings = ratings[0].concat(ratings[1]);
+        //
+        //     ratings.forEach(
+        //       function(rating, index)
+        //       {
+        //         leaders.forEach(
+        //           function(leader)
+        //           {
+        //             if ('SteamID' in rating && rating.SteamID == leader.rlrank_id)
+        //             {
+        //               leader.rating = rating.Value;
+        //             }
+        //             else if(rating.UserName == leader.rlrank_id)
+        //             {
+        //               leader.rating = rating.Value;
+        //             }
+        //           }
+        //         )
+        //       }
+        //     );
 
-            ratings.forEach(
-              function(rating, index)
-              {
-                leaders.forEach(
-                  function(leader)
-                  {
-                    if ('SteamID' in rating && rating.SteamID == leader.rlrank_id)
-                    {
-                      leader.rating = rating.Value;
-                    }
-                    else if(rating.UserName == leader.rlrank_id)
-                    {
-                      leader.rating = rating.Value;
-                    }
-                  }
-                )
-              }
-            );
-
-            db.upsert('leaderboards', {playlist: playlist}, {playlist: playlist, leaderboard: leaders},
+            db.upsert('leaderboards', {playlist: playlist}, {playlist: playlist, leaderboard: filteredResults},
               function(err, doc)
               {
                 console.log("Updated leaderboard from Psyonix -", playlist); // info
               }
             );
-          }
-        );
+        //   }
+        // );
       });
     }
   );

@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', '$cacheFactory', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', function(ApiSvc, RouteSvc, $routeParams, $location) {
         'use strict';
 
         var vm = this;
@@ -54,17 +54,22 @@
           )
         }
 
-        function goToProfile(rlrankId)
+        function goToProfile(input)
         {
           vm.showLoader = true;
-
-          RouteSvc.goToProfile(rlrankId,
-            function(err)
-            {
-              vm.profileError = err.message;
-              vm.showLoader = false;
-            }
-          );
+          ApiSvc.authorise(input)
+            .then(
+              function(response)
+              {
+                $location.path('u/' + response.rlrank_id);
+              })
+            .catch(
+              function(err)
+              {
+                vm.profileError = err.data.message;
+                vm.showLoader = false;
+              }
+            );
         }
     }]);
 })();
