@@ -14,31 +14,32 @@
 
         (function()
         {
-          if (!isNaN(parseFloat($routeParams.steam)) && isFinite($routeParams.steam) && $routeParams.steam.length == 17)
+          if (!isNaN(parseFloat($routeParams.rlrank_id)) && isFinite($routeParams.rlrank_id) && $routeParams.rlrank_id.length == 17)
           {
-            authorise("https://steamcommunity.com/profiles/" + $routeParams.steam);
+            authorise($routeParams.rlrank_id, 'Steam');
           }
           else
           {
-            authorise("https://steamcommunity.com/id/" + $routeParams.steam);
+            authorise($routeParams.rlrank_id, 'PSN');
           }
         })();
 
-        function authorise(url)
+        function authorise(id, platform)
         {
-          ApiSvc.authorise(url)
+          ApiSvc.authorise(id, platform)
             .then(function(response)
             {
               vm.profile = response.data.profile;
-              getPlayerRanks(vm.profile.steamid);
-              getPlayerStats(vm.profile.steamid);
+              getPlayerRanks(id, platform);
+              getPlayerStats(id, platform);
+              // getPlayerRating(vm.profile.rlrank_id, platform);
             }
           );
         }
 
-        function getPlayerRanks(id)
+        function getPlayerRanks(id, platform)
         {
-          ApiSvc.getPlayerRanks(id)
+          ApiSvc.getPlayerRanks(id, platform)
             .then(function(response)
             {
               vm.playlists = response.data.results;
@@ -46,12 +47,22 @@
           );
         }
 
-        function getPlayerStats(id)
+        function getPlayerStats(id, platform)
         {
-          ApiSvc.getPlayerStats(id)
+          ApiSvc.getPlayerStats(id, platform)
             .then(function(response)
             {
               vm.stats = response.data.results;
+            }
+          );
+        }
+
+        function getPlayerRating(id)
+        {
+          ApiSvc.getPlayerRating(id)
+            .then(function(response)
+            {
+              vm.ratings = response.data.results;
             }
           );
         }

@@ -54,11 +54,11 @@
           )
         }
 
-        function goToProfile(url)
+        function goToProfile(rlrankId)
         {
           vm.showLoader = true;
 
-          RouteSvc.goToProfile(url,
+          RouteSvc.goToProfile(rlrankId,
             function(err)
             {
               vm.profileError = err.message;

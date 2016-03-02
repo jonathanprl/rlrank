@@ -25,17 +25,17 @@
           tbody
             tr(ng-repeat="playlist in vm.playlists")
               td 
-                span {{ playlist.Playlist | rlPlaylist }}
+                span {{ playlist.playlist | rlPlaylist }}
               td 
-                img(ng-src="/img/ranks/{{ playlist.Tier || 0 }}_w.png" title="{{ playlist.Tier | rlTier }}" style="width:36px;")
+                img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:36px;")
               td.text-left 
-                span.hidden-xs {{ playlist.Tier | rlTier }}
+                span.hidden-xs {{ playlist.tier | rlTier }}
               td
-                span(ng-if="playlist.Division > 0") {{ playlist.Division | roman }}
+                span(ng-if="playlist.division > 0") {{ playlist.division | roman }}
               td
-                span(ng-if="playlist.MatchesPlayed") {{ playlist.MatchesPlayed }} 
+                span(ng-if="playlist.matches_played") {{ playlist.matches_played }} 
               td
-                span(ng-if="playlist.MMR") {{ playlist.MMR }}
+                span(ng-if="playlist.mmr") {{ playlist.mmr }}
       .col-md-4
         table.table.table-responsive.sp__table.profile__stats
           thead
