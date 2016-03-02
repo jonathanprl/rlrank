@@ -27,7 +27,6 @@
     "body-parser": "^1.14.2",
     "cheerio": "^0.20.0",
     "express": "^4.13.3",
-    "free-gaussian": "^0.1.0",
     "html2canvas": "^0.5.0-beta4",
     "jade": "^1.11.0",
     "lodash": "^4.0.0",
@@ -36,7 +35,6 @@
     "node-rest-client": "^1.5.1",
     "ping": "^0.1.10",
     "promise": "^7.1.1",
-    "restler": "^3.4.0",
-    "trueskill": "0.0.2"
+    "restler": "^3.4.0"
   }
 }
