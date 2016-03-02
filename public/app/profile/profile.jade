@@ -17,7 +17,8 @@
               th(colspan="2")
                 | Rank
               th
-                | Division
+                span Div
+                span.hidden-xs ision
               th
                 | # Played
               th
@@ -37,26 +38,29 @@
               td
                 span(ng-if="playlist.MMR") {{ playlist.MMR }}
       .col-md-4
-        table.table.table-responsive.sp__table.profile__stats
-          thead
-            tr
-              th(ng-repeat="stat in vm.stats")
-                | {{ stat.name }}
-          tbody
-            tr
-              td(ng-repeat="stat in vm.stats")
-               | {{ stat.value }}
-        .sp__share
-          h4 Share
-          .row
-            .col-md-7
-              .form-group
-                input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
-            .col-md-5
-              .sp__share-btn
-                | <a class="twitter-share-button" ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague">Tweet</a>
-              .sp__share-btn
-                | <div class="fb-share-button" data-href="{{ vm.shareUrl }}" data-layout="button"></div>
+        .row
+          .col-md-12.col-sm-8
+            table.table.table-responsive.sp__table.profile__stats
+              thead
+                tr
+                  th(ng-repeat="stat in vm.stats")
+                    | {{ stat.name }}
+              tbody
+                tr
+                  td(ng-repeat="stat in vm.stats")
+                   | {{ stat.value }}
+          .col-md-12.col-sm-4
+            .sp__share
+              h4 Share
+              .row
+                .col-md-7
+                  .form-group
+                    input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
+                .col-md-5
+                  .sp__share-btn
+                    | <a class="twitter-share-button" ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague">Tweet</a>
+                  .sp__share-btn
+                    | <div class="fb-share-button" data-href="{{ vm.shareUrl }}" data-layout="button"></div>
         hr
         .sp__advert
           ins.adsbygoogle(style="display:block" data-ad-client="ca-pub-1249925481918023" data-ad-slot="6533243993" data-ad-format="auto")
