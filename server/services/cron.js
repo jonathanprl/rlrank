@@ -12,7 +12,6 @@ function leaderboards()
 {
   var playlists = [10, 11, 12, 13];
 
-
   console.log("Updating leaderboards..."); // info
 
   playlists.forEach(
@@ -25,28 +24,105 @@ function leaderboards()
           console.log("Could not fetch leaderboard from Psyonix -", playlist, err); // error
         }
 
+        var leadersSteam = [];
+        var leadersPSN = [];
+        var leaders = [];
+
         var filteredResults = [];
 
         results.forEach(
           function(result, index)
           {
-            filteredResults[index] = {
-              position: index + 1,
+            filteredResults.push({
               username: result.UserName,
               mmr: parseFloat(result.MMR),
               tier: result.Value,
               platform: result.Platform,
-              steamid: result.SteamID
-            };
+              rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
+            });
+            // if (result.Platform == 'Steam')
+            // {
+            //   leadersSteam.push(result.SteamID);
+            // }
+            // else
+            // {
+            //   leadersPSN.push(result.UserName);
+            // }
+            //
+            // if ('Value' in result)
+            // {
+            //   leaders.push({
+            //     username: result.UserName,
+            //     mmr: parseFloat(result.MMR),
+            //     tier: result.Value,
+            //     platform: result.Platform,
+            //     rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
+            //   });
+            // }
           }
         );
+        console.log(filteredResults);
 
-        db.upsert('leaderboards', {playlist: playlist}, {playlist: playlist, leaderboard: filteredResults},
-          function(err, doc)
-          {
-            console.log("Updated leaderboard from Psyonix -", playlist); // info
-          }
-        );
+        // var promises = [];
+        //
+        // promises.push(new Promise(
+        //   function (resolve, reject)
+        //   {
+        //     psyonix.getPlayerRatingSteam(leadersSteam[0], playlist,
+        //       function(err, ratings)
+        //       {
+        //         console.log(leadersSteam[0]);
+        //         console.log(ratings);
+        //         resolve(ratings);
+        //       }
+        //     );
+        //   }
+        // ));
+        //
+        // promises.push(new Promise(
+        //   function (resolve, reject)
+        //   {
+        //     psyonix.getLeaderboardRatingsPSN(leadersPSN, playlist,
+        //       function(err, ratings)
+        //       {
+        //         resolve(ratings);
+        //       }
+        //     );
+        //   }
+        // ));
+
+        // Promise.all(promises)
+        //   .then(function(ratings)
+        //   {
+        //     ratings = ratings[0].concat(ratings[1]);
+        //
+        //     ratings.forEach(
+        //       function(rating, index)
+        //       {
+        //         leaders.forEach(
+        //           function(leader)
+        //           {
+        //             if ('SteamID' in rating && rating.SteamID == leader.rlrank_id)
+        //             {
+        //               leader.rating = rating.Value;
+        //             }
+        //             else if(rating.UserName == leader.rlrank_id)
+        //             {
+        //               leader.rating = rating.Value;
+        //             }
+        //           }
+        //         )
+        //       }
+        //     );
+
+            db.upsert('leaderboards', {playlist: playlist}, {playlist: playlist, leaderboard: filteredResults},
+              function(err, doc)
+              {
+                console.log("Updated leaderboard from Psyonix -", playlist); // info
+              }
+            );
+        //   }
+        // );
       });
     }
   );
