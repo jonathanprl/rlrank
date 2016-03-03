@@ -33,41 +33,85 @@ function getStat(req, res)
  */
 function getStats(req, res)
 {
-  var stats = ['Wins', 'Goals', 'MVPs', 'Saves', 'Shots', 'Assists'];
+  var fiveMinsAgo = new Date();
+  fiveMinsAgo.setMinutes(fiveMinsAgo.getMinutes() - 5);
 
-  var promises = [];
+  var query = {
+    rlrank_id: req.params.id,
+    created_at: {
+        $gte: fiveMinsAgo,
+        $lt: new Date()
+    }
+  }
 
-  stats.forEach(
-    function(stat)
+  db.findOneWhere('stats', query, {},
+    function(err, doc)
     {
-      promises.push(new Promise(
-        function(resolve, reject)
+      if (err)
+      {
+        console.log("[STATS] Error fetching stats from DB", err); // ERROR
+      }
+      else if (doc)
+      {
+        console.log("[STATS] Found recent stats in DB", req.params.id);
+        return swiftping.apiResponse('ok', res, doc.playlists);
+      }
+
+      console.log("[STATS] Getting player stats from Psyonix", req.params.id);
+
+      var stats = ['Wins', 'Goals', 'MVPs', 'Saves', 'Shots', 'Assists'];
+
+      var promises = [];
+
+      stats.forEach(
+        function(stat)
         {
-          psyonix.getPlayerStat(req.params.id, req.params.platform, stat,
-            function(err, result)
+          promises.push(new Promise(
+            function(resolve, reject)
+            {
+              psyonix.getPlayerStat(req.params.id, req.params.platform, stat,
+                function(err, result)
+                {
+                  if (err)
+                  {
+                    reject(err);
+                  }
+
+                  if (!result)
+                  {
+                    return resolve({name: stat, value: 'N/A'});
+                  }
+
+                  resolve({name: result.LeaderboardID, value: result.Value});
+                }
+              )
+            }
+          ));
+        }
+      );
+
+      Promise.all(promises)
+        .then(function(results)
+        {
+          var stats = {
+            created_at: new Date(),
+            rlrank_id: req.params.id,
+            stats: results
+          }
+
+          db.insert('stats', stats,
+            function(err, doc)
             {
               if (err)
               {
-                reject(err);
+                console.log("[STATS] Could not save player stats to DB", rank, err); // ERROR
               }
-
-              if (!result)
-              {
-                return resolve({name: stat, value: 'N/A'});
-              }
-
-              resolve({name: result.LeaderboardID, value: result.Value});
             }
-          )
-        }
-      ));
-    }
-  );
+          );
 
-  Promise.all(promises)
-    .then(function(results)
-    {
-      return swiftping.apiResponse('ok', res, results);
+          return swiftping.apiResponse('ok', res, results);
+        }
+      );
     }
   );
 }

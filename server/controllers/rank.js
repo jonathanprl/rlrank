@@ -30,15 +30,15 @@ function getPlayerRanks(req, res)
     {
       if (err)
       {
-        console.log("[PROFILE] Error fetching rank from DB", err); // ERROR
+        console.log("[RANKS] Error fetching rank from DB", err); // ERROR
       }
       else if (doc)
       {
-        console.log("[PROFILE] Found recent rank in DB", req.params.id);
+        console.log("[RANKS] Found recent rank in DB", req.params.id);
         return swiftping.apiResponse('ok', res, doc.playlists);
       }
 
-      console.log("[PROFILE] Getting player rank from Psyonix", req.params.id);
+      console.log("[RANKS] Getting player rank from Psyonix", req.params.id);
 
       psyonix.getPlayerRanks(req.params.id, req.params.platform, function(err, results)
       {
