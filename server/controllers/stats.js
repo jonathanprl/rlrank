@@ -54,7 +54,7 @@ function getStats(req, res)
       else if (doc)
       {
         console.log("[STATS] Found recent stats in DB", req.params.id);
-        return swiftping.apiResponse('ok', res, doc.playlists);
+        return swiftping.apiResponse('ok', res, doc.stats);
       }
 
       console.log("[STATS] Getting player stats from Psyonix", req.params.id);
