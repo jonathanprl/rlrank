@@ -20,6 +20,11 @@ module.exports = {
 
 // LogoutUser
 
+function isNumeric(n)
+{
+  return !isNaN(parseFloat(n)) && isFinite(n)
+}
+
 function auth(req, res)
 {
   db.findOneWhere('profiles', {input: req.body.url}, { _id: 0 },
@@ -55,39 +60,65 @@ function fetchNewProfile(req, res)
   }
   else if (req.body.url.indexOf('steamcommunity.com') === -1 && /[A-Za-z0-9\-\_]$/g.test(req.body.url))
   {
-    console.log("PSN User... Skipping steam"); // INFO;
+    console.log("[PROFILE] PSN User", req.body.url); // INFO;
 
-    return res.send({
-      profile: {
-        steam_url: null,
-        steam_id: null,
-        rlrank_id: req.body.url,
-        username: req.body.url,
-        platform: 'PSN'
+    var profileData = {
+      input: req.body.url,
+      steam_url: null,
+      steam_id: null,
+      rlrank_id: req.body.url,
+      username: req.body.url,
+      platform: 'PSN'
+    };
+
+    db.upsert('profiles', {input: req.body.url}, profileData,
+      function(err, doc)
+      {
+        if (err)
+        {
+          console.log("[STEAM] Could not save profile to database", url); // ERROR
+        }
       }
-    });
+    );
+
+    return res.send({profile: profileData});
   }
-  else if (req.body.url.indexOf('steamcommunity.com') === -1 && !/[A-Za-z0-9\-\_]$/g.test(req.body.url))
+  else
   {
     return res.status(500).send({code: "invalid_psn", message: "Invalid PSN username."});
   }
 
-  steam.getDetailsFromURL(req.body.url, function(err, steamProfile)
+  console.log("[PROFILE] Fetching profile from Steam...", url);
+
+  steam.getDetailsFromURL(url, function(err, steamProfile)
   {
     if (err)
     {
         return res.status(500).send(err);
     }
 
-    res.send({
-      profile: {
-        steam_url: steamProfile.url,
-        steam_id: steamProfile.steamid,
-        rlrank_id: steamProfile.steamid,
-        username: steamProfile.personaname,
-        platform: 'Steam'
+    var profileData = {
+      input: req.body.url,
+      steam_url: steamProfile.url,
+      steam_id: steamProfile.steamid,
+      rlrank_id: steamProfile.steamid,
+      username: steamProfile.personaname,
+      platform: 'Steam'
+    };
+
+    console.log("[PROFILE] Got profile from Steam, saving to DB...", url);
+
+    db.upsert('profiles', {input: req.body.url}, profileData,
+      function(err, doc)
+      {
+        if (err)
+        {
+          console.log("[STEAM] Could not save profile to database", url); // ERROR
+        }
       }
-    });
+    );
+
+    res.send({profile: profileData});
   });
 }
 
@@ -163,9 +194,6 @@ function getPlayerStat(id, platform, stat, callback)
       return callback(err);
     }
 
-
-    console.log(procData);
-    console.log(data);
     var data = parseResults(data);
     callback(null, data[0]);
   });

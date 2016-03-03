@@ -48,35 +48,15 @@ function getDetailsFromURL(url, callback)
     return callback({code: "invalid_url",message: "URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>"});
   }
 
-  db.findOneWhere('steamProfiles', {url: url}, { _id: 0 },
-    function(err, doc)
+  sniffFromSteam(url, function(err, result)
+  {
+    if (err)
     {
-      if (err)
-      {
-        return callback({code: "not_found", message: "Steam profile missing - could not be retrieved."});
-      }
-
-      console.log(doc);
-
-      if (!doc)
-      {
-        sniffFromSteam(url, function(err, result)
-        {
-          if (err)
-          {
-            return callback(err);
-          }
-
-          callback(null, result)
-        });
-      }
-      else
-      {
-        console.log(doc);
-        callback(null, doc.profileData);
-      }
+      return callback(err);
     }
-  );
+
+    callback(null, result)
+  });
 }
 
 function sniffFromSteam(url, callback)
@@ -105,16 +85,6 @@ function sniffFromSteam(url, callback)
       var profileData = JSON.parse(targetScript);
 
       callback(null, profileData);
-
-      db.upsert('steamProfiles', {url: url}, {url: url, profileData: profileData},
-        function(err, doc)
-        {
-          if (err)
-          {
-            console.log("[STEAM] Could not save profile to database", url); // ERROR
-          }
-        }
-      );
     }
   );
 }

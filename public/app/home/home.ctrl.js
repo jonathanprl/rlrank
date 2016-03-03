@@ -61,7 +61,7 @@
             .then(
               function(response)
               {
-                $location.path('u/' + response.rlrank_id);
+                $location.path('u/' + response.data.profile.rlrank_id);
               })
             .catch(
               function(err)
