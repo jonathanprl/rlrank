@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', '$cacheFactory', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
+    .controller('ProfileController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', function(ApiSvc, RouteSvc, $routeParams, $location, TitleSvc) {
         'use strict';
 
         var vm = this;
@@ -12,33 +12,32 @@
         vm.shareUrl = $location.absUrl();
         vm.router = RouteSvc;
 
-        (function()
-        {
-          if (!isNaN(parseFloat($routeParams.steam)) && isFinite($routeParams.steam) && $routeParams.steam.length == 17)
-          {
-            authorise("https://steamcommunity.com/profiles/" + $routeParams.steam);
-          }
-          else
-          {
-            authorise("https://steamcommunity.com/id/" + $routeParams.steam);
-          }
-        })();
+        authorise($routeParams.rlrank_id);
 
-        function authorise(url)
+        function authorise(input)
         {
-          ApiSvc.authorise(url)
-            .then(function(response)
-            {
-              vm.profile = response.data.profile;
-              getPlayerRanks(vm.profile.steamid);
-              getPlayerStats(vm.profile.steamid);
-            }
-          );
+          ApiSvc.authorise(input)
+            .then(
+              function(response)
+              {
+                vm.profile = response.data.profile;
+                getPlayerRanks(vm.profile.rlrank_id, vm.profile.platform);
+                getPlayerStats(vm.profile.rlrank_id, vm.profile.platform);
+                // getPlayerRating(vm.profile.rlrank_id, platform);
+
+                TitleSvc.setTitle(vm.profile.username);
+              })
+            .catch(
+              function(err)
+              {
+                $location.path('/');
+              }
+            );
         }
 
-        function getPlayerRanks(id)
+        function getPlayerRanks(id, platform)
         {
-          ApiSvc.getPlayerRanks(id)
+          ApiSvc.getPlayerRanks(id, platform)
             .then(function(response)
             {
               vm.playlists = response.data.results;
@@ -46,12 +45,22 @@
           );
         }
 
-        function getPlayerStats(id)
+        function getPlayerStats(id, platform)
         {
-          ApiSvc.getPlayerStats(id)
+          ApiSvc.getPlayerStats(id, platform)
             .then(function(response)
             {
               vm.stats = response.data.results;
+            }
+          );
+        }
+
+        function getPlayerRating(id)
+        {
+          ApiSvc.getPlayerRating(id)
+            .then(function(response)
+            {
+              vm.ratings = response.data.results;
             }
           );
         }

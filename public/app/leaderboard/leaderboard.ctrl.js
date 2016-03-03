@@ -10,7 +10,13 @@
         vm.increaseLeaderboard = increaseLeaderboard;
         vm.leaderboards = {};
         vm.limit = 50;
-        vm.sort = {};
+        vm.sort = {
+          10: "-mmr",
+          11: "-mmr",
+          12: "-mmr",
+          13: "-mmr"
+        };
+
         vm.sortLeaderboard = sortLeaderboard;
 
         (function()
@@ -20,7 +26,6 @@
 
         function getLeaderboard(playlist)
         {
-          vm.sort[playlist] = "";
           ApiSvc.getLeaderboard(playlist)
             .then(function(response)
             {
@@ -60,6 +65,8 @@
           {
             vm.sort[playlist] = column;
           }
+
+          console.log(vm.sort);
         }
 
         function increaseLeaderboard()

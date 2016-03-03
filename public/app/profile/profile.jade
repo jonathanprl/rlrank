@@ -3,7 +3,7 @@
   .container(ng-show="vm.playlists")
     .row
       .col-md-4.col-md-offset-1
-        h1 {{ vm.profile.personaname }}
+        h1 {{ vm.profile.username }}
         span.sp__sub-header Updated < 5 minutes ago
     .row
       .col-md-1
@@ -26,17 +26,17 @@
           tbody
             tr(ng-repeat="playlist in vm.playlists")
               td 
-                span {{ playlist.Playlist | rlPlaylist }}
+                span {{ playlist.playlist | rlPlaylist }}
               td 
-                img(ng-src="/img/ranks/{{ playlist.Tier || 0 }}_w.png" title="{{ playlist.Tier | rlTier }}" style="width:36px;")
+                img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:36px;")
               td.text-left 
-                span.hidden-xs {{ playlist.Tier | rlTier }}
+                span.hidden-xs {{ playlist.tier | rlTier }}
               td
-                span(ng-if="playlist.Division > 0") {{ playlist.Division | roman }}
+                span(ng-if="playlist.division > 0") {{ playlist.division | roman }}
               td
-                span(ng-if="playlist.MatchesPlayed") {{ playlist.MatchesPlayed }} 
+                span(ng-if="playlist.matches_played") {{ playlist.matches_played }} 
               td
-                span(ng-if="playlist.MMR") {{ playlist.MMR }}
+                span(ng-if="playlist.mmr") {{ playlist.mmr }}
       .col-md-4
         .row
           .col-md-12.col-sm-8

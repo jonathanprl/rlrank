@@ -8,23 +8,13 @@
           goToProfile: goToProfile
         };
 
-        function goToProfile(url, callback)
+        function goToProfile(rlrankId, callback)
         {
-          ApiSvc.authorise(url)
+          ApiSvc.authorise(rlrankId)
             .then(function(response)
             {
               var profile = response.data.profile;
-
-              var url = _trimTrailingSlash(profile.url);
-
-              if (url.indexOf('/id/') > -1)
-              {
-                $location.path('u/' + url.split('/').pop());
-              }
-              else
-              {
-                $location.path('u/' + profile.steamid);
-              }
+              $location.path('u/' + profile.rlrank_id);
             },
             function(err)
             {

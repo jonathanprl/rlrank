@@ -43,12 +43,17 @@ function getStats(req, res)
       promises.push(new Promise(
         function(resolve, reject)
         {
-          psyonix.getPlayerStat(req.params.id, stat,
+          psyonix.getPlayerStat(req.params.id, req.params.platform, stat,
             function(err, result)
             {
               if (err)
               {
                 reject(err);
+              }
+
+              if (!result)
+              {
+                return resolve({name: stat, value: 'N/A'});
               }
 
               resolve({name: result.LeaderboardID, value: result.Value});
