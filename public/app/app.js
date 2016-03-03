@@ -31,6 +31,13 @@ angular
           templateUrl: '/views/profile/profile',
           controller: 'ProfileController as vm',
           activeSection: 'profile',
+          showMMR: true
+        })
+        .when('/u_mmr/:rlrank_id', {
+          templateUrl: '/views/profile/profile',
+          controller: 'ProfileController as vm',
+          activeSection: 'profile',
+          showMMR: true
         })
         .when('/', {
           templateUrl: '/views/home/home',
