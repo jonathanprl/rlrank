@@ -22,7 +22,38 @@ module.exports = {
 
 function auth(req, res)
 {
-  if (req.body.url.indexOf('steamcommunity.com') === -1 && /[A-Za-z0-9\-\_]$/g.test(req.body.url))
+  db.findOneWhere('profiles', {input: req.body.url}, { _id: 0 },
+    function(err, doc)
+    {
+      if (err || !doc)
+      {
+        if (err) console.log("[PROFILE] Error fetching profile from DB", err); // ERROR
+        fetchNewProfile(req, res);
+      }
+      else
+      {
+        console.log("[PROFILE] Found profile in DB", req.body.url);
+        return res.send({profile: doc});
+      }
+    }
+  );
+}
+
+function fetchNewProfile(req, res)
+{
+  var url;
+
+  console.log("[PROFILE] Fetching new profile..."); // INFO
+
+  if (req.body.url[0] == 7 && isNumeric(req.body.url) && req.body.url.length == 17)
+  {
+    var url = 'https://steamcommunity.com/profiles/' + req.body.url;
+  }
+  else if (req.body.url.indexOf('steamcommunity.com') > -1)
+  {
+    var url = req.body.url;
+  }
+  else if (req.body.url.indexOf('steamcommunity.com') === -1 && /[A-Za-z0-9\-\_]$/g.test(req.body.url))
   {
     console.log("PSN User... Skipping steam"); // INFO;
 
