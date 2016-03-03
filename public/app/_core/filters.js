@@ -70,11 +70,11 @@ angular.module('app')
     return function(input)
     {
       var regions = {
-        '1': 'I',
-        '2': 'II',
-        '3': 'III',
-        '4': 'IV',
-        '5': 'V'
+        '0': 'I',
+        '1': 'II',
+        '2': 'III',
+        '3': 'IV',
+        '4': 'V'
       };
 
       return regions[input] || input;
