@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', '$cacheFactory', function(ApiSvc, RouteSvc, $routeParams, $location, $cacheFactory) {
+    .controller('ProfileController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', function(ApiSvc, RouteSvc, $routeParams, $location, TitleSvc) {
         'use strict';
 
         var vm = this;
@@ -24,6 +24,8 @@
                 getPlayerRanks(vm.profile.rlrank_id, vm.profile.platform);
                 getPlayerStats(vm.profile.rlrank_id, vm.profile.platform);
                 // getPlayerRating(vm.profile.rlrank_id, platform);
+
+                TitleSvc.setTitle(vm.profile.username);
               })
             .catch(
               function(err)
