@@ -1,13 +1,15 @@
 (function() {
   angular
     .module('app')
-    .controller('LeaderboardController', ['ApiSvc', 'RouteSvc', function(ApiSvc, RouteSvc) {
+    .controller('LeaderboardController', ['ApiSvc', 'RouteSvc', 'TitleSvc', function(ApiSvc, RouteSvc, TitleSvc) {
         'use strict';
 
         var vm = this;
 
         vm.goToProfile = goToProfile;
         vm.increaseLeaderboard = increaseLeaderboard;
+        vm.sortLeaderboard = sortLeaderboard;
+
         vm.leaderboards = {};
         vm.limit = 50;
         vm.sort = {
@@ -17,10 +19,10 @@
           13: "-mmr"
         };
 
-        vm.sortLeaderboard = sortLeaderboard;
 
         (function()
         {
+          TitleSvc.setTitle("Leaderboards");
           getAllLeaderboards();
         })();
 

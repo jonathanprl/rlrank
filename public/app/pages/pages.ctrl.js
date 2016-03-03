@@ -1,12 +1,14 @@
 (function() {
   angular
     .module('app')
-    .controller('PagesController', ['RouteSvc', function(RouteSvc) {
+    .controller('PagesController', ['RouteSvc', 'TitleSvc', function(RouteSvc, TitleSvc) {
         'use strict';
 
         var vm = this;
 
         vm.goToProfile = goToProfile;
+
+        TitleSvc.setDefault();
 
         function goToProfile(url)
         {

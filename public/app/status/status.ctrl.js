@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('StatusController', ['ApiSvc', 'RouteSvc', function(ApiSvc, RouteSvc) {
+    .controller('StatusController', ['ApiSvc', 'RouteSvc', 'TitleSvc', function(ApiSvc, RouteSvc, TitleSvc) {
         'use strict';
 
         var vm = this;
@@ -10,6 +10,7 @@
 
         (function()
         {
+          TitleSvc.setTitle("Server Status");
           getStatus();
         })();
 

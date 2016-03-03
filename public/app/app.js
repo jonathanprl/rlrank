@@ -30,7 +30,7 @@ angular
         .when('/u/:rlrank_id', {
           templateUrl: '/views/profile/profile',
           controller: 'ProfileController as vm',
-          activeSection: 'profile'
+          activeSection: 'profile',
         })
         .when('/', {
           templateUrl: '/views/home/home',

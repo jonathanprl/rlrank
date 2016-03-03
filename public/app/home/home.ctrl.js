@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', function(ApiSvc, RouteSvc, $routeParams, $location) {
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TitleSvc', '$routeParams', '$location', function(ApiSvc, RouteSvc, TitleSvc, $routeParams, $location) {
         'use strict';
 
         var vm = this;
@@ -11,6 +11,7 @@
 
         (function()
         {
+          TitleSvc.setDefault();
           getAllLeaderboards();
           getPopulation();
         })();
