@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('LeaderboardController', ['ApiSvc', 'RouteSvc', 'TitleSvc', function(ApiSvc, RouteSvc, TitleSvc) {
+    .controller('StatisticsController', ['ApiSvc', 'RouteSvc', 'TitleSvc', function(ApiSvc, RouteSvc, TitleSvc) {
         'use strict';
 
         var vm = this;

@@ -1,5 +1,6 @@
 var db = require('../db');
 var psyonix = require('./psyonix');
+var swiftping = require('../helpers/swiftping');
 var ping = require('ping');
 
 module.exports = {
@@ -35,7 +36,7 @@ function leaderboards()
           {
             filteredResults.push({
               username: result.UserName,
-              mmr: parseFloat(result.MMR),
+              mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR)),
               tier: result.Value,
               platform: result.Platform,
               rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName

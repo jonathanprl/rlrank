@@ -19,7 +19,6 @@
           13: "-mmr"
         };
 
-
         (function()
         {
           TitleSvc.setTitle("Leaderboards");

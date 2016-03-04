@@ -64,7 +64,7 @@ function getPlayerRanks(req, res)
               tier: result.Tier,
               division: result.Division,
               matches_played: result.MatchesPlayed,
-              mmr: parseFloat(result.MMR)
+              mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
             });
           }
         );

@@ -1,5 +1,6 @@
 module.exports = {
-  apiResponse: apiResponse
+  apiResponse,
+  MMRToSkillRating
 }
 
 function apiResponse(type, res, data)
@@ -13,6 +14,11 @@ function apiResponse(type, res, data)
       _error(res, data);
     break;
   }
+}
+
+function MMRToSkillRating(mmr)
+{
+  return Math.ceil((mmr*20)+99.5);
 }
 
 /**
