@@ -173,10 +173,16 @@ function population()
     playlists.forEach(
       function(playlist)
       {
-        db.insert('population', {playlist: playlist.PlaylistID, players: playlist.NumPlayers, created_at: new Date()},
+        db.upsert('population', {playlist: playlist.PlaylistID}, {playlist: playlist.PlaylistID, players: playlist.NumPlayers, created_at: new Date()},
           function(err, doc)
           {
             if (err) console.log("[CRON] [ERROR] Could not update DB with population", err); // ERROR
+          }
+        );
+        db.insert('populationHistorical', {playlist: playlist.PlaylistID, players: playlist.NumPlayers, created_at: new Date()},
+          function(err, doc)
+          {
+            if (err) console.log("[CRON] [ERROR] Could not insert DB with population (historical)", err); // ERROR
           }
         );
       }

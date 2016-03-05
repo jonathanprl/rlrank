@@ -37,19 +37,9 @@ function getStatus(req, res)
  */
 function getPopulation(req, res)
 {
-  var oneMinAgo = new Date();
-  oneMinAgo.setMinutes(oneMinAgo.getMinutes() - 1);
-
-  var query = {
-    created_at: {
-        $gt: oneMinAgo
-    }
-  }
-
-  db.findWhere('population', query, { _id: 0 },
+  db.findWhere('population', {}, { _id: 0 },
     function(err, doc)
     {
-      console.log(doc);
       if (err)
       {
         return swiftping.apiResponse('error', res, err);
