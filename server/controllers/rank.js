@@ -38,6 +38,10 @@ function getPlayerRanks(req, res)
         return swiftping.apiResponse('ok', res, doc.playlists);
       }
 
+      // display_name: "wSKw BLaCKOPzHD"
+      // profile: "/profile/XboxOne/2533274860807904"
+      // updated_at: "2016-03-05 19:06:26"
+
       console.log("[RANKS] Getting player rank from Psyonix", req.params.id);
 
       psyonix.getPlayerRanks(req.params.id, req.params.platform, function(err, results)
@@ -45,6 +49,13 @@ function getPlayerRanks(req, res)
         if (err)
         {
           return swiftping.apiResponse('error', res, err);
+        }
+
+        console.log(results);
+
+        if (results.length === 0)
+        {
+          return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
         }
 
         var filteredResults = [];

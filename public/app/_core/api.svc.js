@@ -17,9 +17,9 @@
           getPlayerRating: getPlayerRating
         };
 
-        function authorise(url, platform)
+        function authorise(input, platform)
         {
-          return $http.post('/api/auth', {url: url, platform: platform});
+          return $http.post('/api/auth', {input: input, platform: platform});
         }
 
         function getLeaderboard(playlist)

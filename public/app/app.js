@@ -27,6 +27,12 @@ angular
           controller: 'PagesController as vm',
           activeSection: 'contact'
         })
+        .when('/u/:rlrank_id/:platform', {
+          templateUrl: '/views/profile/profile',
+          controller: 'ProfileController as vm',
+          activeSection: 'profile',
+          showMMR: true
+        })
         .when('/u/:rlrank_id', {
           templateUrl: '/views/profile/profile',
           controller: 'ProfileController as vm',

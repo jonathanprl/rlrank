@@ -13,7 +13,15 @@
         vm.shareUrl = $location.absUrl();
         vm.router = RouteSvc;
 
-        authorise($routeParams.rlrank_id);
+        if ($routeParams.platform)
+        {
+          getPlayerRanks($routeParams.rlrank_id, $routeParams.platform);
+          getPlayerStats($routeParams.rlrank_id, $routeParams.platform);
+        }
+        else
+        {
+          authorise($routeParams.rlrank_id);
+        }
 
         // SocketSvc.forward('liveRank', $scope);
         //
@@ -65,7 +73,6 @@
                 vm.profile = response.data.profile;
                 getPlayerRanks(vm.profile.rlrank_id, vm.profile.platform);
                 getPlayerStats(vm.profile.rlrank_id, vm.profile.platform);
-                // getPlayerRating(vm.profile.rlrank_id, platform);
 
                 TitleSvc.setTitle(vm.profile.username);
               })
@@ -88,6 +95,10 @@
               {
                 callback(response.data.results);
               }
+            })
+            .catch(function(err)
+            {
+              $location.path('/');
             }
           );
         }
@@ -98,16 +109,6 @@
             .then(function(response)
             {
               vm.stats = response.data.results;
-            }
-          );
-        }
-
-        function getPlayerRating(id)
-        {
-          ApiSvc.getPlayerRating(id)
-            .then(function(response)
-            {
-              vm.ratings = response.data.results;
             }
           );
         }

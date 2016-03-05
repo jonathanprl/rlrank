@@ -6,8 +6,16 @@
 
         var vm = this;
 
-        vm.leaderboards = {};
         vm.goToProfile = goToProfile;
+        vm.setPlatform = setPlatform;
+
+        vm.leaderboards = {};
+        vm.placeholder = {
+          'steam': "Enter your Steam profile URL, ID or name",
+          'psn': "Enter your PSN username",
+          'xbox': "Enter your Xbox Live username"
+        };
+        vm.platform = {id: 'steam', name: 'Steam'};
 
         (function()
         {
@@ -55,14 +63,14 @@
           )
         }
 
-        function goToProfile(input)
+        function goToProfile()
         {
           vm.showLoader = true;
-          ApiSvc.authorise(input)
+          ApiSvc.authorise(vm.input, vm.platform.id)
             .then(
               function(response)
               {
-                $location.path('u/' + response.data.profile.rlrank_id);
+                $location.path('u/' + response.data.profile.rlrank_id + '/' + response.data.profile.platform.toLowerCase());
               })
             .catch(
               function(err)
@@ -71,6 +79,18 @@
                 vm.showLoader = false;
               }
             );
+        }
+
+        function setPlatform(platform)
+        {
+          if (platform == 'psn')
+          {
+            vm.platform = {id: 'psn', name: 'PSN'};
+          }
+          else
+          {
+            vm.platform = {id: platform, name: platform.charAt(0).toUpperCase() + platform.slice(1)};
+          }
         }
     }]);
 })();
