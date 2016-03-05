@@ -35,8 +35,12 @@
                 span(ng-if="playlist.division > 0") {{ playlist.division | roman }}
               td
                 span(ng-if="playlist.matches_played") {{ playlist.matches_played }} 
-              td
-                span(ng-if="playlist.mmr") {{ playlist.mmr }}
+              td.text-right(style="white-space: pre;")
+                span.rank__change(ng-class="{'text-success': vm.liveRank[playlist.playlist] > 0, 'text-danger': vm.liveRank[playlist.playlist] < 0}" ng-show="vm.liveRank[playlist.playlist]")
+                  i.fa(ng-class="{'fa-caret-up': vm.liveRank[playlist.playlist] > 0, 'fa-caret-down': vm.liveRank[playlist.playlist] < 0, 'fa-minus': vm.liveRank[playlist.playlist] == 0}")
+                  | &nbsp;{{ vm.liveRank[playlist.playlist] }}
+                span(ng-if="playlist.mmr")
+                  {{ playlist.mmr }}
       .col-md-4
         .row
           .col-md-12.col-sm-8

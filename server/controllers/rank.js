@@ -97,7 +97,6 @@ function getPlayerRanks(req, res)
         );
 
         swiftping.apiResponse('ok', res, filteredResults);
-
       }
     );
   });

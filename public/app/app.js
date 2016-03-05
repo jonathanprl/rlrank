@@ -1,5 +1,5 @@
 angular
-  .module('app', ['rlrank-templates', 'ngRoute'])
+  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io'])
   .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
       'use strict';
 

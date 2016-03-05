@@ -13,6 +13,9 @@
   "dependencies": {
     "angular-route": "~1.4.8",
     "angular": "~1.4.8",
-    "bootstrap": "~3.3.6"
+    "bootstrap": "~3.3.6",
+    "socket.io-client": "^1.4.5",
+    "font-awesome": "^4.5.0",
+    "angular-socket-io": "^0.7.0"
   }
 }

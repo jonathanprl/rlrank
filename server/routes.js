@@ -7,6 +7,8 @@ var cron = require('./services/cron');
 
 module.exports = function(app)
 {
+  var socketio = require('./helpers/socketio')(app.io);
+
   app.get('/', function(req, res) {
       res.render('index');
   });
@@ -40,4 +42,16 @@ module.exports = function(app)
   {
     res.render('index');
   });
+
+  app.io.on('connection',
+    function(socket)
+    {
+      socket.on('profile',
+        function(profile)
+        {
+          
+        }
+      )
+    }
+  );
 }

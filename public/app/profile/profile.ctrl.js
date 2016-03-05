@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', function(ApiSvc, RouteSvc, $routeParams, $location, TitleSvc) {
+    .controller('ProfileController', ['$scope', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', function($scope, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc) {
         'use strict';
 
         var vm = this;
@@ -14,6 +14,12 @@
 
         authorise($routeParams.rlrank_id);
 
+        SocketSvc.forward('liveRank', $scope);
+
+        $scope.$on('socket:liveRank', function (ev, data) {
+          vm.liveRank = data;
+        });
+
         function authorise(input)
         {
           ApiSvc.authorise(input)
@@ -25,6 +31,7 @@
                 getPlayerStats(vm.profile.rlrank_id, vm.profile.platform);
                 // getPlayerRating(vm.profile.rlrank_id, platform);
 
+                SocketSvc.emit('profile', vm.profile);
                 TitleSvc.setTitle(vm.profile.username);
               })
             .catch(

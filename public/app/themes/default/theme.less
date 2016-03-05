@@ -83,11 +83,15 @@ h1,h2,h3,h4,h5,h6 {
 
     span,
     a {
-      display: block;
+      // display: block;
       width: 100%;
       white-space: pre;
       overflow-x: hidden;
       text-overflow: ellipsis;
+    }
+
+    span + span {
+      margin-left: 8px;
     }
   }
 
