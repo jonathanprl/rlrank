@@ -4,7 +4,7 @@
     .module('app')
     .factory('TitleSvc', ['$window', function($window)
     {
-      var defaultTitle = "Rocket League Rank - View & Share your Rocket League MMR!";
+      var defaultTitle = "Rocket League Rank - View & share your Rocket League rank and stats!";
       var base = " - Rocket League Rank";
 
       return {
