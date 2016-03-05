@@ -131,13 +131,13 @@ function leaderboards()
 
 function serverStatus()
 {
-  console.log("Updating server statuses..."); // info
+  console.log("[CRON] Updating server statuses..."); // info
 
   psyonix.getServers(function(err, results)
   {
     if (err)
     {
-      console.log("Could not fetch server status from Psyonix", err); // error
+      console.log("[CRON] [ERROR] Could not fetch server status from Psyonix", err); // error
     }
 
     _pingRegions(results,
@@ -149,7 +149,7 @@ function serverStatus()
             db.upsert('status', {region: region.name}, {region: region.name, online: region.online},
               function(err, doc)
               {
-                console.log("Updated server status from Psyonix -", region); // info
+                if (err) console.log("[CRON] [ERROR] Could not update DB with server statuses", err); // ERROR
               }
             );
           }
@@ -161,7 +161,7 @@ function serverStatus()
 
 function population()
 {
-  console.log("Updating population..."); // info
+  console.log("[CRON] Updating population..."); // info
 
   psyonix.getPopulation(function(err, playlists)
   {
@@ -173,10 +173,10 @@ function population()
     playlists.forEach(
       function(playlist)
       {
-        db.upsert('population', {playlist: playlist.PlaylistID}, {playlist: playlist.PlaylistID, players: playlist.NumPlayers},
+        db.insert('population', {playlist: playlist.PlaylistID, players: playlist.NumPlayers, created_at: new Date()},
           function(err, doc)
           {
-            console.log("Updated population from Psyonix", playlist); // info
+            if (err) console.log("[CRON] [ERROR] Could not update DB with population", err); // ERROR
           }
         );
       }

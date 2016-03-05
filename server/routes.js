@@ -42,16 +42,4 @@ module.exports = function(app)
   {
     res.render('index');
   });
-
-  app.io.on('connection',
-    function(socket)
-    {
-      socket.on('profile',
-        function(profile)
-        {
-          
-        }
-      )
-    }
-  );
 }
