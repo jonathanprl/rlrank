@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$scope', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', function($scope, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc) {
+    .controller('ProfileController', ['$interval', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', function($interval, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc) {
         'use strict';
 
         var vm = this;
@@ -9,16 +9,52 @@
         vm.authorise = authorise;
         vm.getPlayerRanks = getPlayerRanks;
         vm.leaderboards = {};
+        vm.liveRank = {};
         vm.shareUrl = $location.absUrl();
         vm.router = RouteSvc;
 
         authorise($routeParams.rlrank_id);
 
-        SocketSvc.forward('liveRank', $scope);
+        // SocketSvc.forward('liveRank', $scope);
+        //
+        // $scope.$on('socket:liveRank', function (ev, data) {
+        //   vm.liveRank = data;
+        // });
 
-        $scope.$on('socket:liveRank', function (ev, data) {
-          vm.liveRank = data;
-        });
+        $interval(
+          function()
+          {
+            // TODO: REAL-TIME WITH DB VIA SOCKET.IO
+            //!£!££
+            var oldRanks = angular.copy(vm.playlists);
+            getPlayerRanks(vm.profile.rlrank_id, vm.profile.platform,
+              function(newRanks)
+              {
+                angular.forEach(oldRanks,
+                  function(oldRank)
+                  {
+                    angular.forEach(newRanks,
+                      function(newRank)
+                      {
+                        if (newRank.playlist == oldRank.playlist)
+                        {
+                          if (newRank.mmr > oldRank.mmr)
+                          {
+                            vm.liveRank[newRank.playlist] = newRank.mmr - oldRank.mmr;
+                          }
+                          else if (newRank.mmr < oldRank.mmr)
+                          {
+                            vm.liveRank[newRank.playlist] = newRank.mmr - oldRank.mmr;
+                          }
+                        }
+                      }
+                    );
+                  }
+                )
+              }
+            );
+          }, '60000'
+        );
 
         function authorise(input)
         {
@@ -31,7 +67,6 @@
                 getPlayerStats(vm.profile.rlrank_id, vm.profile.platform);
                 // getPlayerRating(vm.profile.rlrank_id, platform);
 
-                SocketSvc.emit('profile', vm.profile);
                 TitleSvc.setTitle(vm.profile.username);
               })
             .catch(
@@ -42,12 +77,17 @@
             );
         }
 
-        function getPlayerRanks(id, platform)
+        function getPlayerRanks(id, platform, callback)
         {
           ApiSvc.getPlayerRanks(id, platform)
             .then(function(response)
             {
               vm.playlists = response.data.results;
+
+              if (callback)
+              {
+                callback(response.data.results);
+              }
             }
           );
         }
