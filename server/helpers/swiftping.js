@@ -92,7 +92,7 @@ function fetchNewProfile(req, res)
 
   var url;
 
-  console.log("[PROFILE] Fetching new profile..."); // INFO
+  console.log("[PROFILE] Fetching new profile... Input:", input); // INFO
 
   if (platform == 'steam')
   {
