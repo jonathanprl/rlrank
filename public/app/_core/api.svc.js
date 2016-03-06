@@ -47,6 +47,11 @@
           return $http.get('/api/population');
         }
 
+        function getPopulationHistorical()
+        {
+          return $http.get('/api/population/historical');
+        }
+
         function getPlayerStats(id)
         {
           return $http.get('/api/stats/' + id);

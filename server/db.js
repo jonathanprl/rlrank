@@ -11,7 +11,8 @@ module.exports = {
   update,
   modify,
   remove,
-  drop
+  drop,
+  aggregate
 };
 
 /**
@@ -219,5 +220,25 @@ function drop(collectionName, callback)
     }
 
     callback(doc, null);
+  });
+}
+
+/**
+ * Aggregate collection
+ * @param {string} collectionName - MongoDB collection name
+ * @param {function} callback - Success or error callback function
+ */
+function aggregate(collectionName, query, callback)
+{
+  mongodb.collection(collectionName).aggregate(query, function (err, docs)
+  {
+    if (err)
+    {
+      console.log(err);
+      callback(err, null);
+      return;
+    }
+
+    callback(null, docs);
   });
 }

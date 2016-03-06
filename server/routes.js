@@ -36,6 +36,7 @@ module.exports = function(app)
   app.get('/api/status', status.getStatus);
 
   app.get('/api/population', status.getPopulation);
+  app.get('/api/population/historical', status.getPopulationHistorical);
 
   app.get('/views/*', function(req, res)
   {
