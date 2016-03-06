@@ -3,23 +3,23 @@ module.exports = {
         "browser": true,
         "es6": true,
         "node": true
-    },
-    "extends": "eslint:recommended",
+      },
+    "extends": "angular",
     "rules": {
         "indent": [
-            "error",
+            2,
             2
         ],
         "linebreak-style": [
-            "error",
+            2,
             "windows"
         ],
         "quotes": [
-            "error",
+            2,
             "single"
         ],
         "semi": [
-            "error",
+            2,
             "always"
         ],
         "no-console": [

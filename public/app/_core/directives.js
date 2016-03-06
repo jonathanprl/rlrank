@@ -6,10 +6,14 @@
       function() {
         return {
           restrict: 'A',
+          scope: {
+            data: '=sparkline'
+          },
           link: function (scope, element)
           {
+            console.log(scope.data);
             $(element).sparkline(
-              [5,6,7,9,9,5,3,2,2,4,6,7,5,6,7,9,9,5,3,2,9,9,5,3,2,2,4,6,7,5,6,7,9,9,5,3,2,2,4,6,7,5,6,7,9,9,5,3,2,2,4,6,7,5,6,7,9,9,5,3,2,2,4,6,7,4],
+              [scope.data],
               {
                 type: 'line',
                 width: '100%',

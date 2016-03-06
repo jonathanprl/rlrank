@@ -1,96 +1,110 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TitleSvc', '$routeParams', '$location', function(ApiSvc, RouteSvc, TitleSvc, $routeParams, $location) {
-        'use strict';
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TitleSvc', '$routeParams', '$location', HomeController]);
 
-        var vm = this;
+  function HomeController(ApiSvc, RouteSvc, TitleSvc, $routeParams, $location)
+  {
+    'use strict';
 
-        vm.goToProfile = goToProfile;
-        vm.setPlatform = setPlatform;
+    var vm = this;
 
-        vm.leaderboards = {};
-        vm.placeholder = {
-          'steam': "Enter a Steam profile URL, ID or name",
-          'psn': "Enter a PSN username",
-          'xbox': "Enter a Xbox Live gamertag"
-        };
-        vm.platform = {id: 'steam', name: 'Steam'};
+    vm.goToProfile = goToProfile;
+    vm.setPlatform = setPlatform;
 
-        (function()
+    vm.leaderboards = {};
+    vm.placeholder = {
+      'steam': 'Enter a Steam profile URL, ID or name',
+      'psn': 'Enter a PSN username',
+      'xbox': 'Enter a Xbox Live gamertag'
+    };
+    vm.platform = {id: 'steam', name: 'Steam'};
+
+    (function()
+    {
+      TitleSvc.setDefault();
+      getAllLeaderboards();
+      getPopulation();
+      getPopulationHistorical();
+    })();
+
+    function getLeaderboard(playlist)
+    {
+      ApiSvc.getLeaderboard(playlist)
+        .then(function(response)
         {
-          TitleSvc.setDefault();
-          getAllLeaderboards();
-          getPopulation();
-        })();
-
-        function getLeaderboard(playlist)
+          vm.leaderboards[playlist] = response.data.results;
+        }, function(err)
         {
-          ApiSvc.getLeaderboard(playlist)
-            .then(function(response)
+          console.log(err.code);
+        }
+      );
+    }
+
+    function getAllLeaderboards()
+    {
+      getLeaderboard(10);
+      getLeaderboard(11);
+      getLeaderboard(12);
+      getLeaderboard(13);
+    }
+
+    function getPopulation()
+    {
+      ApiSvc.getPopulation().then(
+        function(response)
+        {
+          vm.playlistPopulation = response.data.results;
+
+          vm.totalPopulation = 0;
+          angular.forEach(vm.playlistPopulation,
+            function(playlist)
             {
-              vm.leaderboards[playlist] = response.data.results;
-            }, function(err)
-            {
-              console.log(err.code);
+              vm.totalPopulation += parseInt(playlist.players);
             }
           );
         }
+      );
+    }
 
-        function getAllLeaderboards()
+    function getPopulationHistorical()
+    {
+      ApiSvc.getPopulationHistorical().then(
+        function(response)
         {
-          getLeaderboard(10);
-          getLeaderboard(11);
-          getLeaderboard(12);
-          getLeaderboard(13);
+          vm.populationHistorical = response.data.results;
         }
+      );
+    }
 
-        function getPopulation()
-        {
-          ApiSvc.getPopulation().then(
-            function(response)
-            {
-              vm.playlistPopulation = response.data.results;
-
-              vm.totalPopulation = 0;
-              angular.forEach(vm.playlistPopulation,
-                function(playlist)
-                {
-                  vm.totalPopulation += parseInt(playlist.players);
-                }
-              );
-            }
-          );
-        }
-
-        function goToProfile()
-        {
-          vm.showLoader = true;
-          ApiSvc.authorise(vm.input, vm.platform.id)
-            .then(
-              function(response)
-              {
-                $location.path('u/' + response.data.profile.rlrank_id);
-              })
-            .catch(
-              function(err)
-              {
-                vm.profileError = err.data.message;
-                vm.showLoader = false;
-              }
-            );
-        }
-
-        function setPlatform(platform)
-        {
-          if (platform == 'psn')
+    function goToProfile()
+    {
+      vm.showLoader = true;
+      ApiSvc.authorise(vm.input, vm.platform.id)
+        .then(
+          function(response)
           {
-            vm.platform = {id: 'psn', name: 'Playstation'};
-          }
-          else
+            $location.path('u/' + response.data.profile.rlrank_id);
+          })
+        .catch(
+          function(err)
           {
-            vm.platform = {id: platform, name: platform.charAt(0).toUpperCase() + platform.slice(1)};
+            vm.profileError = err.data.message;
+            vm.showLoader = false;
           }
-        }
-    }]);
+        );
+    }
+
+    function setPlatform(platform)
+    {
+      if (platform == 'psn')
+      {
+        vm.platform = {id: 'psn', name: 'Playstation'};
+      }
+      else
+      {
+        vm.platform = {id: platform, name: platform.charAt(0).toUpperCase() + platform.slice(1)};
+      }
+    }
+  }
 })();

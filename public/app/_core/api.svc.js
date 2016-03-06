@@ -14,6 +14,7 @@
           getLeaderboard: getLeaderboard,
           getStatus: getStatus,
           getPopulation: getPopulation,
+          getPopulationHistorical: getPopulationHistorical,
           getPlayerStats: getPlayerStats
         };
 

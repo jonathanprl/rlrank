@@ -34,7 +34,14 @@ function getPopulation(req, res)
  */
 function getPopulationHistorical(req, res)
 {
-  db.aggregate('populationHistorical', {},
+  var weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+
+  db.aggregate('populationHistorical',
+    [
+      { $match: { created_at: { $gte: weekAgo } } },
+      { $group: { _id: '$players' }, totalPlayers: { $sum: '$players' } }
+    ],
     function(err, doc)
     {
       if (err)
