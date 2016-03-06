@@ -26,6 +26,8 @@
 
               getPlayerRanks(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
               getPlayerStats(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
+
+              TitleSvc.setTitle(vm.profile.display_name);
             }
           ).catch(
             function(err)

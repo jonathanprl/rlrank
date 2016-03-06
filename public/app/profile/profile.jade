@@ -40,7 +40,7 @@
                   i.fa(ng-class="{'fa-caret-up': vm.liveRank[playlist.playlist] > 0, 'fa-caret-down': vm.liveRank[playlist.playlist] < 0}")
                   | &nbsp;{{ vm.liveRank[playlist.playlist] }}
                 span(ng-if="playlist.mmr")
-                  {{ playlist.mmr }}
+                  | {{ playlist.mmr }}
       .col-md-4
         .row
           .col-md-12.col-sm-8
