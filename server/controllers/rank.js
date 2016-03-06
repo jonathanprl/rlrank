@@ -3,8 +3,7 @@ var swiftping = require('../helpers/swiftping');
 var psyonix = require('../services/psyonix');
 
 module.exports = {
-  getPlayerRanks,
-  getPlayerRatings
+  getPlayerRanks
 };
 
 /**
@@ -38,144 +37,85 @@ function getPlayerRanks(req, res)
         return swiftping.apiResponse('ok', res, doc.playlists);
       }
 
-      // display_name: "wSKw BLaCKOPzHD"
-      // profile: "/profile/XboxOne/2533274860807904"
-      // updated_at: "2016-03-05 19:06:26"
-
       console.log("[RANKS] Getting player rank from Psyonix", req.params.id);
 
-      psyonix.getPlayerRanks(req.params.id, req.params.platform, function(err, results)
-      {
-        if (err)
+      db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
+        function(err, doc)
         {
-          return swiftping.apiResponse('error', res, err);
-        }
-
-        console.log(results);
-
-        if (results.length === 0)
-        {
-          return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
-        }
-
-        var filteredResults = [];
-
-        results.forEach(
-          function(result)
+          if (err)
           {
-            if (result.Playlist === '0')
-            {
-              result.MMR = (result.Mu - (3 * result.Sigma)).toFixed(4);
-            }
-
-            filteredResults.push({
-              playlist: result.Playlist,
-              mu: result.Mu,
-              sigma: result.Sigma,
-              tier: result.Tier,
-              division: result.Division,
-              matches_played: result.MatchesPlayed,
-              mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
-            });
+            console.log("[RANKS] [ERROR] Could not found profile in database", req.params.id);
+            return swiftping.apiResponse('error', res, {code:'not_found', message: 'Profile was not found.'});
           }
-        );
 
-        if (!results)
-        {
-          filteredResults = [
-            {playlist: 0, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-            {playlist: 10, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-            {playlist: 11, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-            {playlist: 12, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-            {playlist: 13, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0}
-          ];
-        }
+          var profile = doc;
+          var id = new Buffer(profile.hash, 'base64').toString('ascii');
 
-        var rank = {
-          created_at: new Date(),
-          rlrank_id: req.params.id,
-          playlists: filteredResults
-        }
-
-        db.insert('ranks', rank,
-          function(err, doc)
+          psyonix.getPlayerRanks(id, profile.platform, function(err, results)
           {
             if (err)
             {
-              console.log("[RANKS] Could not save player rank to DB", rank, err); // ERROR
+              return swiftping.apiResponse('error', res, err);
             }
+
+            if (results.length === 0)
+            {
+              return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
+            }
+
+            var filteredResults = [];
+
+            results.forEach(
+              function(result)
+              {
+                if (result.Playlist === '0')
+                {
+                  result.MMR = (result.Mu - (3 * result.Sigma)).toFixed(4);
+                }
+
+                filteredResults.push({
+                  playlist: result.Playlist,
+                  mu: result.Mu,
+                  sigma: result.Sigma,
+                  tier: result.Tier,
+                  division: result.Division,
+                  matches_played: result.MatchesPlayed,
+                  mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
+                });
+              }
+            );
+
+            if (!results)
+            {
+              filteredResults = [
+                {playlist: 0, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+                {playlist: 10, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+                {playlist: 11, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+                {playlist: 12, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
+                {playlist: 13, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0}
+              ];
+            }
+
+            var rank = {
+              created_at: new Date(),
+              rlrank_id: req.params.id,
+              playlists: filteredResults
+            }
+
+            db.insert('ranks', rank,
+              function(err, doc)
+              {
+                if (err)
+                {
+                  console.log("[RANKS] Could not save player rank to DB", rank, err); // ERROR
+                }
+              }
+            );
+
+            swiftping.apiResponse('ok', res, filteredResults);
           }
         );
-
-        swiftping.apiResponse('ok', res, filteredResults);
       }
     );
   });
-}
-
-/**
- *
- * @param {object} req - Express request
- * @param {object} res - Express response
- */
-function getPlayerRatings(req, res)
-{
-  // db.find('sheets', function(docs)
-  // {
-  //   swiftping.apiResponse('ok', res, docs);
-  // },
-  // function(err)
-  // {
-  //   swiftping.apiResponse('error', res, err);
-  // });
-
-  var playlists = [10, 11, 12, 13];
-  var promises = [];
-
-  playlists.forEach(
-    function(playlist)
-    {
-      promises.push(new Promise(
-        function (resolve, reject)
-        {
-          psyonix.getPlayerRating(req.params.id, playlist,
-            function(err, results)
-            {
-              if (err)
-              {
-                return swiftping.apiResponse('error', res, err);
-              }
-
-              results.forEach(
-                function(result)
-                {
-                  if ('Value' in result)
-                  {
-                    resolve({
-                      playlist: String(playlist),
-                      rating: result.Value
-                    });
-                  }
-                }
-              );
-            }
-          );
-        }
-      ));
-    }
-  );
-
-  Promise.all(promises)
-    .then(function(results)
-    {
-      db.upsert('ratings', {rlrankId: req.params.id}, {$set: {playlists: results}},
-        function(err, doc)
-        {
-
-        }
-      );
-
-      swiftping.apiResponse('ok', res, results);
-    }
-  );
 }

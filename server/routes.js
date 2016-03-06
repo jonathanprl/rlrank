@@ -1,9 +1,12 @@
-var psyonix = require('./services/psyonix');
 var rank = require('./controllers/rank');
 var leaderboard = require('./controllers/leaderboard');
 var stats = require('./controllers/stats');
 var status = require('./controllers/status');
+
+var psyonix = require('./services/psyonix');
 var cron = require('./services/cron');
+
+var swiftping = require('./helpers/swiftping');
 
 module.exports = function(app)
 {
@@ -19,15 +22,16 @@ module.exports = function(app)
     res.send('User-agent: *\nAllow: /');
   });
 
-  app.post('/api/auth', psyonix.auth);
+  app.post('/api/auth', swiftping.auth);
 
-  app.get('/api/rank/:platform/:id', rank.getPlayerRanks);
-  app.get('/api/rating/:id', rank.getPlayerRatings);
+  app.get('/api/profile/:id', swiftping.getProfile);
+
+  app.get('/api/rank/:id', rank.getPlayerRanks);
 
   app.get('/api/leaderboard/:playlist', leaderboard.getLeaderboard);
 
-  app.get('/api/stats/:platform/:id/:stat', stats.getStat);
-  app.get('/api/stats/:platform/:id', stats.getStats);
+  app.get('/api/stats/:id/:stat', stats.getStat);
+  app.get('/api/stats/:id', stats.getStats);
 
   app.get('/api/status', status.getStatus);
 

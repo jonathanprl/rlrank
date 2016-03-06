@@ -6,22 +6,11 @@
 
         var vm = this;
 
-        vm.authorise = authorise;
         vm.getPlayerRanks = getPlayerRanks;
         vm.leaderboards = {};
         vm.liveRank = {};
         vm.shareUrl = $location.absUrl();
         vm.router = RouteSvc;
-
-        if ($routeParams.platform)
-        {
-          getPlayerRanks($routeParams.rlrank_id, $routeParams.platform);
-          getPlayerStats($routeParams.rlrank_id, $routeParams.platform);
-        }
-        else
-        {
-          authorise($routeParams.rlrank_id);
-        }
 
         // SocketSvc.forward('liveRank', $scope);
         //
@@ -29,72 +18,43 @@
         //   vm.liveRank = data;
         // });
 
-        $interval(
-          function()
-          {
-            // TODO: REAL-TIME WITH DB VIA SOCKET.IO
-            //!£!££
-            var oldRanks = angular.copy(vm.playlists);
-            getPlayerRanks(vm.profile.rlrank_id, vm.profile.platform,
-              function(newRanks)
+        ApiSvc.getProfile($routeParams.rlrank_id)
+          .then(
+            function(response)
+            {
+              vm.profile = response.data.results;
+
+              getPlayerRanks(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
+              getPlayerStats(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
+            }
+          ).catch(
+            function(err)
+            {
+              if (err.data.error.code == 'not_found')
               {
-                angular.forEach(oldRanks,
-                  function(oldRank)
-                  {
-                    angular.forEach(newRanks,
-                      function(newRank)
-                      {
-                        if (newRank.playlist == oldRank.playlist)
-                        {
-                          if (newRank.mmr > oldRank.mmr)
-                          {
-                            vm.liveRank[newRank.playlist] = newRank.mmr - oldRank.mmr;
-                          }
-                          else if (newRank.mmr < oldRank.mmr)
-                          {
-                            vm.liveRank[newRank.playlist] = newRank.mmr - oldRank.mmr;
-                          }
-                        }
-                      }
-                    );
-                  }
-                )
+                ApiSvc.authorise($routeParams.rlrank_id, null)
+                  .then(
+                    function(response)
+                    {
+                      console.log(response);
+                      $location.path('/u/' + response.data.profile.rlrank_id)
+                    })
+                  .catch(
+                    function(err)
+                    {
+                      $location.path('/');
+                    }
+                  );
               }
-            );
-          }, '60000'
-        );
+            }
+          );
 
-        function authorise(input)
-        {
-          ApiSvc.authorise(input)
-            .then(
-              function(response)
-              {
-                vm.profile = response.data.profile;
-                getPlayerRanks(vm.profile.rlrank_id, vm.profile.platform);
-                getPlayerStats(vm.profile.rlrank_id, vm.profile.platform);
-
-                TitleSvc.setTitle(vm.profile.username);
-              })
-            .catch(
-              function(err)
-              {
-                $location.path('/');
-              }
-            );
-        }
-
-        function getPlayerRanks(id, platform, callback)
+        function getPlayerRanks(id, platform)
         {
           ApiSvc.getPlayerRanks(id, platform)
             .then(function(response)
             {
               vm.playlists = response.data.results;
-
-              if (callback)
-              {
-                callback(response.data.results);
-              }
             })
             .catch(function(err)
             {
@@ -109,6 +69,10 @@
             .then(function(response)
             {
               vm.stats = response.data.results;
+            })
+            .catch(function(err)
+            {
+              $location.path('/');
             }
           );
         }

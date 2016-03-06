@@ -33,7 +33,6 @@
     "mongodb": "^2.1.4",
     "mongojs": "^2.2.2",
     "node-rest-client": "^1.5.1",
-    "node-xbox": "^0.1.0",
     "ping": "^0.1.10",
     "promise": "^7.1.1",
     "restler": "^3.4.0",

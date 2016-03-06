@@ -70,7 +70,7 @@
             .then(
               function(response)
               {
-                $location.path('u/' + response.data.profile.rlrank_id + '/' + response.data.profile.platform.toLowerCase());
+                $location.path('u/' + response.data.profile.rlrank_id);
               })
             .catch(
               function(err)

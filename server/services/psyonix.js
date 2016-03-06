@@ -3,10 +3,10 @@ var https = require('http');
 var Url = require('url');
 var querystring = require('querystring');
 var steam = require('../helpers/steam');
+var xbox = require('../helpers/xbox');
 var restler = require('restler');
 
 module.exports = {
-  auth,
   getPlayerRanks,
   getPlayerStat,
   getServers,
@@ -16,131 +16,6 @@ module.exports = {
 };
 
 // LogoutUser
-
-function isNumeric(n)
-{
-  return !isNaN(parseFloat(n)) && isFinite(n)
-}
-
-function auth(req, res)
-{
-  db.findOneWhere('profiles', {input: req.body.input, platform: req.body.platform}, { _id: 0 },
-    function(err, doc)
-    {
-      if (err || !doc)
-      {
-        if (err) console.log("[PROFILE] Error fetching profile from DB", err); // ERROR
-        fetchNewProfile(req, res);
-      }
-      else
-      {
-        console.log("[PROFILE] Found profile in DB. %s (%s)", req.body.input, req.body.platform);
-        return res.send({profile: doc});
-      }
-    }
-  );
-}
-
-function fetchNewProfile(req, res)
-{
-  var input = req.body.input;
-  var platform = req.body.platform;
-
-  var url;
-
-  console.log("[PROFILE] Fetching new profile..."); // INFO
-
-  if (platform == 'steam')
-  {
-    console.log("[PROFILE] Steam User", input); // INFO;
-
-    if (input[0] == 7 && isNumeric(input) && input.length == 17)
-    {
-      var url = 'https://steamcommunity.com/profiles/' + input;
-    }
-    else if (input.indexOf('steamcommunity.com') > -1)
-    {
-      var url = input;
-    }
-    else if (/[A-Za-z0-9\-\_]$/g.test(input))
-    {
-      var url = 'https://steamcommunity.com/id/' + input;
-    }
-    else
-    {
-      console.log("[PROFILE] [ERROR] Invalid Steam User [%s]", input); // ERROR
-      return res.status(500).send({code: "invalid_steam", message: "Invalid Steam profile. Please enter your Steam profile URL (e.g. https://steamcommunity.com/profiles/7621738123123), your Steam Profile ID (e.g. 7621738123123) or your Steam Custom URL name"});
-    }
-
-    steam.getDetailsFromURL(url, function(err, steamProfile)
-    {
-      if (err)
-      {
-          return res.status(500).send(err);
-      }
-
-      var profileData = {
-        input: input,
-        steam_url: steamProfile.url,
-        steam_id: steamProfile.steamid,
-        rlrank_id: steamProfile.steamid,
-        username: steamProfile.personaname,
-        platform: platform
-      };
-
-      console.log("[PROFILE] Got profile from Steam, saving to DB...", url);
-
-      db.upsert('profiles', {input: input, platform: platform}, profileData,
-        function(err, doc)
-        {
-          if (err)
-          {
-            console.log("[PROFILE] [ERROR] Could not save Steam profile to database", url); // ERROR
-          }
-        }
-      );
-
-      res.send({profile: profileData});
-    });
-  }
-  else if (platform == 'psn' || platform == 'xbox')
-  {
-    console.log("[PROFILE] %s user [%s]", platform, input); // INFO
-
-    if (/[A-Za-z0-9\-\_ ]$/g.test(input))
-    {
-      var profileData = {
-        input: input,
-        steam_url: null,
-        steam_id: null,
-        rlrank_id: input,
-        username: input,
-        platform: platform
-      };
-
-      db.upsert('profiles', {input: input, platform: platform}, profileData,
-        function(err, doc)
-        {
-          if (err)
-          {
-            console.log("[PROFILE] [ERROR] Could not save %s profile to database [%s]", platform, input); // ERROR
-          }
-        }
-      );
-
-      return res.send({profile: profileData});
-    }
-    else
-    {
-      console.log("[PROFILE] [ERROR] Invalid %s user [%s]", platform, input); // ERROR
-      return res.status(500).send({code: "invalid_xboxpsn", message: "Invalid " + platform + " username."});
-    }
-  }
-  else
-  {
-    return res.status(500).send({code: "invalid_platform", message: "Invalid platform."});
-  }
-}
 
 // 1v1:10, 2v2:11, 3v3S:12, 3v3:13
 
@@ -154,6 +29,17 @@ function getPlayerRanks(id, platform, callback)
       'Proc[]': 'GetPlayerSkillSteam',
       'P0P[]': id
     };
+
+    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+    {
+      if (err)
+      {
+        return callback(err);
+      }
+
+      var data = parseResults(data);
+      callback(null, data);
+    });
   }
   else if (platform == 'psn')
   {
@@ -161,25 +47,46 @@ function getPlayerRanks(id, platform, callback)
       'Proc[]': 'GetPlayerSkillPS4',
       'P0P[]': id
     };
+
+    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+    {
+      if (err)
+      {
+        return callback(err);
+      }
+
+      var data = parseResults(data);
+      callback(null, data);
+    });
   }
   else if (platform == 'xbox')
   {
-    procData = {
-      'Proc[]': 'GetPlayerSkillXboxOne',
-      'P0P[]': id
-    };
+    xbox.getXuidFromGamertag(id,
+      function(err, xuid)
+      {
+        if (err)
+        {
+          return callback(err);
+        }
+
+        procData = {
+          'Proc[]': 'GetPlayerSkillXboxOne',
+          'P0P[]': xuid
+        };
+
+        callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+        {
+          if (err)
+          {
+            return callback(err);
+          }
+
+          var data = parseResults(data);
+          callback(null, data);
+        });
+      }
+    );
   }
-
-  callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
-  {
-    if (err)
-    {
-      return callback(err);
-    }
-
-    var data = parseResults(data);
-    callback(null, data);
-  });
 }
 
 function getLeaderboard(playlist, callback)
@@ -207,7 +114,7 @@ function getPlayerStat(id, platform, stat, callback)
 
   if (platform == 'steam')
   {
-    procData = 'Proc[]=GetLeaderboardValueForUser' + platform + '&P0P[]=' + id + '&P0P[]=' + stat;
+    procData = 'Proc[]=GetLeaderboardValueForUserSteam&P0P[]=' + id + '&P0P[]=' + stat;
   }
   else if (platform == 'psn')
   {
@@ -272,7 +179,8 @@ function callProc(procUrl, procData, callback)
   {
     if (err)
     {
-      return callback(err);
+      console.log("[PSYONIX] [ERROR] Couldn't get token from DB");
+      return callback({"code": "server_error", "message": "There was a server error. We have been notified."});
     }
 
     var headers = {
@@ -333,8 +241,8 @@ function refreshToken(callback)
     {
       if (!data)
       {
-        console.log(err);
-        return callback(true);
+        console.log('[PSYONIX] [ERROR] There was an error authing with Psyonix', err.rawEncoded);
+        return callback({"code": "server_error", "message": "There was a server error. We have been notified."});
       }
 
       db.modify('config', {name: 'token'}, {$set: {value: res.headers.sessionid}},
@@ -342,7 +250,8 @@ function refreshToken(callback)
         {
           if (err)
           {
-            return callback(true);
+            console.log('[PSYONIX] [ERROR] There was an error saving token to DB', err);
+            return callback({"code": "server_error", "message": "There was a server error. We have been notified."});
           }
 
           callback(null, res.headers.sessionid);
