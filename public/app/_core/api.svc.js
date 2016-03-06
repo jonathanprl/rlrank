@@ -10,16 +10,21 @@
           cache: cache,
           authorise: authorise,
           getPlayerRanks: getPlayerRanks,
+          getProfile, getProfile,
           getLeaderboard: getLeaderboard,
           getStatus: getStatus,
           getPopulation: getPopulation,
-          getPlayerStats: getPlayerStats,
-          getPlayerRating: getPlayerRating
+          getPlayerStats: getPlayerStats
         };
 
-        function authorise(url, platform)
+        function authorise(input, platform)
         {
-          return $http.post('/api/auth', {url: url, platform: platform});
+          return $http.post('/api/auth', {input: input, platform: platform});
+        }
+
+        function getProfile(id)
+        {
+          return $http.get('/api/profile/' + id);
         }
 
         function getLeaderboard(playlist)
@@ -27,29 +32,24 @@
           return $http.get('/api/leaderboard/' + playlist);
         }
 
-        function getPlayerRanks(id, platform, callback)
+        function getPlayerRanks(id)
         {
-          return $http.get('/api/rank/' + platform + '/' + id);
+          return $http.get('/api/rank/' + id);
         }
 
-        function getStatus(callback)
+        function getStatus()
         {
           return $http.get('/api/status/');
         }
 
-        function getPopulation(callback)
+        function getPopulation()
         {
           return $http.get('/api/population');
         }
 
-        function getPlayerStats(id, platform, callback)
+        function getPlayerStats(id)
         {
-          return $http.get('/api/stats/' + platform + '/' + id);
-        }
-
-        function getPlayerRating(id, callback)
-        {
-          return $http.get('/api/rating/' + id);
+          return $http.get('/api/stats/' + id);
         }
     }]);
 })();

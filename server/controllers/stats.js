@@ -61,55 +61,62 @@ function getStats(req, res)
 
       var stats = ['Wins', 'Goals', 'MVPs', 'Saves', 'Shots', 'Assists'];
 
-      var promises = [];
-
-      stats.forEach(
-        function(stat)
+      db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
+        function(err, doc)
         {
-          promises.push(new Promise(
-            function(resolve, reject)
+          var profile = doc;
+          var id = new Buffer(profile.hash, 'base64').toString('ascii');
+
+          var promises = [];
+
+          stats.forEach(
+            function(stat)
             {
-              psyonix.getPlayerStat(req.params.id, req.params.platform, stat,
-                function(err, result)
+              promises.push(new Promise(
+                function(resolve, reject)
                 {
-                  if (err)
-                  {
-                    reject(err);
-                  }
+                  psyonix.getPlayerStat(id, profile.platform, stat,
+                    function(err, result)
+                    {
+                      if (err)
+                      {
+                        reject(err);
+                      }
 
-                  if (!result)
-                  {
-                    return resolve({name: stat, value: 'N/A'});
-                  }
-
-                  resolve({name: result.LeaderboardID, value: result.Value});
+                      if (!result)
+                      {
+                        return resolve({name: stat, value: 'N/A'});
+                      }
+                      resolve({name: result.LeaderboardID, value: result.Value});
+                    }
+                  )
                 }
-              )
-            }
-          ));
-        }
-      );
-
-      Promise.all(promises)
-        .then(function(results)
-        {
-          var stats = {
-            created_at: new Date(),
-            rlrank_id: req.params.id,
-            stats: results
-          }
-
-          db.insert('stats', stats,
-            function(err, doc)
-            {
-              if (err)
-              {
-                console.log("[STATS] Could not save player stats to DB", rank, err); // ERROR
-              }
+              ));
             }
           );
 
-          return swiftping.apiResponse('ok', res, results);
+          Promise.all(promises)
+            .then(function(results)
+            {
+              var stats = {
+                created_at: new Date(),
+                rlrank_id: req.params.id,
+                stats: results
+              }
+
+              db.insert('stats', stats,
+                function(err, doc)
+                {
+                  if (err)
+                  {
+                    console.log("[STATS] Could not save player stats to DB", rank, err); // ERROR
+                  }
+                }
+              );
+
+              return swiftping.apiResponse('ok', res, results);
+            }
+          );
         }
       );
     }
