@@ -36,8 +36,7 @@
                   .then(
                     function(response)
                     {
-                      console.log(response);
-                      $location.path('/u/' + response.data.profile.rlrank_id)
+                      $location.path('/u/' + response.data.profile.rlrank_id);
                     })
                   .catch(
                     function(err)

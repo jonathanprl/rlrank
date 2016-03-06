@@ -10,7 +10,7 @@
           cache: cache,
           authorise: authorise,
           getPlayerRanks: getPlayerRanks,
-          getProfile, getProfile,
+          getProfile: getProfile,
           getLeaderboard: getLeaderboard,
           getStatus: getStatus,
           getPopulation: getPopulation,
