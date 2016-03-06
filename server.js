@@ -13,9 +13,16 @@ var cron = require('./server/services/cron.js');
     function()
     {
       cron.serverStatus();
-      cron.population();
     },
     '60000'
+  );
+
+  setInterval(
+    function()
+    {
+      cron.population();
+    },
+    '300000'
   );
 
   setInterval(
