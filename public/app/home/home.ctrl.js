@@ -11,9 +11,9 @@
 
         vm.leaderboards = {};
         vm.placeholder = {
-          'steam': "Enter your Steam profile URL, ID or name",
-          'psn': "Enter your PSN username",
-          'xbox': "Enter your Xbox Live username"
+          'steam': "Enter a Steam profile URL, ID or name",
+          'psn': "Enter a PSN username",
+          'xbox': "Enter a Xbox Live gamertag"
         };
         vm.platform = {id: 'steam', name: 'Steam'};
 
@@ -85,7 +85,7 @@
         {
           if (platform == 'psn')
           {
-            vm.platform = {id: 'psn', name: 'PSN'};
+            vm.platform = {id: 'psn', name: 'Playstation'};
           }
           else
           {
