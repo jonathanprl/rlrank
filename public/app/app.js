@@ -1,8 +1,8 @@
 angular
   .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics'])
   .config(['$routeProvider', '$locationProvider', app])
-  .config(['AnalyticsProvider', analytics])
-  .run(function(Analytics) {});
+  .config(['AnalyticsProvider', analyticsProvider])
+  .run(['Analytics', analytics]);
 
 function app($routeProvider, $locationProvider)
 {
@@ -57,7 +57,7 @@ function app($routeProvider, $locationProvider)
   });
 };
 
-function analytics(AnalyticsProvider)
+function analyticsProvider(AnalyticsProvider)
 {
   AnalyticsProvider
     .setAccount({
@@ -65,3 +65,5 @@ function analytics(AnalyticsProvider)
       trackEvent: true,
     });
 }
+
+function analytics(Analytics) {}
