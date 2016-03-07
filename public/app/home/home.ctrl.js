@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TitleSvc', '$routeParams', '$location', HomeController]);
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TitleSvc', '$routeParams', '$location', 'Analytics', HomeController]);
 
-  function HomeController(ApiSvc, RouteSvc, TitleSvc, $routeParams, $location)
+  function HomeController(ApiSvc, RouteSvc, TitleSvc, $routeParams, $location, Analytics)
   {
     'use strict';
 
@@ -84,6 +84,7 @@
         .then(
           function(response)
           {
+            Analytics.trackEvent('profile', 'find', vm.input + '@' + vm.platform.id);
             $location.path('u/' + response.data.profile.rlrank_id);
           })
         .catch(

@@ -17,6 +17,7 @@
     "socket.io-client": "^1.4.5",
     "font-awesome": "^4.5.0",
     "angular-socket-io": "^0.7.0",
-    "jquery.sparkline": "gwatts/jquery.sparkline#v2.1.2"
+    "jquery.sparkline": "gwatts/jquery.sparkline#v2.1.2",
+    "angular-google-analytics": "^1.1.6"
   }
 }
