@@ -32,11 +32,12 @@
             button.btn.btn-primary.btn-block(ng-click="vm.goToProfile()")
               | Get Ranks & Stats
               span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
-      h2 Players Online: {{ vm.totalPopulation }}
-      .row
-        .col-md-4.col-md-offset-4
-          .sp__graph(ng-if="vm.populationHistorical")
-            .sparkline(sparkline="vm.populationHistorical")
+      .sp__hero-sub
+        h2 Players Online: {{ vm.totalPopulation }}
+        .row
+          .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
+            .sp__graph(ng-if="vm.populationHistorical")
+              .sparkline(sparkline="vm.populationHistorical")
       //- table.table.table-responsive.sp__table.profile__stats
       //-   thead
       //-     tr
