@@ -179,7 +179,7 @@ function population()
             if (err) console.log("[CRON] [ERROR] Could not update DB with population", err); // ERROR
           }
         );
-        db.insert('populationHistorical', {playlist: playlist.PlaylistID, players: playlist.NumPlayers, created_at: new Date()},
+        db.insert('populationHistorical', {playlist: playlist.PlaylistID, players: parseInt(playlist.NumPlayers), created_at: new Date()},
           function(err, doc)
           {
             if (err) console.log("[CRON] [ERROR] Could not insert DB with population (historical)", err); // ERROR
