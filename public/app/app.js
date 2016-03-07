@@ -12,6 +12,11 @@ function app($routeProvider, $locationProvider)
   $locationProvider.html5Mode(true);
 
   $routeProvider
+  .when('/statistics', {
+    templateUrl: '/views/statistics/statistics',
+    controller: 'StatisticsController as vm',
+    activeSection: 'statistics'
+  })
   .when('/leaderboards', {
     templateUrl: '/views/leaderboard/leaderboard',
     controller: 'LeaderboardController as vm',

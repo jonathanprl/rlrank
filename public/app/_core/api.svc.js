@@ -1,61 +1,70 @@
 (function() {
   angular
     .module('app')
-    .factory('ApiSvc', ['$http', '$cacheFactory', function($http, $cacheFactory) {
-        'use strict';
+    .factory('ApiSvc', ['$http', '$cacheFactory', ApiSvc]);
 
-        var cache = $cacheFactory('rank');
+  function ApiSvc($http, $cacheFactory)
+  {
+    'use strict';
 
-        return {
-          cache: cache,
-          authorise: authorise,
-          getPlayerRanks: getPlayerRanks,
-          getProfile: getProfile,
-          getLeaderboard: getLeaderboard,
-          getStatus: getStatus,
-          getPopulation: getPopulation,
-          getPopulationHistorical: getPopulationHistorical,
-          getPlayerStats: getPlayerStats
-        };
+    var cache = $cacheFactory('rank');
 
-        function authorise(input, platform)
-        {
-          return $http.post('/api/auth', {input: input, platform: platform});
-        }
+    return {
+      cache: cache,
+      authorise: authorise,
+      getPlayerRanks: getPlayerRanks,
+      getProfile: getProfile,
+      getLeaderboard: getLeaderboard,
+      getStatus: getStatus,
+      getPopulation: getPopulation,
+      getPopulationHistorical: getPopulationHistorical,
+      getPlayerStats: getPlayerStats,
+      getTierThresholds: getTierThresholds
+    };
 
-        function getProfile(id)
-        {
-          return $http.get('/api/profile/' + id);
-        }
+    function authorise(input, platform)
+    {
+      return $http.post('/api/auth', {input: input, platform: platform});
+    }
 
-        function getLeaderboard(playlist)
-        {
-          return $http.get('/api/leaderboard/' + playlist);
-        }
+    function getProfile(id)
+    {
+      return $http.get('/api/profile/' + id);
+    }
 
-        function getPlayerRanks(id)
-        {
-          return $http.get('/api/rank/' + id);
-        }
+    function getLeaderboard(playlist)
+    {
+      return $http.get('/api/leaderboard/' + playlist);
+    }
 
-        function getStatus()
-        {
-          return $http.get('/api/status/');
-        }
+    function getPlayerRanks(id)
+    {
+      return $http.get('/api/rank/' + id);
+    }
 
-        function getPopulation()
-        {
-          return $http.get('/api/population');
-        }
+    function getStatus()
+    {
+      return $http.get('/api/status/');
+    }
 
-        function getPopulationHistorical()
-        {
-          return $http.get('/api/population/historical');
-        }
+    function getPopulation()
+    {
+      return $http.get('/api/population');
+    }
 
-        function getPlayerStats(id)
-        {
-          return $http.get('/api/stats/' + id);
-        }
-    }]);
+    function getPopulationHistorical()
+    {
+      return $http.get('/api/population/historical');
+    }
+
+    function getPlayerStats(id)
+    {
+      return $http.get('/api/stats/' + id);
+    }
+
+    function getTierThresholds()
+    {
+      return $http.get('/api/statistics/tierThresholds');
+    }
+  };
 })();
