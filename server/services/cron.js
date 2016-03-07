@@ -173,7 +173,7 @@ function population()
     playlists.forEach(
       function(playlist)
       {
-        db.upsert('population', {playlist: playlist.PlaylistID}, {playlist: playlist.PlaylistID, players: playlist.NumPlayers, created_at: new Date()},
+        db.upsert('population', {playlist: playlist.PlaylistID}, {playlist: parseInt(playlist.PlaylistID), players: parseInt(playlist.NumPlayers), created_at: new Date()},
           function(err, doc)
           {
             if (err) console.log("[CRON] [ERROR] Could not update DB with population", err); // ERROR

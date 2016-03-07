@@ -33,8 +33,10 @@
               | Get Ranks & Stats
               span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
       h2 Players Online: {{ vm.totalPopulation }}
-      .sp__graph
-        .sparkline(sparkline="vm.populationHistorical")
+      .row
+        .col-md-4.col-md-offset-4
+          .sp__graph(ng-if="vm.populationHistorical")
+            .sparkline(sparkline="vm.populationHistorical")
       //- table.table.table-responsive.sp__table.profile__stats
       //-   thead
       //-     tr
