@@ -6,17 +6,17 @@ module.exports = {
   apiResponse,
   MMRToSkillRating,
   getProfile
-}
+};
 
 function apiResponse(type, res, data)
 {
   switch (type)
   {
-    case 'ok':
-      _ok(res, data);
+  case 'ok':
+    _ok(res, data);
     break;
-    case 'error':
-      _error(res, data);
+  case 'error':
+    _error(res, data);
     break;
   }
 }
@@ -33,7 +33,7 @@ function rankDifferences(oldPlaylists, newPlaylists)
         {
           if (oldPlaylist.playlist == newPlaylist.playlist)
           {
-            playlists[newPlaylist.playlist] = oldPlaylist.mmr - newPlaylist.mmr
+            playlists[newPlaylist.playlist] = oldPlaylist.mmr - newPlaylist.mmr;
           }
         }
       );
@@ -55,15 +55,15 @@ function auth(req, res)
     {
       if (err)
       {
-        return console.log("[PROFILE] Error fetching profile from DB", err); // ERROR
+        return console.log('[PROFILE] Error fetching profile from DB', err); // ERROR
       }
 
       if (!doc)
       {
-        return fetchNewProfile(req, res)
+        return fetchNewProfile(req, res);
       }
 
-      console.log("[PROFILE] Found profile in DB. %s (%s)", req.body.input, req.body.platform);
+      console.log('[PROFILE] Found profile in DB. %s (%s)', req.body.input, req.body.platform);
       return res.send({profile: doc});
     }
   );
@@ -76,7 +76,7 @@ function getProfile(req, res)
     {
       if (err || !doc)
       {
-        console.log("[PROFILE] Error fetching profile from DB", err || 'No record'); // ERROR
+        console.log('[PROFILE] Error fetching profile from DB', err || 'No record'); // ERROR
         return apiResponse('error', res, {code: 'not_found', message: 'Profile not found.'});
       }
 
@@ -92,11 +92,11 @@ function fetchNewProfile(req, res)
 
   var url;
 
-  console.log("[PROFILE] Fetching new profile... Input:", input); // INFO
+  console.log('[PROFILE] Fetching new profile... Input:', input); // INFO
 
   if (platform == 'steam')
   {
-    console.log("[PROFILE] Steam User", input); // INFO;
+    console.log('[PROFILE] Steam User', input); // INFO;
 
     if (input[0] == 7 && isNumeric(input) && input.length == 17)
     {
@@ -112,15 +112,15 @@ function fetchNewProfile(req, res)
     }
     else
     {
-      console.log("[PROFILE] [ERROR] Invalid Steam User [%s]", input); // ERROR
-      return res.status(500).send({code: "invalid_steam", message: "Invalid Steam profile. Please enter your Steam profile URL (e.g. https://steamcommunity.com/profiles/7621738123123), your Steam Profile ID (e.g. 7621738123123) or your Steam Custom URL name"});
+      console.log('[PROFILE] [ERROR] Invalid Steam User [%s]', input); // ERROR
+      return res.status(500).send({code: 'invalid_steam', message: 'Invalid Steam profile. Please enter your Steam profile URL (e.g. https://steamcommunity.com/profiles/7621738123123), your Steam Profile ID (e.g. 7621738123123) or your Steam Custom URL name'});
     }
 
     steam.getDetailsFromURL(url, function(err, steamProfile)
     {
       if (err)
       {
-          return res.status(500).send(err);
+        return res.status(500).send(err);
       }
 
       console.log(steamProfile);
@@ -133,14 +133,14 @@ function fetchNewProfile(req, res)
         hash: new Buffer(steamProfile.steamid).toString('base64')
       };
 
-      console.log("[PROFILE] Got profile from Steam, saving to DB...", input);
+      console.log('[PROFILE] Got profile from Steam, saving to DB...', input);
 
       db.insert('profiles', profileData,
         function(err, doc)
         {
           if (err)
           {
-            console.log("[PROFILE] [ERROR] Could not save Steam profile to database", input); // ERROR
+            console.log('[PROFILE] [ERROR] Could not save Steam profile to database', input); // ERROR
           }
         }
       );
@@ -150,7 +150,7 @@ function fetchNewProfile(req, res)
   }
   else if (platform == 'psn' || platform == 'xbox')
   {
-    console.log("[PROFILE] %s user [%s]", platform, input); // INFO
+    console.log('[PROFILE] %s user [%s]', platform, input); // INFO
 
     input = decodeURIComponent(input);
 
@@ -169,7 +169,7 @@ function fetchNewProfile(req, res)
         {
           if (err)
           {
-            console.log("[PROFILE] [ERROR] Could not save %s profile to database [%s]", platform, input); // ERROR
+            console.log('[PROFILE] [ERROR] Could not save %s profile to database [%s]', platform, input); // ERROR
           }
         }
       );
@@ -178,8 +178,8 @@ function fetchNewProfile(req, res)
     }
     else
     {
-      console.log("[PROFILE] [ERROR] Invalid %s user [%s]", platform, input); // ERROR
-      return res.status(500).send({code: "invalid_xboxpsn", message: "Invalid " + platform + " username."});
+      console.log('[PROFILE] [ERROR] Invalid %s user [%s]', platform, input); // ERROR
+      return res.status(500).send({code: 'invalid_xboxpsn', message: 'Invalid ' + platform + ' username.'});
     }
   }
   else
@@ -223,7 +223,7 @@ function fetchNewProfile(req, res)
     }
     else
     {
-      return res.status(500).send({code: "invalid_platform", message: "Invalid platform."});
+      return res.status(500).send({code: 'invalid_platform', message: 'Invalid platform.'});
     }
   }
 }
@@ -244,7 +244,7 @@ function getUniqueId()
 
 function isNumeric(n)
 {
-  return !isNaN(parseFloat(n)) && isFinite(n)
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 /**

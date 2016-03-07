@@ -8,15 +8,15 @@ module.exports = {
 
 function getXuidFromGamertag(gamertag, callback)
 {
-  console.log("[XBOX] Getting gamertag from xboxapi [%s]", gamertag);
+  console.log('[XBOX] Getting gamertag from xboxapi [%s]', gamertag);
 
   db.findOneWhere('xuids', {gamertag: gamertag}, {},
     function(err, doc)
     {
       if (err)
       {
-        console.log("[XBOX] [ERROR] Error getting xuid from database [%s]", gamertag, err);
-        return callback({"code": "server_error", "message": "There was an issue fetching your stats. We have been notified."});
+        console.log('[XBOX] [ERROR] Error getting xuid from database [%s]', gamertag, err);
+        return callback({'code': 'server_error', 'message': 'There was an issue fetching your stats. We have been notified.'});
       }
 
       if (!doc)
@@ -31,7 +31,7 @@ function getXuidFromGamertag(gamertag, callback)
                 {
                   if (err)
                   {
-                    console.log("[XBOX] [ERROR] Error saving xuid to database [%s]", gamertag, err);
+                    console.log('[XBOX] [ERROR] Error saving xuid to database [%s]', gamertag, err);
                   }
                 }
               );
@@ -39,8 +39,8 @@ function getXuidFromGamertag(gamertag, callback)
           ).on('error',
             function(err)
             {
-              console.log("[XBOX] [ERROR] Error getting xuid from gamertag [%s]", gamertag, err.rawEncoded);
-              callback({"code": "server_error", "message": "There was an issue fetching your stats. We have been notified."});
+              console.log('[XBOX] [ERROR] Error getting xuid from gamertag [%s]', gamertag, err.rawEncoded);
+              callback({'code': 'server_error', 'message': 'There was an issue fetching your stats. We have been notified.'});
             }
           );
       }

@@ -24,17 +24,17 @@ function getPlayerRanks(req, res)
     }
   };
 
-  db.findOneWhere('ranks', query, {},
+  db.findWhere('ranks', query, {_id: 0, rlrank_id: 0},
     function(err, doc)
     {
       if (err)
       {
         console.log('[RANKS] Error fetching rank from DB', err); // ERROR
       }
-      else if (doc)
+      else if (doc.length > 0)
       {
         console.log('[RANKS] Found recent rank in DB', req.params.id);
-        return swiftping.apiResponse('ok', res, doc.playlists);
+        return swiftping.apiResponse('ok', res, doc);
       }
 
       console.log('[RANKS] Getting player rank from Psyonix', req.params.id);
@@ -64,7 +64,7 @@ function getPlayerRanks(req, res)
                 return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
               }
 
-              var filteredResults = [];
+              var ranks = [];
 
               results.forEach(
                 function(result)
@@ -74,7 +74,9 @@ function getPlayerRanks(req, res)
                     result.MMR = (result.Mu - (3 * result.Sigma)).toFixed(4);
                   }
 
-                  filteredResults.push({
+                  var data = {
+                    created_at: new Date(),
+                    rlrank_id: req.params.id,
                     playlist: result.Playlist,
                     mu: result.Mu,
                     sigma: result.Sigma,
@@ -82,38 +84,23 @@ function getPlayerRanks(req, res)
                     division: result.Division,
                     matches_played: result.MatchesPlayed,
                     mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
-                  });
+                  };
+
+                  ranks.push(data);
+
+                  db.insert('ranks', data,
+                    function(err, doc)
+                    {
+                      if (err)
+                      {
+                        console.log('[RANKS] Could not save player rank to DB', rank, err); // ERROR
+                      }
+                    }
+                  );
                 }
               );
 
-              if (!results)
-              {
-                filteredResults = [
-                  {playlist: 0, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-                  {playlist: 10, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-                  {playlist: 11, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-                  {playlist: 12, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0},
-                  {playlist: 13, mu: 'N/A', sigma: 'N/A', tier: 0, division: 'N/A', matches_played: 'N/A', mmr: 0}
-                ];
-              }
-
-              var rank = {
-                created_at: new Date(),
-                rlrank_id: req.params.id,
-                playlists: filteredResults
-              };
-
-              db.insert('ranks', rank,
-                function(err, doc)
-                {
-                  if (err)
-                  {
-                    console.log('[RANKS] Could not save player rank to DB', rank, err); // ERROR
-                  }
-                }
-              );
-
-              swiftping.apiResponse('ok', res, filteredResults);
+              swiftping.apiResponse('ok', res, ranks);
             }
           );
         }

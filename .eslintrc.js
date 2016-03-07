@@ -25,6 +25,9 @@ module.exports = {
         "no-console": [
           2,
           { allow: ["log", "error"] }
+        ],
+        "angular/log": [
+          0
         ]
     }
 };
