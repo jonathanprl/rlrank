@@ -1,7 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$interval', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', function($interval, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc) {
+    .controller('ProfileController', ['$interval', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', 'Analytics',
+      function($interval, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc, Analytics)
+      {
         'use strict';
 
         var vm = this;
@@ -28,6 +30,8 @@
               getPlayerStats(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
 
               TitleSvc.setTitle(vm.profile.display_name);
+
+              Analytics.trackEvent('profile', 'view', vm.profile.display_name + '@' + vm.profile.platform + ' ' + vm.profile.rlrank_id);
             }
           ).catch(
             function(err)
