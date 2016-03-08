@@ -19,7 +19,8 @@
       getPopulation: getPopulation,
       getPopulationHistorical: getPopulationHistorical,
       getPlayerStats: getPlayerStats,
-      getTierThresholds: getTierThresholds
+      getTierThresholds: getTierThresholds,
+      postPlayerRanksLive: postPlayerRanksLive
     };
 
     function authorise(input, platform)
@@ -65,6 +66,11 @@
     function getTierThresholds()
     {
       return $http.get('/api/statistics/tierThresholds');
+    }
+
+    function postPlayerRanksLive(profile)
+    {
+      return $http.post('/api/rank/live', profile);
     }
   };
 })();

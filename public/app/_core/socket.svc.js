@@ -1,12 +1,15 @@
 (function() {
   angular
     .module('app')
-    .factory('SocketSvc', ['socketFactory', function(socketFactory) {
-        'use strict';
-        var socket = socketFactory();
+    .factory('SocketSvc', ['socketFactory', SocketSvc]);
 
-        socket.forward('error');
+  function SocketSvc(socketFactory)
+  {
+    'use strict';
+    var socket = socketFactory();
 
-        return socket;
-    }]);
+    socket.forward('error');
+
+    return socket;
+  };
 })();

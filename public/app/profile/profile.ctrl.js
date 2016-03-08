@@ -1,85 +1,92 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$interval', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', 'Analytics',
-      function($interval, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc, Analytics)
-      {
-        'use strict';
+    .controller('ProfileController', ['$interval', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', 'Analytics', ProfileController]);
 
-        var vm = this;
+  function ProfileController($interval, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc, Analytics)
+  {
+    'use strict';
 
-        vm.getPlayerRanks = getPlayerRanks;
-        vm.leaderboards = {};
-        vm.liveRank = {};
-        vm.shareUrl = $location.absUrl();
-        vm.router = RouteSvc;
+    var vm = this;
 
-        // SocketSvc.forward('liveRank', $scope);
-        //
-        // $scope.$on('socket:liveRank', function (ev, data) {
-        //   vm.liveRank = data;
-        // });
+    vm.getPlayerRanks = getPlayerRanks;
+    vm.leaderboards = {};
+    vm.liveRank = false;
+    vm.shareUrl = $location.absUrl();
+    vm.router = RouteSvc;
 
-        ApiSvc.getProfile($routeParams.rlrank_id)
-          .then(
-            function(response)
-            {
-              vm.profile = response.data.results;
-
-              getPlayerRanks(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
-              getPlayerStats(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
-
-              TitleSvc.setTitle(vm.profile.display_name);
-
-              Analytics.trackEvent('profile', 'view', vm.profile.display_name + '@' + vm.profile.platform + ' ' + vm.profile.rlrank_id);
-            }
-          ).catch(
-            function(err)
-            {
-              if (err.data.error.code == 'not_found')
-              {
-                ApiSvc.authorise($routeParams.rlrank_id, null)
-                  .then(
-                    function(response)
-                    {
-                      $location.path('/u/' + response.data.profile.rlrank_id);
-                    })
-                  .catch(
-                    function(err)
-                    {
-                      $location.path('/');
-                    }
-                  );
-              }
-            }
-          );
-
-        function getPlayerRanks(id, platform)
+    ApiSvc.getProfile($routeParams.rlrank_id)
+      .then(
+        function(response)
         {
-          ApiSvc.getPlayerRanks(id, platform)
-            .then(function(response)
-            {
-              vm.playlists = response.data.results;
-            })
-            .catch(function(err)
-            {
-              $location.path('/');
-            }
-          );
-        }
+          vm.profile = response.data.results;
 
-        function getPlayerStats(id, platform)
-        {
-          ApiSvc.getPlayerStats(id, platform)
-            .then(function(response)
+          getPlayerRanks(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
+          getPlayerStats(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
+
+          ApiSvc.postPlayerRanksLive(vm.profile).then(
+            function()
             {
-              vm.stats = response.data.results;
-            })
-            .catch(function(err)
-            {
-              $location.path('/');
+              vm.liveRank = true;
+
+              SocketSvc.forward('liveRank', $scope);
+              $scope.$on('socket:liveRank', function (ev, data) {
+                vm.playlists = data;
+              });
             }
           );
+
+          TitleSvc.setTitle(vm.profile.display_name);
+
+          Analytics.trackEvent('profile', 'view', vm.profile.display_name + '@' + vm.profile.platform + ' ' + vm.profile.rlrank_id);
         }
-    }]);
+      ).catch(
+        function(err)
+        {
+          if (err.data.error.code == 'not_found')
+          {
+            ApiSvc.authorise($routeParams.rlrank_id, null)
+              .then(
+                function(response)
+                {
+                  $location.path('/u/' + response.data.profile.rlrank_id);
+                })
+              .catch(
+                function(err)
+                {
+                  $location.path('/');
+                }
+              );
+          }
+        }
+      );
+
+    function getPlayerRanks(id, platform)
+    {
+      ApiSvc.getPlayerRanks(id, platform)
+        .then(function(response)
+        {
+          vm.playlists = response.data.results;
+        })
+        .catch(function(err)
+        {
+          $location.path('/');
+        }
+      );
+    }
+
+    function getPlayerStats(id, platform)
+    {
+      ApiSvc.getPlayerStats(id, platform)
+        .then(function(response)
+        {
+          vm.stats = response.data.results;
+        })
+        .catch(function(err)
+        {
+          $location.path('/');
+        }
+      );
+    }
+};
 })();

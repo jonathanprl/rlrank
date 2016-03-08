@@ -14,7 +14,7 @@ module.exports = function(app)
   var socketio = require('./helpers/socketio')(app.io);
 
   app.get('/', function(req, res) {
-      res.render('index');
+    res.render('index');
   });
 
   app.get('/robots.txt', function(req, res)
@@ -28,6 +28,7 @@ module.exports = function(app)
   app.get('/api/profile/:id', swiftping.getProfile);
 
   app.get('/api/rank/:id', rank.getPlayerRanks);
+  app.post('/api/rank/live', socketio.transport, rank.getPlayerRanksLive);
 
   app.get('/api/leaderboard/:playlist', leaderboard.getLeaderboard);
 
@@ -50,4 +51,4 @@ module.exports = function(app)
   {
     res.render('index');
   });
-}
+};
