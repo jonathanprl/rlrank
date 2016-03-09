@@ -66,8 +66,6 @@
           {
             vm.sort[playlist] = column;
           }
-
-          console.log(vm.sort);
         }
 
         function increaseLeaderboard()

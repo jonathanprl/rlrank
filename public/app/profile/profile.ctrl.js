@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$interval', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'SocketSvc', 'Analytics', ProfileController]);
+    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', '$scope', ProfileController]);
 
-  function ProfileController($interval, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, SocketSvc, Analytics)
+  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics, $scope)
   {
     'use strict';
 
@@ -11,7 +11,6 @@
 
     vm.getPlayerRanks = getPlayerRanks;
     vm.leaderboards = {};
-    vm.liveRank = false;
     vm.shareUrl = $location.absUrl();
     vm.router = RouteSvc;
 
@@ -24,20 +23,7 @@
           getPlayerRanks(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
           getPlayerStats(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
 
-          ApiSvc.postPlayerRanksLive(vm.profile).then(
-            function()
-            {
-              vm.liveRank = true;
-
-              SocketSvc.forward('liveRank', $scope);
-              $scope.$on('socket:liveRank', function (ev, data) {
-                vm.playlists = data;
-              });
-            }
-          );
-
           TitleSvc.setTitle(vm.profile.display_name);
-
           Analytics.trackEvent('profile', 'view', vm.profile.display_name + '@' + vm.profile.platform + ' ' + vm.profile.rlrank_id);
         }
       ).catch(
@@ -67,6 +53,8 @@
         .then(function(response)
         {
           vm.playlists = response.data.results;
+          vm.lastUpdated = vm.playlists[0].created_at;
+          liveRanks();
         })
         .catch(function(err)
         {
@@ -88,5 +76,36 @@
         }
       );
     }
-};
+
+    function liveRanks()
+    {
+      var liveRanksInterval = $interval(
+        function()
+        {
+          ApiSvc.postPlayerRanksLive(vm.profile.rlrank_id, vm.playlists)
+            .then(function(response)
+            {
+              vm.playlists = response.data.results;
+              vm.lastUpdated = vm.playlists[0].created_at;
+              
+              angular.forEach(vm.playlists,
+                function(playlist)
+                {
+                  if (playlist.difference !== 0)
+                  {
+                    $interval.cancel(liveRanksInterval);
+                    $timeout(
+                      function()
+                      {
+                        liveRanks();
+                      }, 300000
+                    );
+                  }
+                }
+              );
+            });
+        }, 30000
+      );
+    }
+  };
 })();

@@ -28,7 +28,7 @@ module.exports = function(app)
   app.get('/api/profile/:id', swiftping.getProfile);
 
   app.get('/api/rank/:id', rank.getPlayerRanks);
-  app.post('/api/rank/live', socketio.transport, rank.getPlayerRanksLive);
+  app.post('/api/rank/:id/live', rank.postLatestChanges);
 
   app.get('/api/leaderboard/:playlist', leaderboard.getLeaderboard);
 

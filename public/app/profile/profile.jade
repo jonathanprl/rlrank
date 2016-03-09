@@ -6,10 +6,12 @@
         h1 {{ vm.profile.display_name }}
     .row
       .col-md-4.col-md-offset-1
-        span.sp__sub-header Updated < 5 minutes ago
-      .col-md-1.text-right
         span.sp__sub-header
-          i.fa.fa-circle.text-danger
+          | Last updated&nbsp;
+          span(am-time-ago="vm.lastUpdated")
+      .col-md-1.text-right
+        span.sp__sub-header(title="Rank updates every 30 seconds")
+          i.fa.fa-circle.text-danger.animated.animated.infinite.flash
           //- fa-dot-circle-o
           | &nbsp;LIVE
     .row
@@ -43,9 +45,9 @@
               td
                 span(ng-if="playlist.matches_played") {{ playlist.matches_played }} 
               td.text-right(style="white-space: pre;")
-                span.rank__change(ng-class="{'text-success': vm.liveRank[playlist.playlist] > 0, 'text-danger': vm.liveRank[playlist.playlist] < 0}" ng-show="vm.liveRank[playlist.playlist]")
-                  i.fa(ng-class="{'fa-caret-up': vm.liveRank[playlist.playlist] > 0, 'fa-caret-down': vm.liveRank[playlist.playlist] < 0}")
-                  | &nbsp;{{ vm.liveRank[playlist.playlist] }}
+                span.rank__change.animated.bounce(ng-class="{'text-success': playlist.difference > 0, 'text-danger': playlist.difference < 0}" ng-show="playlist.difference")
+                  i.fa(ng-class="{'fa-caret-up': playlist.difference > 0, 'fa-caret-down': playlist.difference < 0}")
+                  | &nbsp;{{ playlist.difference }}
                 span(ng-if="playlist.mmr")
                   | {{ playlist.mmr }}
       .col-md-4

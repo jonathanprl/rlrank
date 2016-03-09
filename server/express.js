@@ -37,4 +37,17 @@ io.on('connection',
   }
 );
 
+io.of('/profiles').on('connection',
+  function(socket)
+  {
+    socket.join(req.body.rlrank_id);
+    socket.on('profile',
+      function(profile)
+      {
+
+      }
+    );
+  }
+);
+
 module.exports = app;

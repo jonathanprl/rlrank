@@ -68,9 +68,9 @@
       return $http.get('/api/statistics/tierThresholds');
     }
 
-    function postPlayerRanksLive(profile)
+    function postPlayerRanksLive(id, ranks)
     {
-      return $http.post('/api/rank/live', profile);
+      return $http.post('/api/rank/' + id + '/live', {ranks: ranks});
     }
   };
 })();

@@ -4,7 +4,7 @@ var psyonix = require('../services/psyonix');
 
 module.exports = {
   getPlayerRanks,
-  getPlayerRanksLive
+  postLatestChanges
 };
 
 /**
@@ -110,41 +110,27 @@ function getPlayerRanks(req, res)
   );
 }
 
-/**
- *
- * @param {object} req - Express request
- * @param {object} res - Express response
- */
-function getPlayerRanksLive(req, res)
+function postLatestChanges(req, res)
 {
-  console.log(req.body);
-  req.io.of('/liverank').on('connection',
-    function(socket)
-    {
-      socket.join(req.body.rlrank_id);
-
-      getLatestChanges(req.params.id)
-    }
-  );
-
+  var oldRanks = req.body.ranks;
   db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
     function(err, doc)
     {
       if (err)
       {
-        console.log('[RANKS] [ERROR] Could not found profile in database', req.params.id);
-        return swiftping.apiResponse('error', res, {code:'not_found', message: 'Profile was not found.'});
+        console.log('[RANK] [ERROR] Could not get latestChanges profile from DB %s', req.params.id, err); // ERROR
+        return swiftping.apiResponse('error', res, {code: 'server_error', message: 'Something went wrong. We have been notified.'});
       }
 
-      var profile = doc;
-      var id = new Buffer(profile.hash, 'base64').toString('ascii');
+      var id = new Buffer(doc.hash, 'base64').toString('ascii');
 
-      psyonix.getPlayerRanks(id, profile.platform,
+      psyonix.getPlayerRanks(id, doc.platform,
         function(err, results)
         {
           if (err)
           {
-            return swiftping.apiResponse('error', res, err);
+            console.log('[RANK-LIVE] [ERROR] Could not get playerRanks from Psyonix %s [Hash: %s]', req.params.id, id, err); // ERROR
+            return swiftping.apiResponse('error', res, {code: 'server_error', message: 'Something went wrong. We have been notified.'});
           }
 
           if (results.length === 0)
@@ -162,6 +148,13 @@ function getPlayerRanksLive(req, res)
                 result.MMR = (result.Mu - (3 * result.Sigma)).toFixed(4);
               }
 
+
+
+              if (result.Playlist == 11)
+              {
+                result.MMR = 35.312;
+              }
+
               var data = {
                 created_at: new Date(),
                 rlrank_id: req.params.id,
@@ -175,20 +168,27 @@ function getPlayerRanksLive(req, res)
               };
 
               ranks.push(data);
+            }
+          );
 
-              db.insert('ranks', data,
-                function(err, doc)
+          var newRanks = ranks;
+
+          oldRanks.forEach(
+            function(oldRank)
+            {
+              newRanks.forEach(
+                function(newRank, index)
                 {
-                  if (err)
+                  if (oldRank.playlist == newRank.playlist)
                   {
-                    console.log('[RANKS] Could not save player rank to DB', rank, err); // ERROR
+                    newRank.difference = newRank.mmr - oldRank.mmr;
                   }
                 }
               );
             }
           );
 
-          swiftping.apiResponse('ok', res, ranks);
+          swiftping.apiResponse('ok', res, newRanks);
         }
       );
     }

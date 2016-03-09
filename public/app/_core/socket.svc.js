@@ -6,10 +6,20 @@
   function SocketSvc(socketFactory)
   {
     'use strict';
-    var socket = socketFactory();
 
-    socket.forward('error');
-
-    return socket;
+    // return {
+    //   profiles: profiles
+    // };
+    //
+    // function profiles(profile)
+    // {
+    //   var socket = socketFactory({
+    //     ioSocket: io.connect('/profiles')
+    //   });
+    //
+    //   socket.emit('profile', profile);
+    //
+    //   return socket;
+    // };
   };
 })();

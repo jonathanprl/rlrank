@@ -21,28 +21,6 @@ function apiResponse(type, res, data)
   }
 }
 
-function rankDifferences(oldPlaylists, newPlaylists)
-{
-  var playlists = [];
-
-  oldPlaylists.forEach(
-    function(oldPlaylist)
-    {
-      newPlaylists.forEach(
-        function(newPlaylist)
-        {
-          if (oldPlaylist.playlist == newPlaylist.playlist)
-          {
-            playlists[newPlaylist.playlist] = oldPlaylist.mmr - newPlaylist.mmr;
-          }
-        }
-      );
-    }
-  );
-
-  return playlists;
-}
-
 function MMRToSkillRating(mmr)
 {
   return Math.ceil((mmr*20)+99.5);
