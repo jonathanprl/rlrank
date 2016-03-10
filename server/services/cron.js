@@ -62,7 +62,6 @@ function leaderboards()
             // }
           }
         );
-        console.log(filteredResults);
 
         // var promises = [];
         //
