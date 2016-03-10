@@ -9,12 +9,25 @@ var path = require('path');
 
 app.set('views', path.normalize(__dirname + '/../public/app'));
 app.set('view engine', 'jade');
-app.use(bodyParser.json())
-app.use(express.static(path.normalize(__dirname + '/../public')));
 app.use(require('prerender-node').set('prerenderToken', 'It894S0HIa5KY4kogyI2'));
+app.use(bodyParser.json());
+app.use(express.static(path.normalize(__dirname + '/../public')));
 
 var server = app.listen(config.port);
 console.log('Listening on port %s...', config.port);
+
+if (config.port != 80)
+{
+  var appNonSSL = express();
+
+  // set up a route to redirect http to https
+  appNonSSL.get('*',function(req,res){
+    res.redirect('https://rocketleaguerank.com' + req.url);
+  });
+
+  // have it listen on 8080
+  appNonSSL.listen(80);
+}
 
 
 var io = require('socket.io')(server);
