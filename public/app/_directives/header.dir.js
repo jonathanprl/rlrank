@@ -2,7 +2,7 @@ angular
     .module('app')
     .directive('spHeader', spHeader);
 
-function spHeader($route)
+function spHeader()
 {
   var directive = {
     restrict: 'E',
