@@ -8,7 +8,8 @@ function spHeader($route)
     restrict: 'E',
     templateUrl: '/views/navbar/header',
     scope: {
-      pageTitle: '@'
+      pageTitle: '@',
+      subTitle: '@'
     }
   };
 
