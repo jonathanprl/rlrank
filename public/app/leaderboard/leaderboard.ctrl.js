@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('LeaderboardController', ['ApiSvc', 'RouteSvc', 'TitleSvc', function(ApiSvc, RouteSvc, TitleSvc) {
+    .controller('LeaderboardController', ['ApiSvc', 'RouteSvc', function(ApiSvc, RouteSvc) {
         'use strict';
 
         var vm = this;
@@ -21,7 +21,6 @@
 
         (function()
         {
-          TitleSvc.setTitle("Leaderboards");
           getAllLeaderboards();
         })();
 

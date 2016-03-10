@@ -1,22 +1,6 @@
 .sp__wrapper
   .container
-    .row
-      .col-md-4
-        h1 Global Leaderboards
-        span.sp__sub-header Updated every hour
-      .col-md-4
-        .sp__advert
-      .col-md-4
-        .sp__mini-rank-form
-          form.sp__rank-form
-            .form-group
-              label.control-label Enter a Steam Profile URL
-              input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
-              p.help-block(ng-if="vm.profileError")
-                | {{ vm.profileError }}
-            button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
-              | Get Ranks & Stats
-              span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+    sp-header(page-title="Global Leaderboards")
     .sp__leaderboards
       .row
         .col-lg-3.col-md-4.col-sm-6(ng-repeat="(playlist, leaderboard) in vm.leaderboards")

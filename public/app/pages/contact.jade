@@ -1,35 +1,10 @@
 .sp__wrapper
   .container
-    .sp__header
-      .row
-        .col-md-4
-          h1 Contact
-        .col-md-4
-          .sp__advert
-            
-        .col-md-4
-          .sp__mini-rank-form.hidden-xs.hidden-sm
-            form.sp__rank-form
-              .form-group
-                label.control-label Enter a Steam Profile URL
-                input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
-                p.help-block(ng-if="vm.profileError")
-                  | {{ vm.profileError }}
-              button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
-                | Get Ranks & Stats
-                span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+    sp-header(page-title="Contact")
     .row
       .col-md-4
         .panel
           .panel-body
-            | Please send a message to our <a href="https://twitter.com/rlrank">Twitter</a> until we have have finished this page.
+            p Please send a message to our <a href="https://twitter.com/rlrank">Twitter</a> until we have have finished this page.
     .sp__mini-rank-form.visible-xs.visible-sm
-      form.sp__rank-form
-        .form-group
-          label.control-label Enter a Steam Profile URL
-          input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
-          p.help-block(ng-if="vm.profileError")
-            | {{ vm.profileError }}
-        button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
-          | Get Ranks & Stats
-          span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+      rank-form

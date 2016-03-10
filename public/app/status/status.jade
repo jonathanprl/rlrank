@@ -1,23 +1,6 @@
 .sp__wrapper
   .container
-    .sp__header
-      .row
-        .col-md-4
-          h1 Server Status
-          span.sp__sub-header Status of the official Rocket League servers
-        .col-md-4
-          .sp__advert
-        .col-md-4
-          .sp__mini-rank-form.hidden-xs.hidden-sm
-            form.sp__rank-form
-              .form-group
-                label.control-label Enter a Steam Profile URL
-                input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
-                p.help-block(ng-if="vm.profileError")
-                  | {{ vm.profileError }}
-              button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
-                | Get Ranks & Stats
-                span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+    sp-header(page-title="Global Leaderboards")
     .row
       .col-md-4
         .sp__spinner(ng-if="!vm.regions")

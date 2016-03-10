@@ -50,14 +50,17 @@
           }
         };
       }
-    ).directive('googleAdsense', function () {
-      return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '/views/ads',
-        controller: function () {
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        }
-      };
-    });
+    ).directive('googleAdsense',
+      function ()
+      {
+        return {
+          restrict: 'A',
+          replace: true,
+          templateUrl: '/views/widgets/ads',
+          controller: function () {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          }
+        };
+      }
+    );
 }());

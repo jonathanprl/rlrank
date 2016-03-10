@@ -4,34 +4,7 @@
       h1 Find out your Rocket League MMR!
       .row
         .col-md-4.col-md-offset-4
-          form.sp__rank-form
-          
-            //- label.control-label Enter a Steam/Playstation/Xbox ID
-            .input-group
-              input.form-control(ng-model="vm.input" placeholder="{{ vm.placeholder[vm.platform.id] }}")
-              .input-group-btn
-                button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-                  i.socicon(ng-class="{'socicon-steam': vm.platform.id == 'steam', 'socicon-playstation': vm.platform.id == 'psn', 'socicon-xbox': vm.platform.id == 'xbox'}")
-                  | &nbsp;{{ vm.platform.name }}&nbsp;
-                  span.caret
-                ul.dropdown-menu.dropdown-menu-right
-                  li
-                    a(ng-click="vm.setPlatform('steam')" href="#")
-                      i.socicon.socicon-steam
-                      | &nbsp;Steam
-                  li
-                    a(ng-click="vm.setPlatform('psn')" href="#")
-                      i.socicon.socicon-playstation
-                      | &nbsp;Playstation
-                  li
-                    a(ng-click="vm.setPlatform('xbox')" href="#")
-                      i.socicon.socicon-xbox
-                      | &nbsp;Xbox
-            p.help-block(ng-if="vm.profileError")
-              | {{ vm.profileError }}
-            button.btn.btn-primary.btn-block(ng-click="vm.goToProfile()")
-              | Get Ranks & Stats
-              span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+          rank-form
       .sp__hero-sub
         h2 Players Online: {{ vm.totalPopulation }}
         .row

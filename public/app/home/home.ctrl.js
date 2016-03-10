@@ -1,28 +1,18 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TitleSvc', '$routeParams', '$location', 'Analytics', HomeController]);
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', 'Analytics', HomeController]);
 
-  function HomeController(ApiSvc, RouteSvc, TitleSvc, $routeParams, $location, Analytics)
+  function HomeController(ApiSvc, RouteSvc, $routeParams, $location, Analytics)
   {
     'use strict';
 
     var vm = this;
 
-    vm.goToProfile = goToProfile;
-    vm.setPlatform = setPlatform;
-
     vm.leaderboards = {};
-    vm.placeholder = {
-      'steam': 'Enter a Steam profile URL, ID or name',
-      'psn': 'Enter a PSN username',
-      'xbox': 'Enter a Xbox Live gamertag'
-    };
-    vm.platform = {id: 'steam', name: 'Steam'};
 
     (function()
     {
-      TitleSvc.setDefault();
       getAllLeaderboards();
       getPopulation();
       getPopulationHistorical();
@@ -75,37 +65,6 @@
           vm.populationHistorical = response.data.results;
         }
       );
-    }
-
-    function goToProfile()
-    {
-      vm.showLoader = true;
-      ApiSvc.authorise(vm.input, vm.platform.id)
-        .then(
-          function(response)
-          {
-            Analytics.trackEvent('profile', 'find', vm.input + '@' + vm.platform.id);
-            $location.path('u/' + response.data.profile.rlrank_id);
-          })
-        .catch(
-          function(err)
-          {
-            vm.profileError = err.data.message;
-            vm.showLoader = false;
-          }
-        );
-    }
-
-    function setPlatform(platform)
-    {
-      if (platform == 'psn')
-      {
-        vm.platform = {id: 'psn', name: 'Playstation'};
-      }
-      else
-      {
-        vm.platform = {id: platform, name: platform.charAt(0).toUpperCase() + platform.slice(1)};
-      }
     }
   }
 })();

@@ -82,19 +82,19 @@ gulp.task('less', function() {
 });
 
 gulp.task('templates', function () {
-    //  compile jade, generate angular template cache
-    var stream = gulp.src(['./public/app/**/*.jade'])
-        .pipe(jade())
-        .pipe(templateCache('rlrank-templates.js', {
-          module: 'rlrank-templates',
-          standalone: true,
-          transformUrl: function(url) {
-            url = '/views/' + url;
-            return url.replace('.html', '');
-          }
-        }))
-        .pipe(gulp.dest('./public/js'));
-    return stream;
+  //  compile jade, generate angular template cache
+  var stream = gulp.src(['./public/app/**/*.jade'])
+      .pipe(jade())
+      .pipe(templateCache('rlrank-templates.js', {
+        module: 'rlrank-templates',
+        standalone: true,
+        transformUrl: function(url) {
+          url = '/views/' + url;
+          return url.replace('.html', '');
+        }
+      }))
+      .pipe(gulp.dest('./public/js'));
+  return stream;
 });
 
 gulp.task('watch', function () {

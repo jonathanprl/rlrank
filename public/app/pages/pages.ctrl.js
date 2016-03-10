@@ -1,26 +1,16 @@
 (function() {
   angular
     .module('app')
-    .controller('PagesController', ['RouteSvc', 'TitleSvc', function(RouteSvc, TitleSvc) {
-        'use strict';
+    .controller('PagesController', ['RouteSvc', 'TitleSvc', PagesController]);
 
-        var vm = this;
+  function PagesController(RouteSvc, TitleSvc)
+  {
+    'use strict';
 
-        vm.goToProfile = goToProfile;
+    var vm = this;
 
-        TitleSvc.setDefault();
+    vm.headerUrl = '/views/navbar/header';
+    vm.pageTitle = TitleSvc.currentPage;
 
-        function goToProfile(url)
-        {
-          vm.showLoader = true;
-
-          RouteSvc.goToProfile(url,
-            function(err)
-            {
-              vm.profileError = err.message;
-              vm.showLoader = false;
-            }
-          );
-        }
-    }]);
+  };
 })();
