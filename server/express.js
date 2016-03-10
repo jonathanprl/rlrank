@@ -11,6 +11,7 @@ app.set('views', path.normalize(__dirname + '/../public/app'));
 app.set('view engine', 'jade');
 app.use(bodyParser.json())
 app.use(express.static(path.normalize(__dirname + '/../public')));
+app.use(require('prerender-node').set('prerenderToken', 'It894S0HIa5KY4kogyI2'));
 
 var server = app.listen(config.port);
 console.log('Listening on port %s...', config.port);
