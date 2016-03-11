@@ -2,6 +2,7 @@
   .row
     .col-md-8
       h1 {{ pageTitle }}
+      span.sp__sub-header(ng-show="subTitle") {{ subTitle }}
     .col-md-4
       .sp__mini-rank-form.hidden-xs.hidden-sm
         rank-form

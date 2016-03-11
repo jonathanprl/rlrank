@@ -45,6 +45,38 @@ function app($routeProvider, $locationProvider)
         pageTitle: 'Contact'
       }
     })
+    .when('/advertise', {
+      templateUrl: '/views/pages/advertise',
+      controller: 'PagesController as vm',
+      data: {
+        activeSection: 'advertise',
+        pageTitle: 'Advertise'
+      }
+    })
+    .when('/faq', {
+      templateUrl: '/views/pages/faq',
+      controller: 'PagesController as vm',
+      data: {
+        activeSection: 'faq',
+        pageTitle: 'Frequently Asked Questions'
+      }
+    })
+    .when('/privacy', {
+      templateUrl: '/views/pages/privacy',
+      controller: 'PagesController as vm',
+      data: {
+        activeSection: 'privacy',
+        pageTitle: 'Privacy'
+      }
+    })
+    .when('/statistics', {
+      templateUrl: '/views/pages/statistics',
+      controller: 'StatisticsController as vm',
+      data: {
+        activeSection: 'statistics',
+        pageTitle: 'Statistics'
+      }
+    })
     .when('/u/:rlrank_id/:platform', {
       templateUrl: '/views/profile/profile',
       controller: 'ProfileController as vm',
@@ -64,6 +96,14 @@ function app($routeProvider, $locationProvider)
       showMMR: true
     })
     .when('/', {
+      templateUrl: '/views/home/home',
+      controller: 'HomeController as vm',
+      activeSection: 'home',
+      data: {
+        pageTitle: 'default'
+      }
+    })
+    .otherwise({
       templateUrl: '/views/home/home',
       controller: 'HomeController as vm',
       activeSection: 'home',
