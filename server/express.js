@@ -9,7 +9,7 @@ var path = require('path');
 
 app.set('views', path.normalize(__dirname + '/../public/app'));
 app.set('view engine', 'jade');
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(express.static(path.normalize(__dirname + '/../public')));
 
 var server = app.listen(config.port);
@@ -25,13 +25,26 @@ io.on('connection',
   function(socket)
   {
     sockets.push(socket.id);
-    console.log("[SOCKET] Someone connected to socket.io. Total connections:", sockets.length);
+    console.log('[SOCKET] Someone connected to socket.io. Total connections:', sockets.length);
 
     socket.on('disconnect',
       function()
       {
         sockets.splice(sockets.indexOf(socket.id), 1);
-        console.log("[SOCKET] Someone disconnected from socket.io. Total connections:", sockets.length);
+        console.log('[SOCKET] Someone disconnected from socket.io. Total connections:', sockets.length);
+      }
+    );
+  }
+);
+
+io.of('/profiles').on('connection',
+  function(socket)
+  {
+    socket.join(req.body.rlrank_id);
+    socket.on('profile',
+      function(profile)
+      {
+
       }
     );
   }

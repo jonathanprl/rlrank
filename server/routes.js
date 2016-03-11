@@ -1,6 +1,7 @@
 var rank = require('./controllers/rank');
 var leaderboard = require('./controllers/leaderboard');
 var stats = require('./controllers/stats');
+var statistics = require('./controllers/statistics');
 var status = require('./controllers/status');
 
 var psyonix = require('./services/psyonix');
@@ -13,7 +14,7 @@ module.exports = function(app)
   var socketio = require('./helpers/socketio')(app.io);
 
   app.get('/', function(req, res) {
-      res.render('index');
+    res.render('index');
   });
 
   app.get('/robots.txt', function(req, res)
@@ -27,11 +28,14 @@ module.exports = function(app)
   app.get('/api/profile/:id', swiftping.getProfile);
 
   app.get('/api/rank/:id', rank.getPlayerRanks);
+  app.post('/api/rank/:id/live', rank.postLatestChanges);
 
   app.get('/api/leaderboard/:playlist', leaderboard.getLeaderboard);
 
   app.get('/api/stats/:id/:stat', stats.getStat);
   app.get('/api/stats/:id', stats.getStats);
+
+  app.get('/api/statistics/tierThresholds', statistics.getTierThresholds);
 
   app.get('/api/status', status.getStatus);
 
@@ -47,4 +51,4 @@ module.exports = function(app)
   {
     res.render('index');
   });
-}
+};
