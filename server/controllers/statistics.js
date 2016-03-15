@@ -12,7 +12,7 @@ function getTierThresholds(req, res)
 
   };
 
-  db.aggregate('ranks_stats', [
+  db.aggregate('ranks', [
     {
       $match:
       {

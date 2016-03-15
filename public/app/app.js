@@ -70,7 +70,7 @@ function app($routeProvider, $locationProvider)
       }
     })
     .when('/statistics', {
-      templateUrl: '/views/pages/statistics',
+      templateUrl: '/views/statistics/statistics',
       controller: 'StatisticsController as vm',
       data: {
         activeSection: 'statistics',

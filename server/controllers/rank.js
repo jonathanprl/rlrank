@@ -78,12 +78,12 @@ function getPlayerRanks(req, res)
                   var data = {
                     created_at: new Date(),
                     rlrank_id: req.params.id,
-                    playlist: result.Playlist,
+                    playlist: parseInt(result.Playlist),
                     mu: result.Mu,
                     sigma: result.Sigma,
-                    tier: result.Tier,
-                    division: result.Division,
-                    matches_played: result.MatchesPlayed,
+                    tier: parseInt(result.Tier),
+                    division: parseInt(result.Division),
+                    matches_played: parseInt(result.MatchesPlayed),
                     mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
                   };
 
