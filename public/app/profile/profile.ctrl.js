@@ -54,7 +54,7 @@
         {
           vm.playlists = response.data.results;
           vm.lastUpdated = vm.playlists[0].created_at;
-          liveRanks();
+          // liveRanks();
         })
         .catch(function(err)
         {
@@ -87,7 +87,7 @@
             {
               vm.playlists = response.data.results;
               vm.lastUpdated = vm.playlists[0].created_at;
-              
+
               angular.forEach(vm.playlists,
                 function(playlist)
                 {
