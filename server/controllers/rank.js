@@ -13,20 +13,10 @@ module.exports = {
  */
 function getPlayerRanks(req, res)
 {
-  var fiveMinsAgo = new Date();
-  fiveMinsAgo.setMinutes(fiveMinsAgo.getMinutes() - 5);
-
-  var query = {
-    rlrank_id: req.params.id,
-    created_at: {
-      $gte: fiveMinsAgo,
-      $lt: new Date()
-    }
-  };
-
-  db.findWhere('ranks', query, {_id: 0, rlrank_id: 0},
+  db.findWhere('ranks', {rlrank_id: req.params.id}, {_id: 0, rlrank_id: 0},
     function(err, doc)
     {
+      console.log(doc);
       if (err)
       {
         console.log('[RANKS] Error fetching rank from DB', err); // ERROR
@@ -49,7 +39,7 @@ function getPlayerRanks(req, res)
           }
 
           var profile = doc;
-          var id = new Buffer(profile.hash, 'base64').toString('ascii');
+          var id = swiftping.decryptHash(profile.hash);
 
           psyonix.getPlayerRanks(id, profile.platform,
             function(err, results)

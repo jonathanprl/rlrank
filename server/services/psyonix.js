@@ -4,10 +4,12 @@ var Url = require('url');
 var querystring = require('querystring');
 var steam = require('../helpers/steam');
 var xbox = require('../helpers/xbox');
+var swiftping = require('../helpers/swiftping');
 var restler = require('restler');
 
 module.exports = {
   getPlayerRanks,
+  getPlayersRanks,
   getPlayerStat,
   getServers,
   refreshToken,
@@ -21,6 +23,7 @@ module.exports = {
 
 function getPlayerRanks(id, platform, callback)
 {
+  return false;
   var procData;
 
   if (platform === 'steam')
@@ -73,6 +76,103 @@ function getPlayerRanks(id, platform, callback)
           'Proc[]': 'GetPlayerSkillXboxOne',
           'P0P[]': xuid
         };
+
+        callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+        {
+          if (err)
+          {
+            return callback(err);
+          }
+
+          var data = parseResults(data);
+          callback(null, data);
+        });
+      }
+    );
+  }
+}
+
+function getPlayersRanks(profiles, platform, callback)
+{
+  var procData;
+
+  if (platform === 'steam')
+  {
+    procData = '';
+
+    profiles.forEach(
+      function(profile, index)
+      {
+        var id = new Buffer(profile.hash, 'base64').toString('ascii');
+
+        procData += 'Proc[]=GetPlayerSkillSteam&P' + index + 'P[]=' + id;
+
+        if (index != profiles.length - 1)
+        {
+          procData += '&';
+        }
+      }
+    );
+
+    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+    {
+      if (err)
+      {
+        return callback(err);
+      }
+
+      var data = parseMultiResults(data);
+      callback(null, data);
+    });
+  }
+  else if (platform == 'psn')
+  {
+    procData = '';
+
+    ids.forEach(
+      function(id, index)
+      {
+        procData += 'Proc[]=GetPlayerSkillPS4&P' + index + 'P[]=' + id;
+
+        if (index != ids.length - 1)
+        {
+          procData += '&';
+        }
+      }
+    );
+
+    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+    {
+      if (err)
+      {
+        return callback(err);
+      }
+
+      var data = parseResults(data);
+      callback(null, data);
+    });
+  }
+  else if (platform == 'xbox')
+  {
+    xbox.getXuidFromGamertag(id,
+      function(err, xuid)
+      {
+        if (err)
+        {
+          return callback(err);
+        }
+
+        ids.forEach(
+          function(id, index)
+          {
+            procData += 'Proc[]=GetPlayerSkillXboxOne&P' + index + 'P[]=' + id;
+
+            if (index != ids.length - 1)
+            {
+              procData += '&';
+            }
+          }
+        );
 
         callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
         {
@@ -226,8 +326,8 @@ function refreshToken(callback)
     'PlayerName': 'Mugabe',
     'PlayerID': '76561198165509312',
     'Platform': 'Steam',
-    'BuildID': '-178744029',
-    'AuthCode': '14000000A4B53A687C70EB2EC0C43B0C01001001B71BD256180000000100000002000000A9139B6800000000D5BC160003000000B20000003200000004000000C0C43B0C0100100116DC0300A9139B680200840A000000001A1AD2569AC9ED560100E4780000000000006A055C199DB328C3BC31DAF59E003CEA2B96963401B23609FD98CDA9ACA25CD469EE0671C2AF59CA500DF7D40CDC18E3CF375BBB70A708D31B91767C7D27BA6731203FEE052E42EBDF9F14BE020B4751FF939A081A92E408200CA8B8085B3CF611F10333E87D68B649ABEC94879F5D006238D77774DB5647504C403E5C481ADD',
+    'BuildID': '342373649',
+    'AuthCode': '14000000A994D045DFFE86A2C0C43B0C0100100160BAEC56180000000100000002000000A9139B6800000000808F4A1A20000000B20000003200000004000000C0C43B0C0100100116DC0300A9139B680200840A000000009B0FE0561BBFFB560100E478000000000000195EDB479ABBEF71A594561560639FDE24DC64366A220989E4390D3E9336EA4E9A8291A95C1857DD8B09298F99626896E7AF531CF8F613DC7464CE8DE6BFE339C3FF1250A8ECD09E33795D37632D5FED18FBDE6911B29B63609F77020A9ABFBC9643E59306CE4FCDBE01B6C9CD4B32C232AA9796925B22DC47E62FED2BA141E5',
     'IssuerID': '0'
   };
 
@@ -281,6 +381,39 @@ function parseResults(results)
     if (properties.length > 1)
     {
       parsedResults.push(parsedLine);
+    }
+  });
+
+  return parsedResults;
+}
+
+function parseMultiResults(results)
+{
+  var parsedResults = [];
+  var groupedResults = [];
+
+  var lines = results.split(/\r?\n/);
+
+  lines.forEach(function(line)
+  {
+    var properties = line.split('&');
+
+    var parsedLine = {};
+    properties.forEach(function(property)
+    {
+      property = property.split('=');
+      parsedLine[property[0]] = property[1];
+    });
+
+    if (properties.length > 1)
+    {
+      groupedResults.push(parsedLine);
+    }
+
+    if (line == '' && groupedResults.length > 1)
+    {
+      parsedResults.push(groupedResults);
+      groupedResults = [];
     }
   });
 

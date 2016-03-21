@@ -5,7 +5,9 @@ module.exports = {
   auth,
   apiResponse,
   MMRToSkillRating,
-  getProfile
+  getProfile,
+  decryptHash,
+  encryptHash
 };
 
 function apiResponse(type, res, data)
@@ -130,7 +132,7 @@ function fetchNewProfile(req, res)
         rlrank_id: getUniqueId(),
         display_name: steamProfile.personaname,
         platform: platform,
-        hash: new Buffer(steamProfile.steamid).toString('base64')
+        hash: encryptHash(steamProfile.steamid)
       };
 
       console.log('[PROFILE] Got profile from Steam, saving to DB...', input);
@@ -161,7 +163,7 @@ function fetchNewProfile(req, res)
         rlrank_id: getUniqueId(),
         display_name: input,
         platform: platform,
-        hash: new Buffer(input).toString('base64')
+        hash: encryptHash(input)
       };
 
       db.insert('profiles', profileData,
@@ -187,7 +189,7 @@ function fetchNewProfile(req, res)
     // Assume it's a steam id.
     if (input[0] == 7 && isNumeric(input) && input.length == 17)
     {
-      var hash = new Buffer(input).toString('base64');
+      var hash = encryptHash(input);
 
       db.findOneWhere('profiles', {hash: hash, platform: 'steam'}, {_id: 0, hash: 0},
         function(err, doc)
@@ -245,6 +247,16 @@ function getUniqueId()
 function isNumeric(n)
 {
   return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function encryptHash(s)
+{
+  return new Buffer(s).toString('base64');
+}
+
+function decryptHash(s)
+{
+  return new Buffer(s, 'base64').toString('ascii');
 }
 
 /**
