@@ -1,0 +1,102 @@
+.sp__wrapper
+  .container
+    .row
+      .col-md-4
+        h1 Statistics
+        span.sp__sub-header Rocket League matchmaking statistics
+      .col-md-4
+        .sp__advert
+      .col-md-4
+        .sp__mini-rank-form
+          form.sp__rank-form
+            .form-group
+              label.control-label Enter a Steam Profile URL
+              input.form-control.input-sm(ng-model="vm.steamProfileUrl" placeholder="https://steamcommunity.com/profiles/76561198076736523")
+              p.help-block(ng-if="vm.profileError")
+                | {{ vm.profileError }}
+            button.btn.btn-primary.btn-block.btn-sm(ng-click="vm.goToProfile(vm.steamProfileUrl)")
+              | Get Ranks & Stats
+              span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+    h3 Skill Ratings per Tier
+    .sp__leaderboards
+      .row
+        .col-md-3
+          table.table.table-responsive.sp__table
+            thead
+              tr
+                th(colspan="2")
+                  | Tier
+                th
+                  | From
+                th
+                  | To
+            tbody
+              tr(ng-repeat="threshold in vm.tierThresholds | limitTo:5")
+                td
+                  | {{ threshold._id | rlTier }}
+                td
+                  img.img-responsive(ng-src="/img/ranks/{{ threshold._id }}_w.png" ng-title="threshold.tier | rlTier")
+                td
+                  span {{ threshold.min }}
+                td
+                  span {{ threshold.max }}
+        .col-md-3
+          table.table.table-responsive.sp__table
+            thead
+              tr
+                th(colspan="2")
+                  | Tier
+                th
+                  | From
+                th
+                  | To
+            tbody
+              tr(ng-repeat="threshold in vm.tierThresholds | limitTo:4:5")
+                td
+                  | {{ threshold._id | rlTier }}
+                td
+                  img.img-responsive(ng-src="/img/ranks/{{ threshold._id }}_w.png" ng-title="threshold.tier | rlTier")
+                td
+                  span {{ threshold.min }}
+                td
+                  span {{ threshold.max }}
+        .col-md-3
+          table.table.table-responsive.sp__table
+            thead
+              tr
+                th(colspan="2")
+                  | Tier
+                th
+                  | From
+                th
+                  | To
+            tbody
+              tr(ng-repeat="threshold in vm.tierThresholds | limitTo:4:9")
+                td
+                  | {{ threshold._id | rlTier }}
+                td
+                  img.img-responsive(ng-src="/img/ranks/{{ threshold._id }}_w.png" ng-title="threshold.tier | rlTier")
+                td
+                  span {{ threshold.min }}
+                td
+                  span {{ threshold.max }}
+        .col-md-3
+          table.table.table-responsive.sp__table
+            thead
+              tr
+                th(colspan="2")
+                  | Tier
+                th
+                  | From
+                th
+                  | To
+            tbody
+              tr(ng-repeat="threshold in vm.tierThresholds | limitTo:4:13")
+                td
+                  | {{ threshold._id | rlTier }}
+                td
+                  img.img-responsive(ng-src="/img/ranks/{{ threshold._id }}_w.png" ng-title="threshold.tier | rlTier")
+                td
+                  span {{ threshold.min }}
+                td
+                  span {{ threshold.max }}

@@ -1,5 +1,5 @@
 angular
-  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics'])
+  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment'])
   .config(['$routeProvider', '$locationProvider', app])
   .config(['AnalyticsProvider', analyticsProvider])
   .run(['$rootScope', 'TitleSvc', routeChange])
@@ -70,7 +70,7 @@ function app($routeProvider, $locationProvider)
       }
     })
     .when('/statistics', {
-      templateUrl: '/views/pages/statistics',
+      templateUrl: '/views/statistics/statistics',
       controller: 'StatisticsController as vm',
       data: {
         activeSection: 'statistics',

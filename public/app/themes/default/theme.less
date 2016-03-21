@@ -72,7 +72,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .sp__leaderboards table > tbody > tr > td > img {
-  width: 40px;
+  width: 38px;
 }
 
 .sp__table {
@@ -84,26 +84,26 @@ h1,h2,h3,h4,h5,h6 {
     border-top: 1px solid #3E3E3E;
     max-width: 124px;
     vertical-align: middle;
+    line-height: 16px;
+    padding: 4px 8px;
 
     span,
     a {
-      // display: block;
       width: 100%;
       white-space: pre;
-      overflow-x: hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
 
+    a {
+      display: inline-block;
+    }
+
     span + span {
+      width: auto;
       margin-left: 8px;
     }
   }
-
-  // > thead > tr > th {
-  //   text-align: center;
-  // }
-
-
 }
 
 .sp__share-btn {

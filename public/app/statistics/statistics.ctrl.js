@@ -1,15 +1,26 @@
 (function() {
   angular
     .module('app')
-    .controller('StatisticsController', ['ApiSvc', 'RouteSvc', 'TitleSvc', function(ApiSvc, RouteSvc, TitleSvc) {
-        'use strict';
+    .controller('StatisticsController', ['ApiSvc', 'RouteSvc', 'TitleSvc', StatisticsController]);
 
-        var vm = this;
+  function StatisticsController(ApiSvc, RouteSvc, TitleSvc) {
+    'use strict';
 
-        (function() {
-          TitleSvc.setTitle("Statistics");
-        }());
+    var vm = this;
 
+    (function() {
+      TitleSvc.setTitle('Statistics');
+      getTierThresholds();
+    }());
 
-    }]);
+    function getTierThresholds()
+    {
+      ApiSvc.getTierThresholds().then(
+        function(response)
+        {
+          vm.tierThresholds = response.data.results;
+        }
+      );
+    }
+  };
 })();
