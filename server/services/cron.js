@@ -7,7 +7,8 @@ module.exports = {
   leaderboards,
   serverStatus,
   population,
-  playersRanks
+  playersRanks,
+  playersStats
 };
 
 function leaderboards()
@@ -221,6 +222,93 @@ function _pingRegions(regions, callback)
   );
 }
 
+function playersStats()
+{
+  console.log("[CRON] Getting players stats from Psyonix");
+
+  var stats = ['Wins', 'Goals', 'MVPs', 'Saves', 'Shots', 'Assists'];
+
+  db.find('profiles',
+    function(err, docs)
+    {
+      var profiles = docs;
+
+      var batches = [];
+      var batch = 10;
+      var currentBatch = [];
+
+      profiles.forEach(
+        function(profile, index)
+        {
+          currentBatch.push(profile);
+
+          if ((index + 1) % batch === 0 || (index + 1 == docs.length && (index + 1) % batch !== 0))
+          {
+            batches.push(currentBatch);
+            currentBatch = [];
+          }
+        }
+      );
+
+      batches.forEach(
+        function(profiles, batchindex)
+        {
+          stats.forEach(
+            function(stat, statIndex)
+            {
+              setTimeout(
+                function()
+                {
+                  psyonix.getPlayersStat(profiles, 'steam', stat,
+                    function(err, players)
+                    {
+                      console.log(players);
+                      console.log("Profiles length", profiles.length);
+                      console.log("Stats length", players.length);
+
+                      players.forEach(
+                        function(player, playerIndex)
+                        {
+
+                          if (player)
+                          {
+                            var data = {
+                              created_at: new Date(),
+                              rlrank_id: profiles[playerIndex].rlrank_id,
+                              type: player.LeaderboardID,
+                              value: player.Value
+                            };
+
+                            var query = {
+                              rlrank_id: data.rlrank_id,
+                              type: data.type
+                            };
+
+                            db.upsert('stats', query, data,
+                              function(err, doc)
+                              {
+                                if (err)
+                                {
+                                  console.log("[CRON] Could not save player stats to DB", query, data, err); // ERROR
+                                }
+                              }
+                            );
+                          }
+                        }
+                      );
+                    }
+                  );
+                }, String((batchindex * (statIndex + 1))*2000)
+              );
+            }
+          );
+        }
+      );
+
+    }
+  );
+}
+
 function playersRanks()
 {
   console.log('[CRON] Updating player ranks...'); // info
@@ -272,7 +360,7 @@ function playersRanks()
 
                           var data = {
                             created_at: new Date(),
-                            rlrank_id: profiles[playerIndex].rlrank_id, ranks are not aligning with profiles
+                            rlrank_id: profiles[playerIndex].rlrank_id,
                             playlist: result.Playlist,
                             mu: result.Mu,
                             sigma: result.Sigma,
@@ -281,10 +369,14 @@ function playersRanks()
                             matches_played: result.MatchesPlayed,
                             mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
                           };
-                          console.log(data);
                           ranks.push(data);
 
-                          db.upsert('ranks', {rlrank_id: profiles[playerIndex].rlrank_id}, data,
+                          var query = {
+                            rlrank_id: data.rlrank_id,
+                            playlist: data.playlist
+                          }
+
+                          db.upsert('ranks', query, data,
                             function(err, doc)
                             {
                               if (err)

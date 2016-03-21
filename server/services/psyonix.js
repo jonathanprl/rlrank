@@ -11,6 +11,7 @@ module.exports = {
   getPlayerRanks,
   getPlayersRanks,
   getPlayerStat,
+  getPlayersStat,
   getServers,
   refreshToken,
   getLeaderboard,
@@ -237,6 +238,49 @@ function getPlayerStat(id, platform, stat, callback)
   });
 }
 
+function getPlayersStat(profiles, platform, stat, callback)
+{
+  procData = '';
+
+  profiles.forEach(
+    function(profile, index)
+    {
+      var id = new Buffer(profile.hash, 'base64').toString('ascii');
+
+      if (platform == 'steam')
+      {
+        procData += 'Proc[]=GetLeaderboardValueForUserSteam&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat;
+      }
+      else if (platform == 'psn')
+      {
+        procData += 'Proc[]=GetLeaderboardValueForUserPS4&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat;
+      }
+      else if (platform == 'xbox')
+      {
+        procData += 'Proc[]=GetLeaderboardValueForUserXboxOne&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat;
+      }
+
+      if (index != profiles.length - 1)
+      {
+        procData += '&';
+      }
+    }
+  );
+
+  callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+  {
+    if (err)
+    {
+      return callback(err);
+    }
+
+    console.log(data);
+
+    var data = parseMultiResults(data);
+    callback(null, data);
+  });
+}
+
 function getServers(callback)
 {
   var procData = {
@@ -394,28 +438,50 @@ function parseMultiResults(results)
 
   var lines = results.split(/\r?\n/);
 
-  lines.forEach(function(line)
-  {
-    var properties = line.split('&');
-
-    var parsedLine = {};
-    properties.forEach(function(property)
+  var previousLine = null;
+  lines.forEach(
+    function(line, index)
     {
-      property = property.split('=');
-      parsedLine[property[0]] = property[1];
-    });
+      console.log("Line " + index + ":", line);
+      var properties = line.split('&');
 
-    if (properties.length > 1)
-    {
-      groupedResults.push(parsedLine);
+      var parsedLine = {};
+      properties.forEach(
+        function(property)
+        {
+          property = property.split('=');
+          parsedLine[property[0]] = property[1];
+        }
+      );
+
+      if (properties.length > 1)
+      {
+        groupedResults.push(parsedLine);
+      }
+
+      if (line == '' && previousLine == 'SQL ERROR:')
+      {console.log(1);
+stats need to be parsed better
+      }
+      else if (line == 'SQL ERROR:' || (line === '' && (previousLine === '' || index === 0) && index != lines.length - 1) || (properties.length == 1 && (previousLine == '' || index === 0)))
+      {console.log(2);
+        parsedResults.push([]);
+        groupedResults = [];
+        previousLine = line;
+      }
+      else if (line === '' && groupedResults.length > 0)
+      {console.log(3);
+
+        parsedResults.push(groupedResults);
+        groupedResults = [];
+        previousLine = line;
+      }
+      else
+      {console.log(4);
+        previousLine = line;
+      }
     }
-
-    if (line == '' && groupedResults.length > 1)
-    {
-      parsedResults.push(groupedResults);
-      groupedResults = [];
-    }
-  });
+  );
 
   return parsedResults;
 }

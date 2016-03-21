@@ -7,7 +7,7 @@ require('./server/routes.js')(app);
 require('./server/db.js');
 
 var cron = require('./server/services/cron.js');
-cron.playersRanks();
+cron.playersStats();
 (function() {
   // setInterval(
   //   function()
