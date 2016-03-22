@@ -32,7 +32,6 @@ module.exports = function(app)
 
   app.get('/api/leaderboard/:playlist', leaderboard.getLeaderboard);
 
-  app.get('/api/stats/:id/:stat', stats.getStat);
   app.get('/api/stats/:id', stats.getStats);
 
   app.get('/api/statistics/tierThresholds', statistics.getTierThresholds);

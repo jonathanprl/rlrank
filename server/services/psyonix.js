@@ -10,11 +10,11 @@ var restler = require('restler');
 module.exports = {
   getPlayerRanks,
   getPlayersRanks,
-  getPlayerStat,
+  getPlayerStats,
   getPlayersStat,
   getServers,
   refreshToken,
-  getLeaderboard,
+  getLeaderboards,
   getPopulation
 };
 
@@ -24,7 +24,6 @@ module.exports = {
 
 function getPlayerRanks(id, platform, callback)
 {
-  return false;
   var procData;
 
   if (platform === 'steam')
@@ -93,109 +92,77 @@ function getPlayerRanks(id, platform, callback)
   }
 }
 
-function getPlayersRanks(profiles, platform, callback)
+function getPlayersRanks(profiles, callback)
 {
-  var procData;
+  var procData = '';
+  var promises = [];
 
-  if (platform === 'steam')
-  {
-    procData = '';
-
-    profiles.forEach(
-      function(profile, index)
-      {
-        var id = new Buffer(profile.hash, 'base64').toString('ascii');
-
-        procData += 'Proc[]=GetPlayerSkillSteam&P' + index + 'P[]=' + id;
-
-        if (index != profiles.length - 1)
-        {
-          procData += '&';
-        }
-      }
-    );
-
-    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+  profiles.forEach(
+    function(profile, index)
     {
-      if (err)
+      var id = new Buffer(profile.hash, 'base64').toString('ascii');
+
+      if (profile.platform === 'steam')
       {
-        return callback(err);
+        procData += 'Proc[]=GetPlayerSkillSteam&P' + index + 'P[]=' + id + '&';
       }
-
-      var data = parseMultiResults(data);
-      callback(null, data);
-    });
-  }
-  else if (platform == 'psn')
-  {
-    procData = '';
-
-    ids.forEach(
-      function(id, index)
+      else if (profile.platform == 'psn')
       {
-        procData += 'Proc[]=GetPlayerSkillPS4&P' + index + 'P[]=' + id;
-
-        if (index != ids.length - 1)
-        {
-          procData += '&';
-        }
+        procData += 'Proc[]=GetPlayerSkillPS4&P' + index + 'P[]=' + id + '&';
       }
-    );
+      else if (profile.platform == 'xbox')
+      {
+        promises.push(new Promise(
+          function (resolve, reject)
+          {
+            xbox.getXuidFromGamertag(id,
+              function(err, xuid)
+              {
+                if (err)
+                {
+                  return callback(err);
+                }
+                resolve('Proc[]=GetPlayerSkillXboxOne&P' + index + 'P[]=' + xuid + '&');
+              }
+            );
+          }
+        ));
+      };
+    }
+  );
 
-    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+  Promise.all(promises)
+    .then(function(xboxProcs)
     {
-      if (err)
-      {
-        return callback(err);
-      }
+      procData = procData + xboxProcs.join('');
+      procData = procData.substring(0, procData.length - 1); // Remove trailing ampersand
 
-      var data = parseResults(data);
-      callback(null, data);
-    });
-  }
-  else if (platform == 'xbox')
-  {
-    xbox.getXuidFromGamertag(id,
-      function(err, xuid)
+      callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
       {
         if (err)
         {
           return callback(err);
         }
 
-        ids.forEach(
-          function(id, index)
-          {
-            procData += 'Proc[]=GetPlayerSkillXboxOne&P' + index + 'P[]=' + id;
-
-            if (index != ids.length - 1)
-            {
-              procData += '&';
-            }
-          }
-        );
-
-        callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
-        {
-          if (err)
-          {
-            return callback(err);
-          }
-
-          var data = parseResults(data);
-          callback(null, data);
-        });
-      }
-    );
-  }
+        var data = parseMultiResults(data);
+        callback(null, data);
+      });
+    }
+  );
 }
 
-function getLeaderboard(playlist, callback)
+function getLeaderboards(callback)
 {
-  var procData = {
-    'Proc[]': 'GetSkillLeaderboard_v2',
-    'P0P[]': playlist
-  };
+  var procData = '';
+
+  [10, 11, 12, 13].forEach(
+    function(playlist)
+    {
+      procData = 'Proc[]=GetSkillLeaderboard_v2&P0P[]=' + playlist + '&';
+    }
+  );
+
+  procData = procData.substring(0, procData.length - 1); // Remove trailing ampersand
 
   callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
   {
@@ -204,27 +171,38 @@ function getLeaderboard(playlist, callback)
       return callback(err);
     }
 
-    var data = parseResults(data);
+    console.log(data);
+
+    var data = parseMultiResults(data);
     callback(null, data);
   });
 }
 
-function getPlayerStat(id, platform, stat, callback)
+function getPlayerStats(id, platform, callback)
 {
-  var procData;
+  var procData = '';
 
-  if (platform == 'steam')
-  {
-    procData = 'Proc[]=GetLeaderboardValueForUserSteam&P0P[]=' + id + '&P0P[]=' + stat;
-  }
-  else if (platform == 'psn')
-  {
-    procData = 'Proc[]=GetLeaderboardValueForUserPS4&P0P[]=' + id + '&P0P[]=' + stat;
-  }
-  else if (platform == 'xbox')
-  {
-    procData = 'Proc[]=GetLeaderboardValueForUserXboxOne&P0P[]=' + id + '&P0P[]=' + stat;
-  }
+  var stats = ['Wins', 'Goals', 'MVPs', 'Saves', 'Shots', 'Assists'];
+
+  stats.forEach(
+    function(stat, index)
+    {
+      if (platform == 'steam')
+      {
+        procData += 'Proc[]=GetLeaderboardValueForUserSteam&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat + '&';
+      }
+      else if (platform == 'psn')
+      {
+        procData += 'Proc[]=GetLeaderboardValueForUserPS4&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat + '&';
+      }
+      else if (platform == 'xbox')
+      {
+        procData += 'Proc[]=GetLeaderboardValueForUserXboxOne&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat + '&';
+      }
+    }
+  );
+
+  procData = procData.substring(0, procData.length - 1); // Remove trailing ampersand
 
   callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
   {
@@ -233,12 +211,12 @@ function getPlayerStat(id, platform, stat, callback)
       return callback(err);
     }
 
-    var data = parseResults(data);
-    callback(null, data[0]);
+    var data = parseMultiResults(data);
+    callback(null, data);
   });
 }
 
-function getPlayersStat(profiles, platform, stat, callback)
+function getPlayersStat(profiles, stat, callback)
 {
   procData = '';
 
@@ -247,15 +225,15 @@ function getPlayersStat(profiles, platform, stat, callback)
     {
       var id = new Buffer(profile.hash, 'base64').toString('ascii');
 
-      if (platform == 'steam')
+      if (profile.platform == 'steam')
       {
         procData += 'Proc[]=GetLeaderboardValueForUserSteam&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat;
       }
-      else if (platform == 'psn')
+      else if (profile.platform == 'psn')
       {
         procData += 'Proc[]=GetLeaderboardValueForUserPS4&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat;
       }
-      else if (platform == 'xbox')
+      else if (profile.platform == 'xbox')
       {
         procData += 'Proc[]=GetLeaderboardValueForUserXboxOne&P' + index + 'P[]=' + id + '&P' + index + 'P[]=' + stat;
       }
@@ -274,8 +252,6 @@ function getPlayersStat(profiles, platform, stat, callback)
       return callback(err);
     }
 
-    console.log(data);
-
     var data = parseMultiResults(data);
     callback(null, data);
   });
@@ -293,6 +269,8 @@ function getServers(callback)
     {
       return callback(err);
     }
+
+    console.log(data);
 
     var data = parseResults(data);
     callback(null, data);
@@ -332,6 +310,8 @@ function callProc(procUrl, procData, callback)
       'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
     };
 
+    console.log('[PSYONIX] Sending callProc to Psyonix [%s]', procUrl);
+
     restler.post(procUrl, {data: procData, headers: headers})
       .on('complete',
       function(data, res)
@@ -354,6 +334,10 @@ function callProc(procUrl, procData, callback)
               }
             );
           });
+        }
+        else if (data.indexOf('403 Sorry...') > -1)
+        {
+          console.log('[PSYONIX] [ERROR] Psyonix is throttling requests...');
         }
         else
         {
@@ -442,7 +426,6 @@ function parseMultiResults(results)
   lines.forEach(
     function(line, index)
     {
-      console.log("Line " + index + ":", line);
       var properties = line.split('&');
 
       var parsedLine = {};
@@ -458,26 +441,30 @@ function parseMultiResults(results)
       {
         groupedResults.push(parsedLine);
       }
-
-      if (line == '' && previousLine == 'SQL ERROR:')
-      {console.log(1);
-stats need to be parsed better
+      else if (properties[0] == '')
+      {
+        properties = [];
       }
-      else if (line == 'SQL ERROR:' || (line === '' && (previousLine === '' || index === 0) && index != lines.length - 1) || (properties.length == 1 && (previousLine == '' || index === 0)))
-      {console.log(2);
+
+      if (line == 'SQL ERROR:' || previousLine == 'SQL ERROR:')
+      {
+        previousLine = line;
+      }
+      else if ((line === '' && (previousLine === '' || index === 0) && index != lines.length - 1) || (properties.length == 1 && (previousLine == '' || index === 0)))
+      {
         parsedResults.push([]);
         groupedResults = [];
         previousLine = line;
       }
       else if (line === '' && groupedResults.length > 0)
-      {console.log(3);
+      {
 
         parsedResults.push(groupedResults);
         groupedResults = [];
         previousLine = line;
       }
       else
-      {console.log(4);
+      {
         previousLine = line;
       }
     }

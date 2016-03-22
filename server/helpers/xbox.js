@@ -46,6 +46,7 @@ function getXuidFromGamertag(gamertag, callback)
       }
       else
       {
+        console.log('[XBOX] Found in database [%s]', gamertag);
         return callback(null, doc.xuid);
       }
     }

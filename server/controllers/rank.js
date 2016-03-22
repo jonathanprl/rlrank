@@ -17,7 +17,6 @@ function getPlayerRanks(req, res)
   db.findWhere('ranks', {rlrank_id: req.params.id}, {_id: 0, rlrank_id: 0},
     function(err, doc)
     {
-      console.log(doc);
       if (err)
       {
         console.log('[RANKS] Error fetching rank from DB', err); // ERROR
@@ -28,20 +27,20 @@ function getPlayerRanks(req, res)
         return swiftping.apiResponse('ok', res, doc);
       }
 
-      console.log('[RANKS] Getting player rank from Psyonix', req.params.id);
+      console.log('[RANKS] New user! Getting player rank from Psyonix', req.params.id);
 
       db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
         function(err, doc)
         {
           if (err)
           {
-            console.log('[RANKS] [ERROR] Could not found profile in database', req.params.id);
+            console.log('[RANKS] [ERROR] Could not find profile in database', req.params.id);
             return swiftping.apiResponse('error', res, {code:'not_found', message: 'Profile was not found.'});
           }
 
           var profile = doc;
           var id = swiftping.decryptHash(profile.hash);
-
+          
           psyonix.getPlayerRanks(id, profile.platform,
             function(err, results)
             {

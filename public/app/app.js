@@ -127,7 +127,7 @@ function routeChange($rootScope, TitleSvc)
   var routeChange = $rootScope.$on('$routeChangeStart',
     function(event, next, current)
     {
-      if ('pageTitle' in next.data && next.data.pageTitle != 'default')
+      if ('data' in next && 'pageTitle' in next.data && next.data.pageTitle != 'default')
       {
         TitleSvc.setTitle(next.data.pageTitle);
       }
