@@ -369,7 +369,7 @@ function refreshToken(callback)
     {
       if (!data)
       {
-        console.log('[PSYONIX] [ERROR] There was an error authing with Psyonix', err.rawEncoded);
+        console.log('[PSYONIX] [ERROR] There was an error authing with Psyonix', data);
         return callback({"code": "server_error", "message": "There was a server error. We have been notified."});
       }
 
