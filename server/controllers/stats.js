@@ -37,7 +37,7 @@ function getStats(req, res)
           psyonix.getPlayerStats(id, profile.platform,
             function(err, stats)
             {
-              if (err)
+              if (err || !stats)
               {
                 console.log('[STATS] Error getting stats from Psyonix', req.params.id, err);
                 return swiftping.apiResponse('error', res, {code: 'server_error', message: 'Something went wrong.'});

@@ -40,7 +40,7 @@ function getPlayerRanks(req, res)
 
           var profile = doc;
           var id = swiftping.decryptHash(profile.hash);
-          
+
           psyonix.getPlayerRanks(id, profile.platform,
             function(err, results)
             {
@@ -79,6 +79,16 @@ function getPlayerRanks(req, res)
                   ranks.push(data);
 
                   db.insert('ranks', data,
+                    function(err, doc)
+                    {
+                      if (err)
+                      {
+                        console.log('[RANKS] Could not save player rank to DB', rank, err); // ERROR
+                      }
+                    }
+                  );
+
+                  db.insert('ranksHistorical', data,
                     function(err, doc)
                     {
                       if (err)
