@@ -297,16 +297,20 @@ function getPopulation(callback)
 
 function callProc(procUrl, procData, callback)
 {
-  db.findOne('config', {name: 'token'}, function(err, doc)
+  db.find('config', function(err, doc)
   {
+    var config = doc[0];
+
     if (err)
     {
       console.log("[PSYONIX] [ERROR] Couldn't get token from DB");
       return callback({"code": "server_error", "message": "There was a server error. We have been notified."});
     }
 
+
+
     var headers = {
-      'SessionID': doc.value,
+      'SessionID': config.token,
       'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
     };
 
@@ -319,8 +323,14 @@ function callProc(procUrl, procData, callback)
         if (data.indexOf('SessionNotActive') > -1)
         {
           console.log("Refreshing Psyonix token...");
-          refreshToken(function(err, token)
+          refreshToken(config, function(err, token)
           {
+            if (!token)
+            {
+              console.log('[PSYONIX] [ERROR] Psyonix didn\'t return a token...');
+              return callback(true);
+            }
+
             var headers = {
               'SessionID': token,
               'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
@@ -348,14 +358,14 @@ function callProc(procUrl, procData, callback)
   });
 }
 
-function refreshToken(callback)
+function refreshToken(config, callback)
 {
   var data = {
-    'PlayerName': 'Mugabe',
-    'PlayerID': '76561198165509312',
+    'PlayerName': config.playerName,
+    'PlayerID': config.playerId,
     'Platform': 'Steam',
-    'BuildID': '342373649',
-    'AuthCode': '14000000A994D045DFFE86A2C0C43B0C0100100160BAEC56180000000100000002000000A9139B6800000000808F4A1A20000000B20000003200000004000000C0C43B0C0100100116DC0300A9139B680200840A000000009B0FE0561BBFFB560100E478000000000000195EDB479ABBEF71A594561560639FDE24DC64366A220989E4390D3E9336EA4E9A8291A95C1857DD8B09298F99626896E7AF531CF8F613DC7464CE8DE6BFE339C3FF1250A8ECD09E33795D37632D5FED18FBDE6911B29B63609F77020A9ABFBC9643E59306CE4FCDBE01B6C9CD4B32C232AA9796925B22DC47E62FED2BA141E5',
+    'BuildID': config.buildId,
+    'AuthCode': config.authCode,
     'IssuerID': '0'
   };
 
