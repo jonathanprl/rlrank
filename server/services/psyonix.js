@@ -314,7 +314,9 @@ function callProc(procUrl, procData, callback)
       'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F'
     };
 
-    console.log('[PSYONIX] Sending callProc to Psyonix [%s]', procUrl);
+    var time = new Date();
+
+    console.log(time.toTimeString() + ' [PSYONIX] Sending callProc to Psyonix [%s]', procUrl);
 
     restler.post(procUrl, {data: procData, headers: headers})
       .on('complete',

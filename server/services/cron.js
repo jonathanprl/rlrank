@@ -240,7 +240,7 @@ function playersStats()
                       );
                     }
                   );
-                }, String((batchindex * (statIndex + 1))*2000)
+                }, String(batchindex * 10000)
               );
             }
           );
@@ -336,7 +336,7 @@ function playersRanks()
                   );
                 }
               );
-            }, String(batchindex*2000)
+            }, String(batchindex * 10000)
           );
         }
       );
