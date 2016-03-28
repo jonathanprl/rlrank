@@ -12,6 +12,7 @@ var CronJob = require('cron').CronJob;
 var serverStatusCron = new CronJob('00 * * * * *',
   function()
   {
+    console.log(toTimeString() + ' [CRON] Running serverStatus cronjob...');
     cron.serverStatus();
   }, function(){}
 );
@@ -19,6 +20,7 @@ var serverStatusCron = new CronJob('00 * * * * *',
 var playersRanksCron = new CronJob('00 30 * * * *',
   function()
   {
+    console.log(toTimeString() + ' [CRON] Running playersRanks cronjob...');
     cron.playersRanks();
   }, function(){}
 );
@@ -26,6 +28,7 @@ var playersRanksCron = new CronJob('00 30 * * * *',
 var playersStatsCron = new CronJob('00 00 * * * *',
   function()
   {
+    console.log(toTimeString() + ' [CRON] Running playersStats cronjob...');
     cron.playersStats();
   }, function(){}
 );
@@ -33,7 +36,9 @@ var playersStatsCron = new CronJob('00 00 * * * *',
 var leaderboardsCron = new CronJob('00 00 06 * * *',
   function()
   {
-    cron.playersStats();
+    var time = new Date();
+    console.log(toTimeString() + ' [CRON] Running leaderboards cronjob...');
+    cron.leaderboards();
   }, function(){}
 );
 
