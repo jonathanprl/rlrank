@@ -22,47 +22,48 @@ function refreshToken()
 
 function leaderboards()
 {
-  var playlists = [10, 11, 12, 13];
-
   console.log('Updating leaderboards...'); // info
 
-  playlists.forEach(
-    function(playlist)
+  psyonix.getLeaderboards(function(err, playlists)
+  {
+    if (err)
     {
-      psyonix.getLeaderboard(playlist, function(err, results)
+      console.log('Could not fetch leaderboard from Psyonix -', playlist, err); // error
+    }
+    var playlistIndex = 10;
+
+    playlists.forEach(
+      function(playlist, index)
       {
-        if (err)
-        {
-          console.log('Could not fetch leaderboard from Psyonix -', playlist, err); // error
-        }
-
-        var leadersSteam = [];
-        var leadersPSN = [];
-        var leaders = [];
-
         var filteredResults = [];
 
-        results.forEach(
-          function(result, index)
-          {
-            filteredResults.push({
-              username: result.UserName,
-              mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR)),
-              tier: result.Value,
-              platform: result.Platform,
-              rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
-            });
-          }
-        );
-        db.upsert('leaderboards', {playlist: playlist}, {playlist: playlist, leaderboard: filteredResults},
-          function(err, doc)
-          {
-            console.log('Updated leaderboard from Psyonix -', playlist); // info
-          }
-        );
-      });
-    }
-  );
+        if (playlist.length > 0)
+        {
+          playlist.forEach(
+            function(result, index)
+            {
+              filteredResults.push({
+                username: result.UserName,
+                mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR)),
+                tier: result.Value,
+                platform: result.Platform,
+                rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
+              });
+            }
+          );
+
+          db.upsert('leaderboards', {playlist: playlistIndex}, {playlist: playlistIndex, leaderboard: filteredResults},
+            function(err, doc)
+            {
+              console.log('Updated leaderboard from Psyonix'); // info
+            }
+          );
+
+          playlistIndex++;
+        }
+      }
+    );
+  });
 }
 
 function serverStatus()

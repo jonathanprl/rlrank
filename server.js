@@ -9,7 +9,7 @@ require('./server/db.js');
 var cron = require('./server/services/cron.js');
 var CronJob = require('cron').CronJob;
 
-new CronJob('00 00 * * * *',
+new CronJob('0 * * * *',
   function()
   {
     console.log('[CRON] Running serverStatus cronjob...', (new Date()).toTimeString());
@@ -17,7 +17,7 @@ new CronJob('00 00 * * * *',
   }, function(){}, true
 );
 cron.refreshToken();
-new CronJob('0 */6 * * *',
+new CronJob('0 * * * *',
   function()
   {
     console.log('[CRON] Running token refresh cronjob...', (new Date()).toTimeString());
@@ -41,10 +41,10 @@ new CronJob('0 */6 * * *',
 //   }, function(){}, true
 // );
 //
-// new CronJob('00 00 06 * * *',
-//   function()
-//   {
-//     console.log('[CRON] Running leaderboards cronjob...', (new Date()).toTimeString());
-//     cron.leaderboards();
-//   }, function(){}, true
-// );
+new CronJob('00 06 * * *',
+  function()
+  {
+    console.log('[CRON] Running leaderboards cronjob...', (new Date()).toTimeString());
+    cron.leaderboards();
+  }, function(){}, true
+);

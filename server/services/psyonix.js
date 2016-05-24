@@ -156,9 +156,9 @@ function getLeaderboards(callback)
   var procData = '';
 
   [10, 11, 12, 13].forEach(
-    function(playlist)
+    function(playlist, i)
     {
-      procData = 'Proc[]=GetSkillLeaderboard_v2&P0P[]=' + playlist + '&';
+      procData += 'Proc[]=GetSkillLeaderboard_v2&P' + i + 'P[]=' + playlist + '&';
     }
   );
 
@@ -170,8 +170,6 @@ function getLeaderboards(callback)
     {
       return callback(err);
     }
-
-    console.log(data);
 
     var data = parseMultiResults(data);
     callback(null, data);
