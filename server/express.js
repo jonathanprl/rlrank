@@ -19,23 +19,4 @@ app.use(express.static(path.normalize(__dirname + '/../public')));
 var server = app.listen(config.port);
 console.log('Listening on port %s...', config.port);
 
-var io = require('socket.io')(server);
-
-app.io = io;
-
-var sockets = [];
-io.on('connection',
-  function(socket)
-  {
-    sockets.push(socket.id);
-
-    socket.on('disconnect',
-      function()
-      {
-        sockets.splice(sockets.indexOf(socket.id), 1);
-      }
-    );
-  }
-);
-
 module.exports = app;

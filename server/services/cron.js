@@ -8,8 +8,17 @@ module.exports = {
   serverStatus,
   population,
   playersRanks,
-  playersStats
+  playersStats,
+  refreshToken
 };
+
+function refreshToken()
+{
+  psyonix.refreshToken(function(err, token) {
+    console.log(err);
+    console.log(token);
+  });
+}
 
 function leaderboards()
 {

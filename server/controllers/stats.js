@@ -55,6 +55,11 @@ function getStats(req, res)
               stats.forEach(
                 function(stat)
                 {
+                  if (!stat)
+                  {
+                    return;
+                  }
+
                   var stat = stat[0];
 
                   if ('Value' in stat)

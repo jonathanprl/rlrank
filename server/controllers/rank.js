@@ -3,8 +3,7 @@ var swiftping = require('../helpers/swiftping');
 var psyonix = require('../services/psyonix');
 
 module.exports = {
-  getPlayerRanks,
-  postLatestChanges
+  getPlayerRanks
 };
 
 /**
@@ -103,91 +102,6 @@ function getPlayerRanks(req, res)
               swiftping.apiResponse('ok', res, ranks);
             }
           );
-        }
-      );
-    }
-  );
-}
-
-function postLatestChanges(req, res)
-{
-  var oldRanks = req.body.ranks;
-  db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
-    function(err, doc)
-    {
-      if (err)
-      {
-        console.log('[RANK] [ERROR] Could not get latestChanges profile from DB %s', req.params.id, err); // ERROR
-        return swiftping.apiResponse('error', res, {code: 'server_error', message: 'Something went wrong. We have been notified.'});
-      }
-
-      var id = new Buffer(doc.hash, 'base64').toString('ascii');
-
-      psyonix.getPlayerRanks(id, doc.platform,
-        function(err, results)
-        {
-          if (err)
-          {
-            console.log('[RANK-LIVE] [ERROR] Could not get playerRanks from Psyonix %s [Hash: %s]', req.params.id, id, err); // ERROR
-            return swiftping.apiResponse('error', res, {code: 'server_error', message: 'Something went wrong. We have been notified.'});
-          }
-
-          if (results.length === 0)
-          {
-            return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
-          }
-
-          var ranks = [];
-
-          results.forEach(
-            function(result)
-            {
-              if (result.Playlist === '0')
-              {
-                result.MMR = (result.Mu - (3 * result.Sigma)).toFixed(4);
-              }
-
-
-
-              if (result.Playlist == 11)
-              {
-                result.MMR = 35.312;
-              }
-
-              var data = {
-                created_at: new Date(),
-                rlrank_id: req.params.id,
-                playlist: result.Playlist,
-                mu: result.Mu,
-                sigma: result.Sigma,
-                tier: result.Tier,
-                division: result.Division,
-                matches_played: result.MatchesPlayed,
-                mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
-              };
-
-              ranks.push(data);
-            }
-          );
-
-          var newRanks = ranks;
-
-          oldRanks.forEach(
-            function(oldRank)
-            {
-              newRanks.forEach(
-                function(newRank, index)
-                {
-                  if (oldRank.playlist == newRank.playlist)
-                  {
-                    newRank.difference = newRank.mmr - oldRank.mmr;
-                  }
-                }
-              );
-            }
-          );
-
-          swiftping.apiResponse('ok', res, newRanks);
         }
       );
     }
