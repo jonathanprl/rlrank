@@ -310,7 +310,8 @@ function callProc(procUrl, procData, callback)
       'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F',
       'Cache-Control': 'no-cache',
       'Environment': 'Prod',
-      'User-Agent': 'UE3-TA,UE3Ver(10897)'
+      'User-Agent': 'UE3-TA,UE3Ver(10897)',
+      'BuildID': '636774701'
     };
 
     var time = new Date();
@@ -344,13 +345,19 @@ function refreshToken(callback)
     'PlayerName': '',
     'PlayerID': '1',
     'Platform': 'PS4',
-    'BuildID': '342373649',
+    'BuildID': '636774701',
+    'BuildRegion': '',
     'AuthCode': '',
+    'AuthTicket': '',
     'IssuerID': '0'
   };
 
   var headers = {
-    'LoginSecretKey': 'dUe3SE4YsR8B0c30E6r7F2KqpZSbGiVx'
+    'LoginSecretKey': 'dUe3SE4YsR8B0c30E6r7F2KqpZSbGiVx',
+    'Cache-Control': 'no-cache',
+    'Environment': 'Prod',
+    'User-Agent': 'UE3-TA,UE3Ver(10897)',
+    'BuildID': '636774701'
   };
 
   restler.post('https://psyonix-rl.appspot.com/auth/', {data: data, headers: headers})
