@@ -16,14 +16,15 @@ new CronJob('0 * * * *',
     cron.serverStatus();
   }, function(){}, true
 );
-cron.refreshToken();
-new CronJob('0 * * * *',
+
+new CronJob('*/20 * * * *',
   function()
   {
     console.log('[CRON] Running token refresh cronjob...', (new Date()).toTimeString());
     cron.refreshToken();
   }, function(){}, true
 );
+cron.refreshToken();
 
 // new CronJob('00 30 * * * *',
 //   function()
