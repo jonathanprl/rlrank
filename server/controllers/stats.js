@@ -192,9 +192,11 @@ function getUpdatedPlayerStats(req, res)
               {
                 stats.push(data);
 
+                console.log('[STATS] Insert start [stats]', rank, err);
                 db.upsert('stats', {rlrank_id: data.rlrank_id, type: data.type}, data,
                   function(err, doc)
                   {
+                    console.log('[STATS] Insert end [stats]', rank, err);
                     if (err)
                     {
                       console.log('[STATS] Could not save player stats to "stats" DB', data, err); // ERROR
@@ -202,9 +204,11 @@ function getUpdatedPlayerStats(req, res)
                   }
                 );
 
+                console.log('[STATS] Insert start [statsHistorical]', rank, err);
                 db.insert('statsHistorical', data,
                   function(err, doc)
                   {
+                    console.log('[STATS] Insert end [statsHistorical]', rank, err);
                     if (err)
                     {
                       console.log('[STATS] Could not save player stats to "statsHistorical" DB', data, err); // ERROR
