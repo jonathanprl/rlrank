@@ -40,7 +40,7 @@
               .catch(
                 function(err)
                 {
-                  $location.path('/');
+                  vm.error = 'There was a problem retrieving your profile. Please try again later. Our developers have been notified.';
                 }
               );
           }
@@ -54,11 +54,10 @@
         {
           vm.playlists = response.data.results;
           vm.lastUpdated = vm.playlists[0].created_at;
-          // liveRanks();
         })
         .catch(function(err)
         {
-          $location.path('/');
+          vm.error = 'There was a problem retrieving your rank. Please try again later. Our developers have been notified.';
         }
       );
     }
@@ -72,39 +71,8 @@
         })
         .catch(function(err)
         {
-          $location.path('/');
+          vm.error = 'There was a problem retrieving your stats. Please try again later. Our developers have been notified.';
         }
-      );
-    }
-
-    function liveRanks()
-    {
-      var liveRanksInterval = $interval(
-        function()
-        {
-          ApiSvc.postPlayerRanksLive(vm.profile.rlrank_id, vm.playlists)
-            .then(function(response)
-            {
-              vm.playlists = response.data.results;
-              vm.lastUpdated = vm.playlists[0].created_at;
-
-              angular.forEach(vm.playlists,
-                function(playlist)
-                {
-                  if (playlist.difference !== 0)
-                  {
-                    $interval.cancel(liveRanksInterval);
-                    $timeout(
-                      function()
-                      {
-                        liveRanks();
-                      }, 300000
-                    );
-                  }
-                }
-              );
-            });
-        }, 30000
       );
     }
   };

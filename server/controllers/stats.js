@@ -171,7 +171,7 @@ function getUpdatedPlayerStats(req, res)
 
           if (results.length === 0)
           {
-            return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
+            return swiftping.apiResponse('error', res, {code: 'server_error_1', message: 'There was a problem.'});
           }
 
           var stats = [];
@@ -184,33 +184,41 @@ function getUpdatedPlayerStats(req, res)
               var data = {
                 created_at: new Date(),
                 rlrank_id: req.params.id,
-                type: result.LeaderboardID,
-                value: result.Value
+                type: result ? result.LeaderboardID : null,
+                value: result ? result.Value : null
               };
 
-              stats.push(data);
+              if (result && 'Value' in result)
+              {
+                stats.push(data);
 
-              db.upsert('stats', {rlrank_id: data.rlrank_id, type: data.type}, data,
-                function(err, doc)
-                {
-                  if (err)
+                db.upsert('stats', {rlrank_id: data.rlrank_id, type: data.type}, data,
+                  function(err, doc)
                   {
-                    console.log('[STATS] Could not save player stats to "stats" DB', data, err); // ERROR
+                    if (err)
+                    {
+                      console.log('[STATS] Could not save player stats to "stats" DB', data, err); // ERROR
+                    }
                   }
-                }
-              );
+                );
 
-              db.insert('statsHistorical', data,
-                function(err, doc)
-                {
-                  if (err)
+                db.insert('statsHistorical', data,
+                  function(err, doc)
                   {
-                    console.log('[STATS] Could not save player stats to "statsHistorical" DB', data, err); // ERROR
+                    if (err)
+                    {
+                      console.log('[STATS] Could not save player stats to "statsHistorical" DB', data, err); // ERROR
+                    }
                   }
-                }
-              );
+                );
+              }
             }
           );
+
+          if (stats.length == 0)
+          {
+            return swiftping.apiResponse('error', res, {code: 'server_error_2', message: 'There was a problem.'});
+          }
 
           swiftping.apiResponse('ok', res, stats);
         }
