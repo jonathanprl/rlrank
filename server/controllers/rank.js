@@ -95,26 +95,26 @@ function getUpdatedPlayerRanks(req, res)
 
               ranks.push(data);
 
-              console.log('[RANKS] Insert start [ranks]', rank, err);
+              console.log('[RANKS] Insert start [ranks]', data, err);
               db.upsert('ranks', {rlrank_id: data.rlrank_id, playlist: parseInt(result.Playlist)}, data,
                 function(err, doc)
                 {
-                  console.log('[RANKS] Insert end [ranks]', rank, err);
+                  console.log('[RANKS] Insert end [ranks]', data, err);
                   if (err)
                   {
-                    console.log('[RANKS] Could not save player rank to "ranks" DB', rank, err); // ERROR
+                    console.log('[RANKS] Could not save player rank to "ranks" DB', data, err); // ERROR
                   }
                 }
               );
 
-              console.log('[RANKS] Insert start [ranksHistorical]', rank, err);
+              console.log('[RANKS] Insert start [ranksHistorical]', data, err);
               db.insert('ranksHistorical', data,
                 function(err, doc)
                 {
-                  console.log('[RANKS] Insert end [ranksHistorical]', rank, err);
+                  console.log('[RANKS] Insert end [ranksHistorical]', data, err);
                   if (err)
                   {
-                    console.log('[RANKS] Could not save player rank to "ranksHistorical" DB', rank, err); // ERROR
+                    console.log('[RANKS] Could not save player rank to "ranksHistorical" DB', data, err); // ERROR
                   }
                 }
               );
