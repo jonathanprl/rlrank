@@ -165,7 +165,7 @@ function fetchNewProfile(req, res)
   else
   {
     // Assume it's a steam id.
-    if (input[0] == 7 && isNumeric(input) && input.length == 17)
+    if (input.length > 0 && input[0] == 7 && isNumeric(input) && input.length == 17)
     {
       var hash = encryptHash(input);
 
