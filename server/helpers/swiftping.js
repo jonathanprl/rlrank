@@ -70,6 +70,11 @@ function fetchNewProfile(req, res)
   var input = req.body.input;
   var platform = req.body.platform;
 
+  if (!input)
+  {
+    return res.status(500).send({code: 'invalid_input', message: 'Please enter your Steam, PSN or Xbox ID.'});
+  }
+
   var url;
 
   console.log('[PROFILE] Fetching new profile... Input:', input); // INFO
