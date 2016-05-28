@@ -40,13 +40,13 @@
 
               vm.players[1] = player;
               TitleSvc.setTitle(vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name);
-              vm.shareText = vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name + ' - Rocket League rank & stats!';
+              vm.shareText = vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name + ' - Rocket League rank and stats lookup';
             }
           );
         }
         else
         {
-          vm.shareText = player.profile.display_name + ' - Rocket League rank & stats!';
+          vm.shareText = player.profile.display_name + ' - Rocket League rank and stats lookup';
         }
       }
     );
