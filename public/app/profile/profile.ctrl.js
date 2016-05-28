@@ -9,6 +9,7 @@
 
     var vm = this;
 
+    vm.compare = false;
     vm.errors = [];
     vm.getPlayerRanks = getPlayerRanks;
     vm.leaderboards = {};
@@ -16,6 +17,11 @@
     vm.router = RouteSvc;
     vm.players = [];
     vm.playlists = [0, 10, 11, 12, 13];
+
+    if ($routeParams.rlrank_id2)
+    {
+      vm.compare = true;
+    }
 
     getPlayerDetails($routeParams.rlrank_id,
       function(err, player)
@@ -60,7 +66,7 @@
           {
             player.profile = response.data.results;
 
-            getPlayerRanks(player.profile.rlrank_id, player.profile.platform,
+            getPlayerRanks(player.profile,
               function(err, ranks)
               {
                 if (err)
@@ -71,7 +77,7 @@
                 player.playlists = ranks.playlists;
                 player.lastUpdated = ranks.lastUpdated;
 
-                getPlayerStats(player.profile.rlrank_id, player.profile.platform,
+                getPlayerStats(player.profile,
                   function(err, stats)
                   {
                     if (err)
@@ -115,9 +121,9 @@
         );
     }
 
-    function getPlayerRanks(id, platform, callback)
+    function getPlayerRanks(profile, callback)
     {
-      ApiSvc.getPlayerRanks(id, platform)
+      ApiSvc.getPlayerRanks(profile.rlrank_id, profile.platform)
         .then(function(response)
         {
           var playlists = {};
@@ -142,21 +148,21 @@
         })
         .catch(function(err)
         {
-          callback('Ranks could not be retrieved for ' + id + '. Please try again later. Our developers have been notified.');
+          callback('Ranks could not be retrieved for "' + profile.display_name + '". Please try again later. Our developers have been notified.');
         }
       );
     }
 
-    function getPlayerStats(id, platform, callback)
+    function getPlayerStats(profile, callback)
     {
-      ApiSvc.getPlayerStats(id, platform)
+      ApiSvc.getPlayerStats(profile.rlrank_id, profile.platform)
         .then(function(response)
         {
           callback(null, response.data.results);
         })
         .catch(function(err)
         {
-          callback('Stats could not be retrieved for ' + id + '. Please try again later. Our developers have been notified.');
+          callback('Stats could not be retrieved for  "' + profile.display_name + '". Please try again later. Our developers have been notified.');
         }
       );
     }

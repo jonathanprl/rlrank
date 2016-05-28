@@ -1,5 +1,10 @@
 .sp__wrapper
   .container
+    .row(ng-if="vm.errors.length > 0")
+      .col-md-4.col-md-offset-4
+        div.alert.alert-danger(role="alert" ng-repeat="error in vm.errors")
+          strong Sorry!&nbsp;
+          | {{ error }}
     .row(ng-if="vm.players.length > 0")
       .col-md-5
         h1
@@ -9,11 +14,6 @@
       .col-md-5(ng-if="vm.players.length > 1")
         h1
           a(ng-href="{{ '/u/' + vm.players[1].profile.rlrank_id }}" title="{{ vm.players[1].profile.display_name }}") {{ vm.players[1].profile.display_name }}
-    .row(ng-if="vm.errors.length > 0")
-      .col-md-4.col-md-offset-4
-        div.alert.alert-danger(role="alert" ng-repeat="error in vm.errors")
-          strong Sorry!&nbsp;
-          | {{ error }}
     .row(ng-if="vm.players")
       .col-md-5
         span.sp__sub-header(ng-show="vm.players.length > 0")
@@ -68,9 +68,10 @@
             tr
               td(ng-repeat="stat in vm.players[0].stats")
                | {{ stat.value }}
-      .col-md-5.col-md-offset-2(ng-if="vm.players[1].playlists")
-        h4 Ranks
-        table.table.table-responsive.sp__table
+      .col-md-5.col-md-offset-2
+        .sp__spinner(ng-hide="(vm.compare && vm.players.length == 2) || !vm.compare || vm.errors.length > 0")
+        h4(ng-if="vm.players[1].playlists") Ranks
+        table.table.table-responsive.sp__table(ng-if="vm.players[1].playlists")
           thead
             tr
               th
@@ -102,7 +103,7 @@
                   | &nbsp;{{ playlist.difference }}
                 span
                   | {{ playlist.mmr || 100 }}   
-        h4 Stats
+        h4(ng-if="vm.players[1].stats") Stats
         table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[1].stats")
           thead
             tr
@@ -114,7 +115,7 @@
                | {{ stat.value }}
 
       .col-md-4.col-sm-8(ng-class="{'col-md-offset-2': vm.players.length == 1}")
-        .sp__share(ng-if="vm.players.length == 1")
+        .sp__share(ng-if="vm.players.length == 1 && !vm.compare")
            h4.m-t-0 Compare with another player! 
              span.label.label-danger  NEW
            rank-form(button-text="Compare!" compare="vm.players[0].profile.rlrank_id")
