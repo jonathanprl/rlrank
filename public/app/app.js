@@ -1,9 +1,8 @@
 angular
-  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment'])
+  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment', 'djds4rce.angular-socialshare'])
   .config(['$routeProvider', '$locationProvider', app])
   .config(['AnalyticsProvider', analyticsProvider])
-  .run(['$rootScope', 'TitleSvc', routeChange])
-  .run(['Analytics', analytics]);
+  .run(['$rootScope', 'TitleSvc', 'Analytics', '$FB', run]);
 
 function app($routeProvider, $locationProvider)
 {
@@ -110,8 +109,7 @@ function analyticsProvider(AnalyticsProvider)
     });
 }
 
-function routeChange($rootScope, TitleSvc)
-{
+function run($rootScope, TitleSvc, Analytics, $FB) {
   var routeChange = $rootScope.$on('$routeChangeStart',
     function(event, next, current)
     {
@@ -125,6 +123,6 @@ function routeChange($rootScope, TitleSvc)
       }
     }
   );
-}
 
-function analytics(Analytics) {}
+  $FB.init('1077927685606343');
+}

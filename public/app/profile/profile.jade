@@ -126,8 +126,8 @@
                 input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
             .col-md-5
               .sp__share-btn
-                | <a class="twitter-share-button" ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague">Tweet</a>
+                | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
               .sp__share-btn
-                | <div class="fb-share-button" data-href="{{ vm.shareUrl }}" data-layout="button"></div>
+                | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
                 
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")
