@@ -79,7 +79,7 @@ function getProfile(req, res)
         return updateProfileName(doc,
           function(profile)
           {
-            return apiResponse('ok', res, profile);
+            return apiResponse('ok', res, {profile: profile});
           }
         );
       }
