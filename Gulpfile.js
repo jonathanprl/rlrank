@@ -75,8 +75,10 @@ gulp.task('concat-templates', ['templates'], function() {
 gulp.task('less', function() {
   var stream = gulp.src(['./public/app/themes/default/base.less'])
     .pipe(inject(gulp.src(['./public/app/**/*.less', '!./public/app/themes/**/*.less'], {read: false}), { relative: true }))
-    .pipe(less())
-    .pipe(minifyCss())
+    .pipe(less({
+      paths: ['./public/app/themes/default/']
+    }))
+    // .pipe(minifyCss())
     .pipe(gulp.dest('./public/css'));
   return stream;
 });
@@ -101,10 +103,10 @@ gulp.task('watch', function () {
   gulp.watch([
     './public/app/**/*.jade',
     './public/app/**/*.js',
+    './public/app/**/*.less',
     '!./public/js/*.js',
     '!./public/app/index.jade',
-    '!./public/app/rlrank-templates.js',
-    './public/app/**/*.less'
+    '!./public/app/rlrank-templates.js'
   ], ['build']);
 });
 
