@@ -27,26 +27,29 @@
 
         vm.players[0] = player;
         TitleSvc.setTitle(player.profile.display_name);
-        vm.shareText = player.profile.display_name + ' - Rocket League rank & stats!';
+
+        if ($routeParams.rlrank_id2)
+        {
+          getPlayerDetails($routeParams.rlrank_id2,
+            function(err, player)
+            {
+              if (err)
+              {
+                return vm.errors.push(err);
+              }
+
+              vm.players[1] = player;
+              TitleSvc.setTitle(vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name);
+              vm.shareText = vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name + ' - Rocket League rank & stats!';
+            }
+          );
+        }
+        else
+        {
+          vm.shareText = player.profile.display_name + ' - Rocket League rank & stats!';
+        }
       }
     );
-
-    if ($routeParams.rlrank_id2)
-    {
-      getPlayerDetails($routeParams.rlrank_id2,
-        function(err, player)
-        {
-          if (err)
-          {
-            return vm.errors.push(err);
-          }
-
-          vm.players[1] = player;
-          TitleSvc.setTitle(vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name);
-          vm.shareText = vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name + ' - Rocket League rank & stats!';
-        }
-      );
-    }
 
     function getPlayerDetails(rlrank_id, callback)
     {

@@ -19,7 +19,7 @@ app.use(require('prerender-node').set('prerenderToken', 'It894S0HIa5KY4kogyI2'))
 app.use(bodyParser.json());
 app.use(express.static(path.normalize(__dirname + '/../public')));
 
-if (config.env == 'daaev')
+if (config.env == 'dev')
 {
   app.listen(config.port);
 }
