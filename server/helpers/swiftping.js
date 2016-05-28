@@ -60,6 +60,30 @@ function getProfile(req, res)
         return apiResponse('error', res, {code: 'not_found', message: 'Profile not found.'});
       }
 
+      var neverModified = false;
+      if (doc.modified_at)
+      {
+        var now = new Date();
+
+        var timeDiff = Math.abs(now.getTime() - doc.modified_at.getTime());
+        var diffHours = Math.ceil(timeDiff / (1000 * 3600));
+      }
+      else
+      {
+        neverModified = true;
+      }
+
+      if (neverModified || diffHours > 11)
+      {
+        console.log('[PROFILE] Found outdated profile in DB [%s]', req.params.id);
+        return updateProfileName(doc,
+          function(profile)
+          {
+            return apiResponse('ok', res, profile);
+          }
+        );
+      }
+
       return apiResponse('ok', res, doc);
     }
   );
@@ -115,7 +139,8 @@ function fetchNewProfile(req, res)
         rlrank_id: getUniqueId(),
         display_name: steamProfile.personaname,
         platform: platform,
-        hash: encryptHash(steamProfile.steamid)
+        hash: encryptHash(steamProfile.steamid),
+        modified_at: new Date()
       };
 
       console.log('[PROFILE] Got profile from Steam, saving to DB...', input);
@@ -146,7 +171,8 @@ function fetchNewProfile(req, res)
         rlrank_id: getUniqueId(),
         display_name: input,
         platform: platform,
-        hash: encryptHash(input)
+        hash: encryptHash(input),
+        modified_at: new Date()
       };
 
       db.insert('profiles', profileData,
@@ -210,6 +236,41 @@ function fetchNewProfile(req, res)
     {
       return res.status(500).send({code: 'invalid_platform', message: 'Invalid platform.'});
     }
+  }
+}
+
+function updateProfileName(profile, callback)
+{
+  var id = decryptHash(profile.hash);
+
+  if (profile.platform == 'steam')
+  {
+    steam.getDetailsFromURL('https://steamcommunity.com/profiles/' + id, function(err, steamProfile)
+    {
+      if (err)
+      {
+        return res.status(500).send(err);
+      }
+
+      console.log('[PROFILE_UPDATE] Got profile from Steam, updating name in DB. [' + steamProfile.personaname + ']');
+
+      db.modify('profiles', { hash: profile.hash }, { $set: { display_name: steamProfile.personaname, modified_at: new Date() } },
+        function(err, doc)
+        {
+          if (err)
+          {
+            return console.log('[PROFILE_UPDATE] [ERROR] Could not update Steam profile name in DB. [' + steamProfile.personaname + ']', err); // ERROR
+          }
+
+          profile.display_name = steamProfile.personaname;
+          return callback(profile);
+        }
+      );
+    });
+  }
+  else if (profile.platform == 'psn' || profile.platform == 'xbox')
+  {
+    return profile;
   }
 }
 
