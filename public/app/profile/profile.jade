@@ -130,4 +130,4 @@
               .sp__share-btn
                 | <div class="fb-share-button" data-href="{{ vm.shareUrl }}" data-layout="button"></div>
                 
-  .sp__spinner(ng-hide="vm.players || vm.errors.length > 0")
+    .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")
