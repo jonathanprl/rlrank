@@ -1,53 +1,102 @@
 .sp__wrapper
-  .container
-    .sp__hero
-      h1 Find out your Rocket League MMR!
+  section.sp__landing
+    .container
+      .sp__hero
+        h1 Find out your Rocket League MMR!
+        .row
+          .col-md-4.col-md-offset-4
+            rank-form
+        .sp__hero-sub
+          h2 Players Online: N/A
+          //- .row
+          //-   .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
+          //-     .sp__graph(ng-if="vm.populationHistorical")
+          //-       .sparkline(sparkline="vm.populationHistorical")
+        //- table.table.table-responsive.sp__table.profile__stats
+        //-   thead
+        //-     tr
+        //-       th(ng-repeat="playlist in vm.playlistPopulation | orderBy:playlist")
+        //-         | {{ playlist.playlist | rlPlaylist }}
+        //-   tbody
+        //-     tr
+        //-       td(ng-repeat="playlist in vm.playlistPopulation")
+        //-        | {{ playlist.players }}
+  
+  section.middle
+    .container
+      .sp__leaderboards
+        h2 Global Leaderboards
+        .row
+          .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
+            h3 {{ playlist | rlPlaylist }}
+            table.table.table-responsive.sp__table
+              tr
+                td
+                  strong Pos
+                td
+                  strong Rank
+                td
+                  strong Username
+                td
+                  strong MMR
+              tr(ng-repeat="player in leaderboard | orderBy:'-mmr' |  limitTo:5")
+                td
+                  strong {{ '#' + ($index + 1) }}
+                td
+                  img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
+                td
+                  a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
+                td
+                  span(ng-if="player.mmr") {{ player.mmr }}
+        a.btn.btn-primary.btn-block(href="/leaderboards" title="Rocket League Leaderboards") See Top 200
+
+  section.bg2
+    .container
       .row
-        .col-md-4.col-md-offset-4
-          rank-form
-      .sp__hero-sub
-        h2 Players Online: N/A
-        //- .row
-        //-   .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
-        //-     .sp__graph(ng-if="vm.populationHistorical")
-        //-       .sparkline(sparkline="vm.populationHistorical")
-      //- table.table.table-responsive.sp__table.profile__stats
-      //-   thead
-      //-     tr
-      //-       th(ng-repeat="playlist in vm.playlistPopulation | orderBy:playlist")
-      //-         | {{ playlist.playlist | rlPlaylist }}
-      //-   tbody
-      //-     tr
-      //-       td(ng-repeat="playlist in vm.playlistPopulation")
-      //-        | {{ playlist.players }}
-    .sp__leaderboards
-      h2 Global Leaderboards
-      .row
-        .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
-          h3 {{ playlist | rlPlaylist }}
-          table.table.table-responsive.sp__table
-            tr
-              td
-                strong Pos
-              td
-                strong Rank
-              td
-                strong Username
-              td
-                strong MMR
-            tr(ng-repeat="player in leaderboard | orderBy:'-mmr' |  limitTo:10")
-              td
-                strong {{ '#' + ($index + 1) }}
-              td
-                img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
-              td
-                a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
-              td
-                span(ng-if="player.mmr") {{ player.mmr }}
-    //- .sp__advert.text-center
-    //-   ins.adsbygoogle(style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-1249925481918023" data-ad-slot="3603457193")
-    //-     script.
-    //-       (adsbygoogle = window.adsbygoogle || []).push({});
-    .sp__advert.text-center
-      div(google-adsense)
-      
+        .col-md-5.col-sm-9
+          h2 Rocket League News
+          .panel.sp__panel-trans.sp__news
+            .panel-body
+              h3.m-t-0 Season 3 Changes
+              h4 Rewards
+              p Psyonix next Rocket League update at the end of June will mark the conclusion of Season 2 and the beginning of Season 3. There will be a more specific date closer to launch, but in the meantime, here's what you can expect to see in terms of rewards based on your highest-reached competitive skill tier: 
+              .row
+                .col-md-6
+                  | <br><strong>Prospect I or higher</strong> <br> Season 2 Prospect Rocket Trail
+                  img(src="/img/news/GIF_03_Prospect.gif")
+                .col-md-6
+                  | <br><strong>Challenger I or higher</strong> <br> Season 2 Challenger Rocket Trail
+                  img(src="/img/news/GIF_01_Challenger.gif")
+                .col-md-6
+                  | <br><strong>Rising Star or higher</strong> <br> Season 2 Star Rocket Trail
+                  img(src="/img/news/GIF_04_Star.gif")
+                .col-md-6
+                  | <br><strong>Champion or higher</strong> <br> Season 2 Champion Rocket Trail
+                  img(src="/img/news/GIF_02_Champion.gif")
+                .col-md-12
+                  p
+                    br
+                    | and last but not least <strong>Grand Champion's get a "Season 2 Grand Champion" Title</strong>
+                  p
+                    h4 SKILL WIPE 
+                    | As the first year of competitive Rocket League draws to a close, there will be a full Skill Rating wipe for all competitive playlists. Psyonix will be watching how the skill curve shakes out without legacy data from previous seasons. 
+                    | A full reset will not solve all of the concerns raised during Season 2, but the wipe will give Psyonix valuable data to analyze as they move forward. For Grand Champion players in particular, Psyonix want to observe how the top ranks settle before deciding how to approach past complaints about stagnation and rank climbing. 
+              p.lead.text-right
+                a(href="http://steamcommunity.com/games/252950/announcements/detail/692805476660693610", title="Read more...") Read more...
+                
+        .col-md-5.col-md-offset-2
+          h2
+            i.fa.fa-twitch &nbsp;
+            | Rocket League Streams
+          .panel.sp__panel-trans.sp__twitch
+            .panel-body
+              .row
+                .col-md-6(ng-repeat="stream in vm.twitchStreams | limitTo: 10")
+                  a(ng-href="{{ stream.channel.url }}" title="{{ stream.channel.status }}")
+                    h4 {{ stream.channel.status }}
+                    img(ng-src="{{ stream.preview.medium }}")
+                    p
+                      strong {{ stream.channel.name }}
+                      strong.pull-right
+                        i.fa.fa-user &nbsp;
+                        | {{ stream.viewers }}

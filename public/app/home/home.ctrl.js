@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', ['ApiSvc', 'RouteSvc', '$routeParams', '$location', 'Analytics', HomeController]);
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TwitchSvc', '$routeParams', '$location', 'Analytics', HomeController]);
 
-  function HomeController(ApiSvc, RouteSvc, $routeParams, $location, Analytics)
+  function HomeController(ApiSvc, RouteSvc, TwitchSvc, $routeParams, $location, Analytics)
   {
     'use strict';
 
@@ -16,6 +16,7 @@
       getAllLeaderboards();
       getPopulation();
       getPopulationHistorical();
+      getTwitchStreams();
     })();
 
     function getLeaderboard(playlist)
@@ -65,6 +66,14 @@
           vm.populationHistorical = response.data.results;
         }
       );
+    }
+
+    function getTwitchStreams()
+    {
+      TwitchSvc.getStreams()
+        .then(function(response) {
+          vm.twitchStreams = response.data.streams;
+        });
     }
   }
 })();
