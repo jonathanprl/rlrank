@@ -37,7 +37,7 @@
                 strong MMR
             tr(ng-repeat="player in leaderboard | orderBy:'-mmr' |  limitTo:10")
               td
-                strong {{ '#' + player.position }}
+                strong {{ '#' + ($index + 1) }}
               td
                 img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
               td

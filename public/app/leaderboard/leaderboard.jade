@@ -19,7 +19,7 @@
             tbody
               tr(ng-repeat="player in leaderboard | orderBy: vm.sort[playlist] | limitTo: vm.limit")
                 td
-                  strong {{ '#' + player.position }}
+                  strong {{ '#' + ($index + 1) }}
                 td
                   img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
                 td
