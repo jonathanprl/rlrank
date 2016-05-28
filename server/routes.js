@@ -8,6 +8,7 @@ var psyonix = require('./services/psyonix');
 var cron = require('./services/cron');
 
 var swiftping = require('./helpers/swiftping');
+var sitemap = require('./helpers/sitemap');
 
 module.exports = function(app)
 {
@@ -22,6 +23,8 @@ module.exports = function(app)
     res.set('Content-Type', 'text/plain');
     res.send('User-agent: *\nAllow: /');
   });
+
+  app.get('/sitemap.xml', sitemap.generateSitemap);
 
   app.post('/api/auth', swiftping.auth);
 
