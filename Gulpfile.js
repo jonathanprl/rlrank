@@ -98,17 +98,14 @@ gulp.task('templates', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch([
-      './public/app/**/*.jade',
-      './public/app/**/*.js',
-      '!./public/js/*.js',
-      '!./public/app/index.jade',
-      '!./public/app/rlrank-templates.js'
-    ], ['build']);
-
-    gulp.watch([
-      './public/app/**/*.less'
-    ], ['less']);
+  gulp.watch([
+    './public/app/**/*.jade',
+    './public/app/**/*.js',
+    '!./public/js/*.js',
+    '!./public/app/index.jade',
+    '!./public/app/rlrank-templates.js',
+    './public/app/**/*.less'
+  ], ['build']);
 });
 
 gulp.task('daemon', function () {

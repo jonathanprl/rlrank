@@ -1,81 +1,133 @@
 .sp__wrapper
   .container
-    .row(ng-if="vm.profile")
-      .col-md-4.col-md-offset-1
-        h1 {{ vm.profile.display_name }}
-    .row(ng-if="vm.error")
-      .col-md-4.col-md-offset-4
-        div.alert.alert-danger(role="alert")
-          strong Sorry!&nbsp;
-          | {{ vm.error }}
-    .row(ng-if="vm.playlists || vm.stats")
-      .col-md-4.col-md-offset-1
-        span.sp__sub-header
-          | Last updated&nbsp;
-          span(am-time-ago="vm.lastUpdated")
-      .col-md-1.text-right
-        //- span.sp__sub-header(title="Rank updates every 30 seconds")
-        //-   i.fa.fa-circle.text-danger.animated.animated.infinite.flash
-        //-   //- fa-dot-circle-o
-        //-   | &nbsp;LIVE
-    .row(ng-if="vm.playlists || vm.stats")
-      .col-md-1
-        | &nbsp;
+    .row(ng-if="vm.players.length > 0")
       .col-md-5
-        table.table.table-responsive.sp__table(ng-if="vm.playlists")
+        h1
+          a(ng-href="{{ '/u/' + vm.players[0].profile.rlrank_id }}" title="{{ vm.players[0].profile.display_name }}") {{ vm.players[0].profile.display_name }}
+      .col-md-2.text-center(ng-if="vm.players.length > 1")
+        h1 vs
+      .col-md-5(ng-if="vm.players.length > 1")
+        h1
+          a(ng-href="{{ '/u/' + vm.players[1].profile.rlrank_id }}" title="{{ vm.players[1].profile.display_name }}") {{ vm.players[1].profile.display_name }}
+    .row(ng-if="vm.errors.length > 0")
+      .col-md-4.col-md-offset-4
+        div.alert.alert-danger(role="alert" ng-repeat="error in vm.errors")
+          strong Sorry!&nbsp;
+          | {{ error }}
+    .row(ng-if="vm.players")
+      .col-md-5
+        span.sp__sub-header(ng-show="vm.players.length > 0")
+          | Last updated&nbsp;
+          span(am-time-ago="vm.players[0].lastUpdated")
+      .col-md-5.col-md-offset-2
+        span.sp__sub-header(ng-show="vm.players.length > 1")
+          | Last updated&nbsp;
+          span(am-time-ago="vm.players[1].lastUpdated")
+    .row(ng-if="vm.players.length > 0 && vm.players[0].stats")
+      .col-md-5(ng-if="vm.players[0].playlists")
+        h4 Ranks
+        table.table.table-responsive.sp__table
           thead
             tr
               th
                 | Mode
               th(colspan="2")
                 | Rank
-              th
+              th.text-center
                 span Div
                 span.hidden-xs ision
-              th
+              th.text-center
                 | # Played
-              th
-                | MMR
+              th.text-center
+                | Skill Rating
           tbody
-            tr(ng-repeat="playlist in vm.playlists")
+            tr(ng-repeat="playlist in vm.players[0].playlists")
               td 
                 span {{ playlist.playlist | rlPlaylist }}
               td 
                 img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:36px;")
               td.text-left 
                 span.hidden-xs {{ playlist.tier | rlTier }}
-              td
+              td.text-center
                 span(ng-if="playlist.division > 0") {{ playlist.division | roman }}
-              td
-                span(ng-if="playlist.matches_played") {{ playlist.matches_played }} 
-              td.text-right(style="white-space: pre;")
+              td.text-center
+                span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
+              td.text-center(style="white-space: pre;")
                 span.rank__change.animated.bounce(ng-class="{'text-success': playlist.difference > 0, 'text-danger': playlist.difference < 0}" ng-show="playlist.difference")
                   i.fa(ng-class="{'fa-caret-up': playlist.difference > 0, 'fa-caret-down': playlist.difference < 0}")
                   | &nbsp;{{ playlist.difference }}
-                span(ng-if="playlist.mmr")
-                  | {{ playlist.mmr }}
-      .col-md-4
-        .row
-          .col-md-12.col-sm-8(ng-if="vm.stats")
-            table.table.table-responsive.sp__table.profile__stats
-              thead
-                tr
-                  th(ng-repeat="stat in vm.stats")
-                    | {{ stat.type }}
-              tbody
-                tr
-                  td(ng-repeat="stat in vm.stats")
-                   | {{ stat.value }}
-          .col-md-12.col-sm-4
-            .sp__share
-              h4 Share
-              .row
-                .col-md-7
-                  .form-group
-                    input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
-                .col-md-5
-                  .sp__share-btn
-                    | <a class="twitter-share-button" ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague">Tweet</a>
-                  .sp__share-btn
-                    | <div class="fb-share-button" data-href="{{ vm.shareUrl }}" data-layout="button"></div>                 
-  .sp__spinner(ng-hide="vm.playlists || vm.error")
+                span
+                  | {{ playlist.mmr || 100 }}        
+        h4 Stats
+        table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[0].stats")
+          thead
+            tr
+              th(ng-repeat="stat in vm.players[0].stats")
+                | {{ stat.type }}
+          tbody
+            tr
+              td(ng-repeat="stat in vm.players[0].stats")
+               | {{ stat.value }}
+      .col-md-5.col-md-offset-2(ng-if="vm.players[1].playlists")
+        h4 Ranks
+        table.table.table-responsive.sp__table
+          thead
+            tr
+              th
+                | Mode
+              th(colspan="2")
+                | Rank
+              th.text-center
+                span Div
+                span.hidden-xs ision
+              th.text-center
+                | # Played
+              th.text-center
+                | Skill Rating
+          tbody
+            tr(ng-repeat="playlist in vm.players[1].playlists")
+              td 
+                span {{ playlist.playlist | rlPlaylist }}
+              td 
+                img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:36px;")
+              td.text-left 
+                span.hidden-xs {{ playlist.tier | rlTier }}
+              td.text-center
+                span(ng-if="playlist.division > 0") {{ playlist.division | roman }}
+              td.text-center
+                span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
+              td.text-center(style="white-space: pre;")
+                span.rank__change.animated.bounce(ng-class="{'text-success': playlist.difference > 0, 'text-danger': playlist.difference < 0}" ng-show="playlist.difference")
+                  i.fa(ng-class="{'fa-caret-up': playlist.difference > 0, 'fa-caret-down': playlist.difference < 0}")
+                  | &nbsp;{{ playlist.difference }}
+                span
+                  | {{ playlist.mmr || 100 }}   
+        h4 Stats
+        table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[1].stats")
+          thead
+            tr
+              th(ng-repeat="stat in vm.players[1].stats")
+                | {{ stat.type }}
+          tbody
+            tr
+              td(ng-repeat="stat in vm.players[1].stats")
+               | {{ stat.value }}
+
+      .col-md-4.col-sm-8(ng-class="{'col-md-offset-2': vm.players.length == 1}")
+        .sp__share(ng-if="vm.players.length == 1")
+           h4.m-t-0 Compare with another player! 
+             span.label.label-danger  NEW
+           rank-form(button-text="Compare!" compare="vm.players[0].profile.rlrank_id")
+        .sp__share
+          h4 Share
+          .row
+            .col-md-7
+              .form-group
+                input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
+            .col-md-5
+              .sp__share-btn
+                | <a class="twitter-share-button" ng-href="https://twitter.com/intent/tweet?text=Check out my Rocket League rank!&url={{ vm.shareUrl }}&via=rlrank&hashtags=rlrank,rocketleague">Tweet</a>
+              .sp__share-btn
+                | <div class="fb-share-button" data-href="{{ vm.shareUrl }}" data-layout="button"></div>
+                
+  .sp__spinner(ng-hide="vm.players || vm.errors.length > 0")

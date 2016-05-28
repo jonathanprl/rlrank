@@ -1,26 +1,26 @@
-form.sp__rank-form(rank-form)
+form.sp__rank-form
   .input-group
-    input.form-control(ng-model="vm.input" placeholder="{{ vm.placeholder[vm.platform.id] }}")
+    input.form-control(ng-model="input" placeholder="{{ placeholder[platform.id] }}")
     .input-group-btn
       button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-        i.socicon(ng-class="{'socicon-steam': vm.platform.id == 'steam', 'socicon-playstation': vm.platform.id == 'psn', 'socicon-xbox': vm.platform.id == 'xbox'}")
-        | &nbsp;{{ vm.platform.name }}&nbsp;
+        i.socicon(ng-class="{'socicon-steam': platform.id == 'steam', 'socicon-playstation': platform.id == 'psn', 'socicon-xbox': platform.id == 'xbox'}")
+        | &nbsp;{{ platform.name }}&nbsp;
         span.caret
       ul.dropdown-menu.dropdown-menu-right
         li
-          a(ng-click="vm.setPlatform('steam')" href="#")
+          a(ng-click="setPlatform('steam')" href="#")
             i.socicon.socicon-steam
             | &nbsp;Steam
         li
-          a(ng-click="vm.setPlatform('psn')" href="#")
+          a(ng-click="setPlatform('psn')" href="#")
             i.socicon.socicon-playstation
             | &nbsp;Playstation
         li
-          a(ng-click="vm.setPlatform('xbox')" href="#")
+          a(ng-click="setPlatform('xbox')" href="#")
             i.socicon.socicon-xbox
             | &nbsp;Xbox
-  p.help-block(ng-if="vm.profileError")
-    | {{ vm.profileError }}
-  button.btn.btn-primary.btn-block(ng-click="vm.goToProfile()")
-    | Get Ranks & Stats
-    span.sp__spinner.sp__spinner-mini.pull-right(ng-if="vm.showLoader")
+  p.help-block(ng-if="profileError")
+    | {{ profileError }}
+  button.btn.btn-primary.btn-block(ng-click="goToProfile()")
+    | {{ buttonText }}
+    span.sp__spinner.sp__spinner-mini.pull-right(ng-if="showLoader")

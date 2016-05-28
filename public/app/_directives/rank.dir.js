@@ -1,71 +1,69 @@
 angular
     .module('app')
-    .directive('rankForm', rankForm);
+    .directive('rankForm', ['ApiSvc', 'Analytics', '$location', rankForm]);
 
-function rankForm()
+function rankForm(ApiSvc, Analytics, $location)
 {
   var directive = {
     restrict: 'E',
     templateUrl: '/views/widgets/rankForm',
-    scope: true,
-    link: linkFunc,
-    controller: RankFormController,
-    controllerAs: 'vm',
-    bindToController: true // because the scope is isolated
+    scope: {
+      compare: '='
+    },
+    link: linkFn
   };
 
   return directive;
 
-  function linkFunc(scope, el, attr, ctrl) {
-
-  }
-}
-
-RankFormController.$inject = ['ApiSvc', 'Analytics', '$location'];
-
-function RankFormController(ApiSvc, Analytics, $location)
-{
-  var vm = this;
-
-  vm.goToProfile = goToProfile;
-  vm.setPlatform = setPlatform;
-
-  vm.placeholder = {
-    'steam': 'Enter a Steam profile URL, ID or name',
-    'psn': 'Enter a PSN username',
-    'xbox': 'Enter a Xbox Live gamertag'
-  };
-  vm.platform = {id: 'steam', name: 'Steam'};
-
-
-  function setPlatform(platform)
+  function linkFn(scope, element, attr, ctrl)
   {
-    if (platform == 'psn')
-    {
-      vm.platform = {id: 'psn', name: 'Playstation'};
-    }
-    else
-    {
-      vm.platform = {id: platform, name: platform.charAt(0).toUpperCase() + platform.slice(1)};
-    }
-  }
+    scope.goToProfile = goToProfile;
+    scope.setPlatform = setPlatform;
 
-  function goToProfile()
-  {
-    vm.showLoader = true;
-    ApiSvc.authorise(vm.input, vm.platform.id)
-      .then(
-        function(response)
-        {
-          Analytics.trackEvent('profile', 'find', vm.input + '@' + vm.platform.id);
-          $location.path('u/' + response.data.profile.rlrank_id);
-        })
-      .catch(
-        function(err)
-        {
-          vm.profileError = err.data.message;
-          vm.showLoader = false;
-        }
-      );
+    scope.buttonText = attr.buttonText || 'Get Ranks & Stats';
+    scope.placeholder = {
+      'steam': 'Enter a Steam profile URL, ID or name',
+      'psn': 'Enter a PSN username',
+      'xbox': 'Enter a Xbox Live gamertag'
+    };
+    scope.platform = {id: 'steam', name: 'Steam'};
+
+    function setPlatform(platform)
+    {
+      if (platform == 'psn')
+      {
+        scope.platform = {id: 'psn', name: 'Playstation'};
+      }
+      else
+      {
+        scope.platform = {id: platform, name: platform.charAt(0).toUpperCase() + platform.slice(1)};
+      }
+    }
+
+    function goToProfile()
+    {
+      scope.showLoader = true;
+      ApiSvc.authorise(scope.input, scope.platform.id)
+        .then(
+          function(response)
+          {
+            Analytics.trackEvent('profile', 'find', scope.input + '@' + scope.platform.id);
+
+            if (scope.compare)
+            {
+              Analytics.trackEvent('profile', 'compare', scope.compare + '@' + scope.platform.id + ' & ' + response.data.profile.rlrank_id + '@' + scope.platform.id);
+              return $location.path('u/' + scope.compare + '/' + response.data.profile.rlrank_id);
+            }
+
+            $location.path('u/' + response.data.profile.rlrank_id);
+          })
+        .catch(
+          function(err)
+          {
+            scope.profileError = err.data.message;
+            scope.showLoader = false;
+          }
+        );
+    }
   }
 }

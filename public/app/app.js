@@ -77,19 +77,7 @@ function app($routeProvider, $locationProvider)
         pageTitle: 'Statistics'
       }
     })
-    .when('/u/:rlrank_id/:platform', {
-      templateUrl: '/views/profile/profile',
-      controller: 'ProfileController as vm',
-      activeSection: 'profile',
-      showMMR: true
-    })
-    .when('/u/:rlrank_id', {
-      templateUrl: '/views/profile/profile',
-      controller: 'ProfileController as vm',
-      activeSection: 'profile',
-      showMMR: true
-    })
-    .when('/u_mmr/:rlrank_id', {
+    .when('/u/:rlrank_id/:rlrank_id2?', {
       templateUrl: '/views/profile/profile',
       controller: 'ProfileController as vm',
       activeSection: 'profile',

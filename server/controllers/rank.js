@@ -25,9 +25,9 @@ function getPlayerRanks(req, res)
         var now = new Date();
 
         var timeDiff = Math.abs(now.getTime() - docs[0].created_at.getTime());
-        var diffHours = Math.ceil(timeDiff / (1000 * 3600));
+        var diffMins = Math.ceil(timeDiff / (1000 * 60));
 
-        if (diffHours > 1)
+        if (diffMins > 30)
         {
           console.log('[RANKS] Found outdated ranks in DB [%s]', req.params.id);
           return getUpdatedPlayerRanks(req, res);

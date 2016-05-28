@@ -9,69 +9,148 @@
 
     var vm = this;
 
+    vm.errors = [];
     vm.getPlayerRanks = getPlayerRanks;
     vm.leaderboards = {};
     vm.shareUrl = $location.absUrl();
     vm.router = RouteSvc;
+    vm.players = [];
+    vm.playlists = [0, 10, 11, 12, 13];
 
-    ApiSvc.getProfile($routeParams.rlrank_id)
-      .then(
-        function(response)
+    getPlayerDetails($routeParams.rlrank_id,
+      function(err, player)
+      {
+        if (err)
         {
-          vm.profile = response.data.results;
-
-          getPlayerRanks(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
-          getPlayerStats(vm.profile.rlrank_id, vm.profile.hash, vm.profile.platform);
-
-          TitleSvc.setTitle(vm.profile.display_name);
-          Analytics.trackEvent('profile', 'view', vm.profile.display_name + '@' + vm.profile.platform + ' ' + vm.profile.rlrank_id);
+          return vm.errors.push(err);
         }
-      ).catch(
-        function(err)
-        {
-          if (err.data.error.code == 'not_found')
-          {
-            ApiSvc.authorise($routeParams.rlrank_id, null)
-              .then(
-                function(response)
-                {
-                  $location.path('/u/' + response.data.profile.rlrank_id);
-                })
-              .catch(
-                function(err)
-                {
-                  vm.error = 'There was a problem retrieving your profile. Please try again later. Our developers have been notified.';
-                }
-              );
-          }
-        }
-      );
 
-    function getPlayerRanks(id, platform)
+        vm.players[0] = player;
+      }
+    );
+
+    if ($routeParams.rlrank_id2)
     {
-      ApiSvc.getPlayerRanks(id, platform)
-        .then(function(response)
+      getPlayerDetails($routeParams.rlrank_id2,
+        function(err, player)
         {
-          vm.playlists = response.data.results;
-          vm.lastUpdated = vm.playlists[0].created_at;
-        })
-        .catch(function(err)
-        {
-          vm.error = 'There was a problem retrieving your rank. Please try again later. Our developers have been notified.';
+          if (err)
+          {
+            return vm.errors.push(err);
+          }
+
+          vm.players[1] = player;
         }
       );
     }
 
-    function getPlayerStats(id, platform)
+    function getPlayerDetails(rlrank_id, callback)
+    {
+      var player = {};
+      ApiSvc.getProfile(rlrank_id)
+        .then(
+          function(response)
+          {
+            player.profile = response.data.results;
+
+            getPlayerRanks(player.profile.rlrank_id, player.profile.platform,
+              function(err, ranks)
+              {
+                if (err)
+                {
+                  return vm.errors.push(err);
+                }
+
+                player.playlists = ranks.playlists;
+                player.lastUpdated = ranks.lastUpdated;
+
+                getPlayerStats(player.profile.rlrank_id, player.profile.platform,
+                  function(err, stats)
+                  {
+                    if (err)
+                    {
+                      return vm.errors.push(err);
+                    }
+
+                    player.stats = stats;
+                    callback(null, player);
+                  }
+                );
+              }
+            );
+
+            TitleSvc.setTitle(player.profile.display_name);
+            Analytics.trackEvent('profile', 'view', player.profile.display_name + '@' + player.profile.platform + ' ' + player.profile.rlrank_id);
+          }
+        ).catch(
+          function(err)
+          {
+            if (err.data.error.code == 'not_found')
+            {
+              ApiSvc.authorise(rlrank_id, null)
+                .then(
+                  function(response)
+                  {
+                    getPlayerDetails(response.data.profile.rlrank_id,
+                      function(err, player)
+                      {
+                        callback(null, player);
+                      }
+                    );
+                  })
+                .catch(
+                  function(err)
+                  {
+                    callback('A profile could not be retrieved. Please try again later. Our developers have been notified.');
+                  }
+                );
+            }
+          }
+        );
+    }
+
+    function getPlayerRanks(id, platform, callback)
+    {
+      ApiSvc.getPlayerRanks(id, platform)
+        .then(function(response)
+        {
+          var playlists = {};
+          angular.forEach(vm.playlists,
+            function(playlist)
+            {
+              angular.forEach(response.data.results,
+                function(result)
+                {
+                  if (result.playlist == playlist) playlists[playlist] = result;
+                }
+              );
+
+              if (!playlists[playlist]) playlists[playlist] = {playlist: playlist};
+            }
+          );
+
+          callback(null, {
+            playlists: playlists,
+            lastUpdated: response.data.results[0].created_at
+          });
+        })
+        .catch(function(err)
+        {
+          callback('Ranks could not be retrieved for ' + id + '. Please try again later. Our developers have been notified.');
+        }
+      );
+    }
+
+    function getPlayerStats(id, platform, callback)
     {
       ApiSvc.getPlayerStats(id, platform)
         .then(function(response)
         {
-          vm.stats = response.data.results;
+          callback(null, response.data.results);
         })
         .catch(function(err)
         {
-          vm.error = 'There was a problem retrieving your stats. Please try again later. Our developers have been notified.';
+          callback('Stats could not be retrieved for ' + id + '. Please try again later. Our developers have been notified.');
         }
       );
     }
