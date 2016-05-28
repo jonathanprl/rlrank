@@ -270,7 +270,7 @@ function updateProfileName(profile, callback)
   }
   else if (profile.platform == 'psn' || profile.platform == 'xbox')
   {
-    return profile;
+    return callback(profile);
   }
 }
 
