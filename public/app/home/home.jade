@@ -27,7 +27,7 @@
       .sp__leaderboards
         h2 Global Leaderboards
         .row
-          .col-md-3(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
+          .col-md-3.col-sm-6(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
             h3 {{ playlist | rlPlaylist }}
             table.table.table-responsive.sp__table
               tr
@@ -48,7 +48,9 @@
                   a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
                 td
                   span(ng-if="player.mmr") {{ player.mmr }}
-        a.btn.btn-primary.btn-block(href="/leaderboards" title="Rocket League Leaderboards") See Top 200
+        .row
+          .col-md-4.col-md-offset-4
+            a.btn.btn-primary.btn-block(href="/leaderboards" title="Rocket League Leaderboards") See Top 200
 
   section.bg2
     .container

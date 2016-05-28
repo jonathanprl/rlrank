@@ -117,8 +117,8 @@
       .col-md-4.col-sm-8(ng-class="{'col-md-offset-2': vm.players.length == 1}")
         .sp__share(ng-if="vm.players.length == 1 && !vm.compare")
            h4.m-t-0 Compare with another player! 
-             span.label.label-danger  NEW
-           rank-form(button-text="Compare!" compare="vm.players[0].profile.rlrank_id")
+             span.label.label-danger NEW
+           rank-form(button-text="Compare!" compare="vm.players[0].profile.rlrank_id" platform="vm.players[0].profile.platform")
         .sp__share
           h4 Share
           .row

@@ -8,7 +8,8 @@ function rankForm(ApiSvc, Analytics, $location)
     restrict: 'E',
     templateUrl: '/views/widgets/rankForm',
     scope: {
-      compare: '='
+      compare: '=',
+      platform: '='
     },
     link: linkFn
   };
@@ -26,7 +27,15 @@ function rankForm(ApiSvc, Analytics, $location)
       'psn': 'Enter a PSN username',
       'xbox': 'Enter a Xbox Live gamertag'
     };
-    scope.platform = {id: 'steam', name: 'Steam'};
+
+    if (scope.platform)
+    {
+      setPlatform(scope.platform);
+    }
+    else
+    {
+      scope.platform = {id: 'steam', name: 'Steam'};
+    }
 
     function setPlatform(platform)
     {
