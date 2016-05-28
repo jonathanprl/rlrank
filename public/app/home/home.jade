@@ -82,7 +82,7 @@
                     | As the first year of competitive Rocket League draws to a close, there will be a full Skill Rating wipe for all competitive playlists. Psyonix will be watching how the skill curve shakes out without legacy data from previous seasons. 
                     | A full reset will not solve all of the concerns raised during Season 2, but the wipe will give Psyonix valuable data to analyze as they move forward. For Grand Champion players in particular, Psyonix want to observe how the top ranks settle before deciding how to approach past complaints about stagnation and rank climbing. 
               p.lead.text-right
-                a(href="http://steamcommunity.com/games/252950/announcements/detail/692805476660693610", title="Read more...") Read more...
+                a(href="http://steamcommunity.com/games/252950/announcements/detail/692805476660693610", title="Read more..." target="_blank") Read more...
                 
         .col-md-5.col-md-offset-2
           h2
@@ -92,7 +92,7 @@
             .panel-body
               .row
                 .col-md-6(ng-repeat="stream in vm.twitchStreams | limitTo: 10")
-                  a(ng-href="{{ stream.channel.url }}" title="{{ stream.channel.status }}")
+                  a(ng-href="{{ stream.channel.url }}" title="{{ stream.channel.status }}" target="_blank")
                     h4 {{ stream.channel.status }}
                     img(ng-src="{{ stream.preview.medium }}")
                     p
