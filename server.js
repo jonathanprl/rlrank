@@ -42,7 +42,8 @@ cron.refreshToken();
 //   }, function(){}, true
 // );
 //
-new CronJob('00 06 * * *',
+
+new CronJob('0 */2 * * *',
   function()
   {
     console.log('[CRON] Running leaderboards cronjob...', (new Date()).toTimeString());
