@@ -56,35 +56,52 @@ function getProfile(req, res)
     {
       if (err || !doc)
       {
-        console.log('[PROFILE] Error fetching profile from DB', err || 'No record'); // ERROR
-        return apiResponse('error', res, {code: 'not_found', message: 'Profile not found.'});
-      }
-
-      var neverModified = false;
-      if (doc.modified_at)
-      {
-        var now = new Date();
-
-        var timeDiff = Math.abs(now.getTime() - doc.modified_at.getTime());
-        var diffHours = Math.ceil(timeDiff / (1000 * 3600));
-      }
-      else
-      {
-        neverModified = true;
-      }
-
-      if (neverModified || diffHours > 11)
-      {
-        console.log('[PROFILE] Found outdated profile in DB [%s]', req.params.id);
-        return updateProfileName(doc,
-          function(profile)
+        db.findOneWhere('profiles', {hash: encryptHash(req.params.id)}, { _id: 0, input: 0 },
+          function(err, doc)
           {
-            return apiResponse('ok', res, profile);
+            if (err || !doc)
+            {
+              console.log('[PROFILE] Error fetching profile from DB', err || 'No record'); // ERROR
+              return apiResponse('error', res, {code: 'not_found', message: 'Profile not found.'});
+            }
+            
+            outdateCheck(doc);
           }
         );
       }
+      else
+      {
+        outdateCheck(doc);
+      }
 
-      return apiResponse('ok', res, doc);
+      function outdateCheck(profile)
+      {
+        var neverModified = false;
+        if (profile.modified_at)
+        {
+          var now = new Date();
+
+          var timeDiff = Math.abs(now.getTime() - profile.modified_at.getTime());
+          var diffHours = Math.ceil(timeDiff / (1000 * 3600));
+        }
+        else
+        {
+          neverModified = true;
+        }
+
+        if (neverModified || diffHours > 11)
+        {
+          console.log('[PROFILE] Found outdated profile in DB [%s]', req.params.id);
+          return updateProfileName(profile,
+            function(profile)
+            {
+              return apiResponse('ok', res, profile);
+            }
+          );
+        }
+
+        return apiResponse('ok', res, profile);
+      }
     }
   );
 }
@@ -109,15 +126,15 @@ function fetchNewProfile(req, res)
 
     if (input[0] == 7 && isNumeric(input) && input.length == 17)
     {
-      var url = 'https://steamcommunity.com/profiles/' + input;
+      url = 'https://steamcommunity.com/profiles/' + input;
     }
     else if (input.indexOf('steamcommunity.com') > -1)
     {
-      var url = input;
+      url = input;
     }
     else if (/[A-Za-z0-9\-\_]$/g.test(input))
     {
-      var url = 'https://steamcommunity.com/id/' + input;
+      url = 'https://steamcommunity.com/id/' + input;
     }
     else
     {
