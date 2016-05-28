@@ -24,7 +24,6 @@ new CronJob('*/20 * * * *',
     cron.refreshToken();
   }, function(){}, true
 );
-cron.refreshToken();
 
 // new CronJob('00 30 * * * *',
 //   function()
