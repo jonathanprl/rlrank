@@ -9,7 +9,7 @@ function rankForm(ApiSvc, Analytics, $location)
     templateUrl: '/views/widgets/rankForm',
     scope: {
       compare: '=',
-      platform: '='
+      platform: '=?'
     },
     link: linkFn
   };
