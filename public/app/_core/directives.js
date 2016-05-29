@@ -54,7 +54,7 @@
       function ()
       {
         return {
-          restrict: 'A',
+          restrict: 'E',
           replace: true,
           templateUrl: '/views/widgets/ads',
           controller: function () {
