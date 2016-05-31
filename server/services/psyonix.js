@@ -316,7 +316,7 @@ function callProc(procUrl, procData, callback)
 
     var time = new Date();
 
-    console.log(time.toTimeString() + ' [PSYONIX] Sending callProc to Psyonix [%s]', procData);
+    console.log(time.toTimeString() + ' [PSYONIX] Sending callProc to Psyonix [%s]', JSON.stringify(procData));
 
     restler.post(procUrl, {data: procData, headers: headers})
       .on('complete',

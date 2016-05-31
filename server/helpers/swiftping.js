@@ -1,5 +1,6 @@
 var db = require('../db');
 var steam = require('../helpers/steam');
+var xbox = require('../helpers/xbox');
 
 module.exports = {
   auth,
@@ -64,7 +65,7 @@ function getProfile(req, res)
               console.log('[PROFILE] Error fetching profile from DB', err || 'No record'); // ERROR
               return apiResponse('error', res, {code: 'not_found', message: 'Profile not found.'});
             }
-            
+
             outdateCheck(doc);
           }
         );
@@ -175,7 +176,7 @@ function fetchNewProfile(req, res)
       res.send({profile: profileData});
     });
   }
-  else if (platform == 'psn' || platform == 'xbox')
+  else if (platform == 'psn')
   {
     console.log('[PROFILE] %s user [%s]', platform, input); // INFO
 
@@ -203,6 +204,51 @@ function fetchNewProfile(req, res)
       );
 
       return res.send({profile: profileData});
+    }
+    else
+    {
+      console.log('[PROFILE] [ERROR] Invalid %s user [%s]', platform, input); // ERROR
+      return res.status(500).send({code: 'invalid_xboxpsn', message: 'Invalid ' + platform + ' username.'});
+    }
+  }
+  else if (platform == 'xbox')
+  {
+    console.log('[PROFILE] %s user [%s]', platform, input); // INFO
+
+    input = decodeURIComponent(input);
+
+    if (/[A-Za-z0-9\-\_ ]$/g.test(input))
+    {
+      xbox.getXuidFromGamertag(input,
+        function(err, xuid)
+        {
+          if (err)
+          {
+            return res.status(500).send(err);
+          }
+
+          var profileData = {
+            input: input,
+            rlrank_id: getUniqueId(),
+            display_name: input,
+            platform: platform,
+            hash: encryptHash(xuid),
+            modified_at: new Date()
+          };
+
+          db.insert('profiles', profileData,
+            function(err, doc)
+            {
+              if (err)
+              {
+                console.log('[PROFILE] [ERROR] Could not save %s profile to database [%s]', platform, input); // ERROR
+              }
+            }
+          );
+
+          return res.send({profile: profileData});
+        }
+      );
     }
     else
     {
