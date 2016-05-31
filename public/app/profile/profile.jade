@@ -17,11 +17,11 @@
     .row(ng-if="vm.players")
       .col-md-5
         span.sp__sub-header(ng-show="vm.players.length > 0")
-          | Last updated&nbsp;
+          | Last updated&nbsp; (Updated every 15 minutes)
           span(am-time-ago="vm.players[0].lastUpdated")
       .col-md-5.col-md-offset-2
         span.sp__sub-header(ng-show="vm.players.length > 1")
-          | Last updated&nbsp;
+          | Last updated&nbsp; (Updated every 15 minutes)
           span(am-time-ago="vm.players[1].lastUpdated")
     .row(ng-if="vm.players.length > 0 && vm.players[0].stats")
       .col-md-5(ng-if="vm.players[0].playlists")
