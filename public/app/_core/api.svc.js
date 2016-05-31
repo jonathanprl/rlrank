@@ -20,6 +20,7 @@
       getPopulationHistorical: getPopulationHistorical,
       getPlayerStats: getPlayerStats,
       getTierThresholds: getTierThresholds,
+      getRankTiers: getRankTiers,
       postPlayerRanksLive: postPlayerRanksLive
     };
 
@@ -66,6 +67,11 @@
     function getTierThresholds()
     {
       return $http.get('/api/statistics/tierThresholds');
+    }
+
+    function getRankTiers()
+    {
+      return $http.get('/api/rank/tiers');
     }
 
     function postPlayerRanksLive(id, ranks)

@@ -19,6 +19,7 @@ function generateSitemap(req, res)
       urls.unshift(
         { url: '/' },
         { url: '/leaderboards' },
+        { url: '/rank-tiers' },
         { url: '/status' },
         { url: '/faq' },
         { url: '/contact' },

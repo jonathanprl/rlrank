@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('PagesController', ['RouteSvc', 'TitleSvc', PagesController]);
+    .controller('PagesController', ['RouteSvc', 'TitleSvc', 'ApiSvc', PagesController]);
 
-  function PagesController(RouteSvc, TitleSvc)
+  function PagesController(RouteSvc, TitleSvc, ApiSvc)
   {
     'use strict';
 
@@ -11,6 +11,16 @@
 
     vm.headerUrl = '/views/navbar/header';
     vm.pageTitle = TitleSvc.currentPage;
+
+    (function() {
+      ApiSvc.getRankTiers()
+        .then(
+          function(response)
+          {
+            vm.rankTiers = response.data.results;
+          }
+        );
+    }());
 
   };
 })();

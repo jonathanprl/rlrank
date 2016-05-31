@@ -3,7 +3,8 @@ var swiftping = require('../helpers/swiftping');
 var psyonix = require('../services/psyonix');
 
 module.exports = {
-  getPlayerRanks
+  getPlayerRanks,
+  getRankTiers
 };
 
 /**
@@ -34,7 +35,18 @@ function getPlayerRanks(req, res)
         }
 
         console.log('[RANKS] Found recent ranks in DB [%s]', req.params.id);
-        return swiftping.apiResponse('ok', res, docs);
+
+        return _getRankThresholds(docs,
+          function(err, ranks)
+          {
+            if (err)
+            {
+              return swiftping.apiResponse('error', res, err);
+            }
+
+            return swiftping.apiResponse('ok', res, ranks);
+          }
+        );
       }
 
       return getUpdatedPlayerRanks(req, res);
@@ -117,9 +129,97 @@ function getUpdatedPlayerRanks(req, res)
             }
           );
 
-          swiftping.apiResponse('ok', res, ranks);
+          _getRankThresholds(ranks,
+            function(err, ranks)
+            {
+              if (err)
+              {
+                return swiftping.apiResponse('error', res, err);
+              }
+
+              swiftping.apiResponse('ok', res, ranks);
+            }
+          );
         }
       );
+    }
+  );
+}
+
+/**
+ *
+ * @param {object} req - Express request
+ * @param {object} res - Express response
+ */
+function getRankTiers(req, res)
+{
+  _getRankTiers(
+    function(err, docs)
+    {
+      if (err)
+      {
+        return swiftping.apiResponse('error', res, 'Could not get ranking tiers.');
+      }
+
+      swiftping.apiResponse('ok', res, docs);
+    }
+  );
+};
+
+function _getRankTiers(callback)
+{
+  console.log('[RANK_TIERS] Getting ranking tiers from ranksHistorical.');
+  db.aggregate('ranksHistorical', [ { $group: {_id: '$tier', minMMR: { $min: '$mmr' }, maxMMR: { $max: '$mmr' } } }, { $sort: { _id: 1 } }, { $project: { _id: 0, tier: '$_id', minMMR: 1, maxMMR: 1 } } ],
+    function(err, docs)
+    {
+      if (err)
+      {
+        console.log('[RANK_TIERS] Could not get ranking tiers from ranksHistorical.', err);
+        return callback('Could not get ranking tiers.');
+      }
+
+      callback(null, docs);
+    }
+  );
+}
+
+function _getRankThresholds(playlists, callback)
+{
+  _getRankTiers(
+    function(err, tiers)
+    {
+      if (err)
+      {
+        return callback(err);
+      }
+
+      var ranks = playlists.map(
+        function(playlist) {
+
+          if (!playlist.tier || tiers[playlist.tier+1].tier != playlist.tier)
+          {
+            return playlist;
+          }
+
+          var max = tiers[playlist.tier+1].maxMMR;
+          var min = tiers[playlist.tier+1].minMMR;
+          var mmr = playlist.mmr;
+
+          var threshold = (max - min) / 4;
+          if (mmr >= (max - threshold))
+          {
+            playlist.threshold = 1;
+          }
+          else if (mmr <= (min + threshold))
+          {
+            playlist.threshold = -1;
+          }
+
+          return playlist;
+        }
+      );
+
+      callback(null, ranks);
     }
   );
 }

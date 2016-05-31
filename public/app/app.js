@@ -68,6 +68,14 @@ function app($routeProvider, $locationProvider)
         pageTitle: 'Privacy'
       }
     })
+    .when('/rank-tiers', {
+      templateUrl: '/views/pages/ranks',
+      controller: 'PagesController as vm',
+      data: {
+        activeSection: 'ranks',
+        pageTitle: 'Rocket League Ranking Tiers'
+      }
+    })
     .when('/statistics', {
       templateUrl: '/views/statistics/statistics',
       controller: 'StatisticsController as vm',
