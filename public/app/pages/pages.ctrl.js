@@ -17,7 +17,7 @@
         .then(
           function(response)
           {
-            vm.rankTiers = response.data.results;
+            vm.tierRanges = response.data.results;
           }
         );
     }());

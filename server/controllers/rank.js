@@ -169,7 +169,7 @@ function getRankTiers(req, res)
 function _getRankTiers(callback)
 {
   console.log('[RANK_TIERS] Getting ranking tiers from ranksHistorical.');
-  db.aggregate('ranksHistorical', [ { $group: {_id: '$tier', minMMR: { $min: '$mmr' }, maxMMR: { $max: '$mmr' } } }, { $sort: { _id: 1 } }, { $project: { _id: 0, tier: '$_id', minMMR: 1, maxMMR: 1 } } ],
+  db.aggregate('ranksHistorical', [{$group: {_id: {tier: '$tier',division: '$division'},minMMR: { $min: '$mmr' },maxMMR: { $max: '$mmr'}}},{$group: {_id: '$_id.tier', divisions: {$push: {division: '$_id.division', minMMR: '$minMMR', maxMMR: '$maxMMR' } } } }, { $sort: { _id: 1 } }, { $project: { _id: 0, divisions: '$divisions', tier: '$_id' } } ],
     function(err, docs)
     {
       if (err)
@@ -201,8 +201,13 @@ function _getRankThresholds(playlists, callback)
             return playlist;
           }
 
-          var max = tiers[playlist.tier+1].maxMMR;
-          var min = tiers[playlist.tier+1].minMMR;
+          var divisions = tiers[playlist.tier+1].divisions;
+          divisions.sort(function(a,b) {
+            return (a.division > b.division) ? 1 : ((b.division > a.division) ? -1 : 0);
+          });
+
+          var max = tiers[playlist.tier+1].divisions[playlist.division].maxMMR;
+          var min = tiers[playlist.tier+1].divisions[playlist.division].minMMR;
           var mmr = playlist.mmr;
 
           var threshold = (max - min) / 4;

@@ -1,106 +1,12 @@
 .sp__wrapper
   .container
-    sp-header(page-title="Rocket League Rank Tiers" sub-title="Season 2 Ranking Tiers")
+    sp-header(page-title="Rocket League Rank Tiers" sub-title="Season 2 rank and division MMR thresholds")
     .row
-      .col-md-6.col-md-offset-3
+      .col-md-8.col-md-offset-2
         .row.sp__rank-tiers
-          .col-sm-4.col-sm-push-8
+          div(ng-repeat="range in vm.tierRanges | orderBy: '-' + range.tier" ng-class="{'col-sm-4': $index < 3, 'col-sm-3': $index >= 3}" ng-if="range.tier || range.tier === 0")
             .sp__rank-tier
-              img(src="/img/ranks/15_w.png")
+              img(src="/img/ranks/{{ range.tier + '_w.png' }}")
               p
-                strong Grand Champion
-              p MMR: {{ ::vm.rankTiers[1+15].minMMR }} - {{ ::vm.rankTiers[1+15].maxMMR }}
-          .col-sm-4
-            .sp__rank-tier
-              img(src="/img/ranks/14_w.png")
-              p
-                strong Super Champion
-              p MMR: {{ ::vm.rankTiers[1+14].minMMR }} - {{ ::vm.rankTiers[1+14].maxMMR }}
-          .col-sm-4.col-sm-pull-8
-            .sp__rank-tier
-              img(src="/img/ranks/13_w.png")
-              p
-                strong Champion
-              p MMR: {{ ::vm.rankTiers[1+13].minMMR }} - {{ ::vm.rankTiers[1+13].maxMMR }}
-        .row.sp__rank-tiers
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/9_w.png")
-              p
-                strong Rising Star
-              p MMR: {{ ::vm.rankTiers[1+9].minMMR }} - {{ ::vm.rankTiers[1+9].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/10_w.png")
-              p
-                strong Shooting Star
-              p MMR: {{ ::vm.rankTiers[1+10].minMMR }} - {{ ::vm.rankTiers[1+10].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/11_w.png")
-              p
-                strong All Star
-              p MMR: {{ ::vm.rankTiers[1+11].minMMR }} - {{ ::vm.rankTiers[1+11].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/12_w.png")
-              p
-                strong Superstar
-              p MMR: {{ ::vm.rankTiers[1+12].minMMR }} - {{ ::vm.rankTiers[1+12].maxMMR }}
-        .row.sp__rank-tiers
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/5_w.png")
-              p
-                strong Challenger I
-              p MMR: {{ ::vm.rankTiers[1+5].minMMR }} - {{ ::vm.rankTiers[1+5].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/6_w.png")
-              p
-                strong Challenger II
-              p MMR: {{ ::vm.rankTiers[1+6].minMMR }} - {{ ::vm.rankTiers[1+6].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/7_w.png")
-              p
-                strong Challenger III
-              p MMR: {{ ::vm.rankTiers[1+7].minMMR }} - {{ ::vm.rankTiers[1+7].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/8_w.png")
-              p
-                strong Challenger Elite
-              p MMR: {{ ::vm.rankTiers[1+8].minMMR }} - {{ ::vm.rankTiers[1+8].maxMMR }}
-        .row.sp__rank-tiers
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/1_w.png")
-              p
-                strong Prospect I
-              p MMR: {{ ::vm.rankTiers[1+1].minMMR }} - {{ ::vm.rankTiers[1+1].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/2_w.png")
-              p
-                strong Prospect II
-              p MMR: {{ ::vm.rankTiers[1+2].minMMR }} - {{ ::vm.rankTiers[1+2].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/3_w.png")
-              p
-                strong Prospect III
-              p MMR: {{ ::vm.rankTiers[1+3].minMMR }} - {{ ::vm.rankTiers[1+3].maxMMR }}
-          .col-sm-3.col-xs-6
-            .sp__rank-tier
-              img(src="/img/ranks/4_w.png")
-              p
-                strong Prospect Elite
-              p MMR: {{ ::vm.rankTiers[1+4].minMMR }} - {{ ::vm.rankTiers[1+4].maxMMR }}
-        .row.sp__rank-tiers
-          .col-sm-4.col-xs-6.col-sm-o.col-xs-offset-4
-            .sp__rank-tier
-              img(src="/img/ranks/0_w.png")
-              p
-                strong Unranked
-              p MMR: {{ ::vm.rankTiers[1+0].minMMR }} - {{ ::vm.rankTiers[1+0].maxMMR }}
+                strong {{ range.tier | rlTier }}
+              span(ng-repeat="division in range.divisions | orderBy: '-division'") Div {{ division.division }}: {{ ::division.minMMR }} - {{ ::division.maxMMR }} <br>
