@@ -51,7 +51,7 @@
               td.text-left 
                 span.hidden-xs {{ playlist.tier | rlTier }}
               td.text-center
-                span(ng-if="playlist.division > 0") {{ playlist.division | roman }}
+                span(ng-if="playlist.division > 0 || playlist.division === 0") {{ playlist.division | roman }}
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
@@ -96,7 +96,7 @@
               td.text-left 
                 span.hidden-xs {{ playlist.tier | rlTier }}
               td.text-center
-                span(ng-if="playlist.division > 0") {{ playlist.division | roman }}
+                span(ng-if="playlist.division > 0 || playlist.division === 0") {{ playlist.division | roman }}
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
