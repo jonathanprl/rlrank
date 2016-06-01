@@ -9,4 +9,4 @@
               img(src="/img/ranks/{{ range.tier + '_w.png' }}")
               p
                 strong {{ range.tier | rlTier }}
-              span(ng-repeat="division in range.divisions | orderBy: '-division'") Div {{ division.division }}: {{ ::division.minMMR }} - {{ ::division.maxMMR }} <br>
+              span(ng-repeat="division in range.divisions | orderBy: '-division'") Div {{ division.division | roman }}: {{ ::division.minMMR }} - {{ ::division.maxMMR }} <br>
