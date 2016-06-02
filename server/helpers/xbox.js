@@ -1,22 +1,20 @@
 var config = require('../../config.js');
 var restler = require('restler');
 var db = require('../db');
+var swiftping = require('./swiftping');
 
 module.exports = {
   getXuidFromGamertag
-}
+};
 
 function getXuidFromGamertag(gamertag, callback)
 {
-  console.log('[XBOX] Getting gamertag from xboxapi [%s]', gamertag);
-
   db.findOneWhere('xuids', {gamertag: gamertag}, {},
     function(err, doc)
     {
       if (err)
       {
-        console.log('[XBOX] [ERROR] Error getting xuid from database [%s]', gamertag, err);
-        return callback({'code': 'server_error', 'message': 'There was an issue fetching your stats. We have been notified.'});
+        return callback({code: 0, msg: 'Error getting XUID from database', data: err});
       }
 
       if (!doc)
@@ -25,13 +23,18 @@ function getXuidFromGamertag(gamertag, callback)
           .on('complete',
             function(xuid)
             {
+              if (xuid.success === false)
+              {
+                return callback({code: 1, msg: 'XUID search returned no result', data: xuid});
+              }
+
               callback(null, xuid);
               db.insert('xuids', {gamertag: gamertag, xuid: xuid},
                 function(err, doc)
                 {
                   if (err)
                   {
-                    console.log('[XBOX] [ERROR] Error saving xuid to database [%s]', gamertag, err);
+                    return callback({code: 2, msg: 'Error saving XUID to database', data: err});
                   }
                 }
               );
@@ -39,14 +42,12 @@ function getXuidFromGamertag(gamertag, callback)
           ).on('error',
             function(err)
             {
-              console.log('[XBOX] [ERROR] Error getting xuid from gamertag [%s]', gamertag, err.rawEncoded);
-              callback({'code': 'server_error', 'message': 'There was an issue fetching your stats. We have been notified.'});
+              return callback({code: 3, msg: 'Error getting XUID from Gamertag', data: err.rawEncoded});
             }
           );
       }
       else
       {
-        console.log('[XBOX] Found in database [%s]', gamertag);
         return callback(null, doc.xuid);
       }
     }

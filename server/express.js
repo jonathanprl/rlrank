@@ -9,6 +9,7 @@ var path = require('path');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
+var swiftping = require('./helpers/swiftping');
 
 console.log(config.env);
 
@@ -41,6 +42,6 @@ else
   }, app).listen(config.port + 5);
 }
 
-console.log('Listening on port %s...', config.port);
+swiftping.logger('info', 'SERVER', 'Server has started.');
 
 module.exports = app;

@@ -1,6 +1,12 @@
 var db = require('../db');
 var steam = require('../helpers/steam');
 var xbox = require('../helpers/xbox');
+var path = require('path');
+var config = require('../../config');
+var gcloud = require('gcloud')({
+  projectId: 'rl-rank',
+  keyFilename: path.normalize(__dirname + '/../keys/g.json')
+});
 
 module.exports = {
   auth,
@@ -8,7 +14,8 @@ module.exports = {
   MMRToSkillRating,
   getProfile,
   decryptHash,
-  encryptHash
+  encryptHash,
+  logger
 };
 
 function apiResponse(type, res, data)
@@ -36,7 +43,7 @@ function auth(req, res)
     {
       if (err)
       {
-        return console.log('[PROFILE] Error fetching profile from DB', err); // ERROR
+        return logger('critical', 'profile', 'Error fetching profile from DB', {input: req.body.input, platform: req.body.platform, mongoError: err});
       }
 
       if (!doc)
@@ -44,7 +51,7 @@ function auth(req, res)
         return fetchNewProfile(req, res);
       }
 
-      console.log('[PROFILE] Found profile in DB. %s (%s)', req.body.input, req.body.platform);
+      logger('info', 'profile', 'Found profile in DB', {input: req.body.input, platform: req.body.platform});
       return res.send({profile: doc});
     }
   );
@@ -60,9 +67,16 @@ function getProfile(req, res)
         db.findOneWhere('profiles', {hash: encryptHash(req.params.id)}, { _id: 0, input: 0 },
           function(err, doc)
           {
-            if (err || !doc)
+
+            if (err)
             {
-              console.log('[PROFILE] Error fetching profile from DB', err || 'No record'); // ERROR
+              logger('critical', 'profile', 'Error fetching profile from DB', {paramsId: req.params.id, hash: encryptHash(req.params.id), mongoError: err});
+              return apiResponse('error', res, {code: 'server_error', message: 'There was a server error. Devs have been notified.'});
+            }
+
+            if (!doc)
+            {
+              logger('info', 'profile', 'No profile found in DB', {paramsId: req.params.id, hash: encryptHash(req.params.id)});
               return apiResponse('error', res, {code: 'not_found', message: 'Profile not found.'});
             }
 
@@ -92,7 +106,6 @@ function getProfile(req, res)
 
         if (neverModified || diffHours > 11)
         {
-          console.log('[PROFILE] Found outdated profile in DB [%s]', req.params.id);
           return updateProfileName(profile,
             function(profile)
             {
@@ -119,12 +132,10 @@ function fetchNewProfile(req, res)
 
   var url;
 
-  console.log('[PROFILE] Fetching new profile... Input:', input); // INFO
+  logger('info', 'profile', 'Fetching new profile.', {input: input, platform: platform});
 
   if (platform == 'steam')
   {
-    console.log('[PROFILE] Steam User', input); // INFO;
-
     if (input[0] == 7 && isNumeric(input) && input.length == 17)
     {
       url = 'https://steamcommunity.com/profiles/' + input;
@@ -139,7 +150,7 @@ function fetchNewProfile(req, res)
     }
     else
     {
-      console.log('[PROFILE] [ERROR] Invalid Steam User [%s]', input); // ERROR
+      logger('info', 'profile', 'Invalid Steam profile syntax.', {input: input});
       return res.status(500).send({code: 'invalid_steam', message: 'Invalid Steam profile. Please enter your Steam profile URL (e.g. https://steamcommunity.com/profiles/7621738123123), your Steam Profile ID (e.g. 7621738123123) or your Steam Custom URL name'});
     }
 
@@ -150,8 +161,6 @@ function fetchNewProfile(req, res)
         return res.status(500).send(err);
       }
 
-      console.log(steamProfile);
-
       var profileData = {
         input: input,
         rlrank_id: getUniqueId(),
@@ -161,25 +170,12 @@ function fetchNewProfile(req, res)
         modified_at: new Date()
       };
 
-      console.log('[PROFILE] Got profile from Steam, saving to DB...', input);
-
-      db.insert('profiles', profileData,
-        function(err, doc)
-        {
-          if (err)
-          {
-            console.log('[PROFILE] [ERROR] Could not save Steam profile to database', input); // ERROR
-          }
-        }
-      );
-
+      saveProfile(profileData);
       res.send({profile: profileData});
     });
   }
   else if (platform == 'psn')
   {
-    console.log('[PROFILE] %s user [%s]', platform, input); // INFO
-
     input = decodeURIComponent(input);
 
     if (/[A-Za-z0-9\-\_ ]$/g.test(input))
@@ -193,39 +189,38 @@ function fetchNewProfile(req, res)
         modified_at: new Date()
       };
 
-      db.insert('profiles', profileData,
-        function(err, doc)
-        {
-          if (err)
-          {
-            console.log('[PROFILE] [ERROR] Could not save %s profile to database [%s]', platform, input); // ERROR
-          }
-        }
-      );
 
+      saveProfile(profileData);
       return res.send({profile: profileData});
     }
     else
     {
-      console.log('[PROFILE] [ERROR] Invalid %s user [%s]', platform, input); // ERROR
+      logger('info', 'PSN', 'Invalid PSN format.', {input: input});
       return res.status(500).send({code: 'invalid_xboxpsn', message: 'Invalid ' + platform + ' username.'});
     }
   }
   else if (platform == 'xbox')
   {
-    console.log('[PROFILE] %s user [%s]', platform, input); // INFO
-
     input = decodeURIComponent(input);
 
     if (/[A-Za-z0-9\-\_ ]$/g.test(input))
     {
+      logger('info', 'xbox', 'Getting XUID from Gamertag', {gamertag: input});
       xbox.getXuidFromGamertag(input,
         function(err, xuid)
         {
           if (err)
           {
-            return res.status(500).send(err);
+            if (err.code == '1')
+            {
+              logger('info', 'xbox', err.msg, err.data);
+              return res.status(500).send({'code': 'not_found', 'message': 'Gamertag does not exist.'});
+            }
+            logger('error', 'xbox', err.msg, err.data);
+            return res.status(500).send({'code': 'server_error', 'message': 'There was an issue with the Xbox service. Our developer has been notified.'});
           }
+
+          logger('info', 'xbox', 'Found XUID for Gamertag', { gamertag: input, xuid: xuid });
 
           var profileData = {
             input: input,
@@ -236,23 +231,14 @@ function fetchNewProfile(req, res)
             modified_at: new Date()
           };
 
-          db.insert('profiles', profileData,
-            function(err, doc)
-            {
-              if (err)
-              {
-                console.log('[PROFILE] [ERROR] Could not save %s profile to database [%s]', platform, input); // ERROR
-              }
-            }
-          );
-
+          saveProfile(profileData);
           return res.send({profile: profileData});
         }
       );
     }
     else
     {
-      console.log('[PROFILE] [ERROR] Invalid %s user [%s]', platform, input); // ERROR
+      logger('error', 'profile', 'Invalid user', {platform: platform, input: input});
       return res.status(500).send({code: 'invalid_xboxpsn', message: 'Invalid ' + platform + ' username.'});
     }
   }
@@ -302,27 +288,43 @@ function fetchNewProfile(req, res)
   }
 }
 
+function saveProfile(profileData)
+{
+  db.insert('profiles', profileData,
+    function(err, doc)
+    {
+      if (err)
+      {
+        logger('critical', 'profile', 'Could not save profile to DB', {profileData: profileData, mongoError: err});
+      }
+    }
+  );
+  profileData.modified_at = String(profileData.modified_at);
+  logger('info', 'profile', 'Saving profile to DB', {profileData: profileData});
+}
+
 function updateProfileName(profile, callback)
 {
   var id = decryptHash(profile.hash);
 
   if (profile.platform == 'steam')
   {
+    logger('info', 'STEAM', 'Steam profile name outdated. Fetching new profile from Steam', {oldProfileData: profile});
     steam.getDetailsFromURL('https://steamcommunity.com/profiles/' + id, function(err, steamProfile)
     {
       if (err)
       {
+        logger('error', 'STEAM', 'Could not get profile from Steam.');
         return res.status(500).send(err);
       }
 
-      console.log('[PROFILE_UPDATE] Got profile from Steam, updating name in DB. [' + steamProfile.personaname + ']');
-
-      db.modify('profiles', { hash: profile.hash }, { $set: { display_name: steamProfile.personaname, modified_at: new Date() } },
+      db.update('profiles', { hash: profile.hash }, { $set: { display_name: steamProfile.personaname, modified_at: new Date() } },
         function(err, doc)
         {
-          if (err)
+          if (err && err.ok != 1 && err.nModified != 1)
           {
-            return console.log('[PROFILE_UPDATE] [ERROR] Could not update Steam profile name in DB. [' + steamProfile.personaname + ']', err); // ERROR
+            steamProfile.modified_at = String(steamProfile.modified_at);
+            return logger('critical', 'PROFILE', 'Could not update Steam profile name in DB.', {oldProfileData: steamProfile, mongoError: err});
           }
 
           profile.display_name = steamProfile.personaname;
@@ -364,6 +366,60 @@ function encryptHash(s)
 function decryptHash(s)
 {
   return new Buffer(s, 'base64').toString('ascii');
+}
+
+function logger(level, subject, message, metadata)
+{
+
+  if (typeof metadata === 'undefined') metadata = {};
+
+  var logging = gcloud.logging();
+
+  var gcs = gcloud.storage();
+
+  var logType = config.env == 'dev' ? 'rlrank_dev' : 'rlrank';
+
+  logging.createSink('rlrank_log_sink', {
+    destination: gcs.bucket('rlrank_log')
+  }, function(err, sink) {});
+
+  var applog = logging.log(logType);
+
+  var entry = applog.entry({
+    type: 'gce_instance',
+    labels: {
+      zone: 'global',
+      instance_id: '3'
+    }
+  }, {
+    message: '[' + subject.toUpperCase() + ']' + ' ' + message,
+    metadata: metadata
+  });
+
+
+  switch (level) {
+  case 'debug':
+    applog.debug(entry, function(err, apiResponse) {});
+    break;
+  case 'info':
+    applog.info(entry, function(err, apiResponse) {});
+    break;
+  case 'alert':
+    applog.alert(entry, function(err, apiResponse) {});
+    break;
+  case 'error':
+    applog.error(entry, function(err, apiResponse) {});
+    break;
+  case 'critical':
+    applog.critical(entry, function(err, apiResponse) {});
+    break;
+  case 'emergency':
+    applog.emergency(entry, function(err, apiResponse) {});
+    break;
+  }
+
+  console.log('[' + subject.toUpperCase() + ']' + ' ' + message);
+
 }
 
 /**

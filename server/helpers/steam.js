@@ -17,35 +17,35 @@ function getDetailsFromURL(url, callback)
 {
   if (!url)
   {
-    return callback({code: "missing_url",message: "No URL entered"});
+    return callback({code: 'missing_url',message: 'No URL entered'});
   }
 
   var urlArray = url.split('/');
 
-  if (urlArray[0] == "http:" || urlArray[0] == "https:")
+  if (urlArray[0] == 'http:' || urlArray[0] == 'https:')
   {
-    if (urlArray[2] == "steamcommunity.com" || urlArray[2] == "www.steamcommunity.com")
+    if (urlArray[2] == 'steamcommunity.com' || urlArray[2] == 'www.steamcommunity.com')
     {
-      if (urlArray[3] != "id" && urlArray[3] != "profiles")
+      if (urlArray[3] != 'id' && urlArray[3] != 'profiles')
       {
-        return callback({code: "invalid_url",message: "URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>"});
+        return callback({code: 'invalid_url',message: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
       }
     }
     else
     {
-      return callback({code: "invalid_url",message: "URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>"});
+      return callback({code: 'invalid_url',message: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
     }
   }
-  else if (urlArray[0] == "steamcommunity.com" || urlArray[0] == "www.steamcommunity.com")
+  else if (urlArray[0] == 'steamcommunity.com' || urlArray[0] == 'www.steamcommunity.com')
   {
-    if (urlArray[1] != "id" || urlArray[1] != "profiles")
+    if (urlArray[1] != 'id' || urlArray[1] != 'profiles')
     {
-      return callback({code: "invalid_url",message: "URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>"});
+      return callback({code: 'invalid_url',message: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
     }
   }
   else
   {
-    return callback({code: "invalid_url",message: "URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>"});
+    return callback({code: 'invalid_url',message: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
   }
 
   sniffFromSteam(url, function(err, result)
@@ -61,8 +61,6 @@ function getDetailsFromURL(url, callback)
 
 function sniffFromSteam(url, callback)
 {
-  console.log("[STEAM] Getting Steam ID from", url); // INFO
-
   rest.get(url)
     .on('complete', function(result)
     {
@@ -72,15 +70,14 @@ function sniffFromSteam(url, callback)
 
       if (!targetScript)
       {
-        console.log("[STEAM] Steam ID could not be retrieved from", url); // INFO
-        callback({code: "not_found",message: "No Steam profile could be found"});
+        callback({code: 'not_found', message: 'No Steam profile could be found'});
         return false;
       }
 
       targetScript = targetScript.split('g_rgProfileData =');
       targetScript = targetScript[1].split('"};');
       targetScript = targetScript[0].trim();
-      targetScript += "\"}";
+      targetScript += '\"}';
 
       var profileData = JSON.parse(targetScript);
 
