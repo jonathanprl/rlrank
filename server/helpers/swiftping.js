@@ -309,7 +309,6 @@ function updateProfileName(profile, callback)
 
   if (profile.platform == 'steam')
   {
-    logger('info', 'STEAM', 'Steam profile name outdated. Fetching new profile from Steam', {oldProfileData: profile});
     steam.getDetailsFromURL('https://steamcommunity.com/profiles/' + id, function(err, steamProfile)
     {
       if (err)
@@ -332,6 +331,9 @@ function updateProfileName(profile, callback)
         }
       );
     });
+
+    if (profile.modified_at) profile.modified_at = String(profile.modified_at);
+    logger('info', 'STEAM', 'Steam profile name outdated. Fetching new profile from Steam', {oldProfileData: profile});
   }
   else if (profile.platform == 'psn' || profile.platform == 'xbox')
   {
