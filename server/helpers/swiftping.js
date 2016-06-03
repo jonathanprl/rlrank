@@ -154,7 +154,7 @@ function fetchNewProfile(req, res)
       return res.status(500).send({code: 'invalid_steam', message: 'Invalid Steam profile. Please enter your Steam profile URL (e.g. https://steamcommunity.com/profiles/7621738123123), your Steam Profile ID (e.g. 7621738123123) or your Steam Custom URL name'});
     }
 
-    steam.getDetailsFromURL(url, function(err, steamProfile)
+    steam.getProfile(url, function(err, steamProfile)
     {
       if (err)
       {

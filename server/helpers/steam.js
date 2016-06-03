@@ -5,7 +5,7 @@ var rest = require('restler');
 var cheerio = require('cheerio');
 
 module.exports = {
-  getDetailsFromURL: getDetailsFromURL
+  getProfile: getProfile
 };
 
 /**
@@ -13,12 +13,14 @@ module.exports = {
  * @param {object} req - Express request
  * @param {object} res - Express response
  */
-function getDetailsFromURL(url, callback)
+function getProfile(url, callback)
 {
   if (!url)
   {
     return callback({code: 'missing_url',message: 'No URL entered'});
   }
+
+  var isSteamId = false;
 
   var urlArray = url.split('/');
 
@@ -28,6 +30,7 @@ function getDetailsFromURL(url, callback)
     {
       if (urlArray[3] != 'id' && urlArray[3] != 'profiles')
       {
+        if (urlArray[3] == 'profiles') isSteamId = true;
         return callback({code: 'invalid_url',message: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
       }
     }
@@ -40,6 +43,7 @@ function getDetailsFromURL(url, callback)
   {
     if (urlArray[1] != 'id' || urlArray[1] != 'profiles')
     {
+      if (urlArray[1] == 'profiles') isSteamId = true;
       return callback({code: 'invalid_url',message: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
     }
   }
@@ -48,40 +52,59 @@ function getDetailsFromURL(url, callback)
     return callback({code: 'invalid_url',message: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
   }
 
-  sniffFromSteam(url, function(err, result)
+  profileId = url.replace(/\/$/, '').split('/').pop();
+
+  if (isSteamId)
   {
-    if (err)
-    {
-      return callback(err);
-    }
-
-    callback(null, result)
-  });
-}
-
-function sniffFromSteam(url, callback)
-{
-  rest.get(url)
-    .on('complete', function(result)
-    {
-      var $ = cheerio.load(result);
-
-      var targetScript = $('.responsive_page_template_content script').html();
-
-      if (!targetScript)
+    getSteamProfile(profileId, function(err, profile) {
+      if (err)
       {
-        callback({code: 'not_found', message: 'No Steam profile could be found'});
-        return false;
+        return callback(err);
       }
 
-      targetScript = targetScript.split('g_rgProfileData =');
-      targetScript = targetScript[1].split('"};');
-      targetScript = targetScript[0].trim();
-      targetScript += '\"}';
+      callback(null, profile);
 
-      var profileData = JSON.parse(targetScript);
+    });
+  }
+  else
+  {
+    getSteamId(profileId, function(err, steamId) {
+      if (err)
+      {
+        return callback(err);
+      }
 
-      callback(null, profileData);
+      getSteamProfile(steamId, function(err, profile) {
+        if (err)
+        {
+          return callback(err);
+        }
+
+        callback(null, profile);
+
+      });
+    });
+  }
+}
+
+function getSteamId(id, callback)
+{
+  rest.get('http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=386CE59F095593AC9CF2199578C90A40&&vanityurl=' + id)
+    .on('complete', function(result)
+    {
+      //TODO: Error check
+      callback(null, result.response.steamid);
+    }
+  );
+}
+
+function getSteamProfile(id, callback)
+{
+  rest.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=386CE59F095593AC9CF2199578C90A40&steamids=' + id)
+    .on('complete', function(result)
+    {
+      //TODO: Error check
+      callback(null, result.response.players[0]);
     }
   );
 }
