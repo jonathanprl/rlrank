@@ -120,7 +120,7 @@ function getSteamProfileByID(id, callback)
 {
   rest.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + steamApiKey + '&steamids=' + id)
     .on('complete', function(result) {
-      if (result.response || !result.response.players || result.response.players.length == 0)
+      if (!result.response || !result.response.players || result.response.players.length == 0)
       {
         swiftping.logger('debug', 'steam', 'getSteamProfileByID Steam profile could not be found from Steam API.', {id: id, profile: result});
         return callback({code: 'not_found', msg: 'Steam profile could not be found.'});
