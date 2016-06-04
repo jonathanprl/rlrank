@@ -19,28 +19,12 @@
           13: "-mmr"
         };
 
-        (function()
-        {
-          getAllLeaderboards();
-        })();
-
-        function getLeaderboard(playlist)
-        {
-          ApiSvc.getLeaderboard(playlist)
-            .then(function(response)
-            {
-              vm.leaderboards[playlist] = response.data.results;
-            }
-          );
-        }
-
-        function getAllLeaderboards()
-        {
-          getLeaderboard(10);
-          getLeaderboard(11);
-          getLeaderboard(12);
-          getLeaderboard(13);
-        }
+        ApiSvc.getLeaderboards()
+          .then(function(response)
+          {
+            vm.leaderboards = response.data.results;
+          }
+        );
 
         function goToProfile(url)
         {

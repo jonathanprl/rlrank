@@ -9,35 +9,27 @@
 
     var vm = this;
 
-    vm.leaderboards = {};
+    vm.leaderboardPlaylists = [10, 11, 12, 13];
 
     (function()
     {
-      getAllLeaderboards();
+      getLeaderboards();
       getPopulation();
       getPopulationHistorical();
       getTwitchStreams();
     })();
 
-    function getLeaderboard(playlist)
+    function getLeaderboards()
     {
-      ApiSvc.getLeaderboard(playlist)
+      ApiSvc.getLeaderboards()
         .then(function(response)
         {
-          vm.leaderboards[playlist] = response.data.results;
+          vm.leaderboards = response.data.results;
         }, function(err)
         {
           console.log(err.code);
         }
       );
-    }
-
-    function getAllLeaderboards()
-    {
-      getLeaderboard(10);
-      getLeaderboard(11);
-      getLeaderboard(12);
-      getLeaderboard(13);
     }
 
     function getPopulation()

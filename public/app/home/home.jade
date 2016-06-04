@@ -27,8 +27,8 @@
       .sp__leaderboards
         h2 Global Leaderboards
         .row
-          .col-md-3.col-sm-6(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
-            h3 {{ playlist | rlPlaylist }}
+          .col-md-3.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist'")
+            h3 {{ playlist.playlist | rlPlaylist }}
             table.table.table-responsive.sp__table
               tr
                 td
@@ -39,7 +39,7 @@
                   strong Username
                 td
                   strong MMR
-              tr(ng-repeat="player in leaderboard | orderBy:'-mmr' |  limitTo:5")
+              tr(ng-repeat="player in playlist.players | orderBy:'-mmr' | limitTo:5")
                 td
                   strong {{ '#' + ($index + 1) }}
                 td
@@ -51,8 +51,6 @@
         .row
           .col-md-4.col-md-offset-4
             a.btn.btn-primary.btn-block(href="/leaderboards" title="Rocket League Leaderboards") See Top 200
-        .sp__advert.text-center
-          google-adsense
   section#news.bg2
     .container
       .row

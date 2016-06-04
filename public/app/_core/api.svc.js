@@ -11,10 +11,10 @@
 
     return {
       cache: cache,
-      authorise: authorise,
-      getPlayerRanks: getPlayerRanks,
       getProfile: getProfile,
-      getLeaderboard: getLeaderboard,
+      getProfileById: getProfileById,
+      getPlayerRanks: getPlayerRanks,
+      getLeaderboards: getLeaderboards,
       getStatus: getStatus,
       getPopulation: getPopulation,
       getPopulationHistorical: getPopulationHistorical,
@@ -24,24 +24,24 @@
       postPlayerRanksLive: postPlayerRanksLive
     };
 
-    function authorise(input, platform)
+    function getProfile(input, platform)
     {
-      return $http.post('/api/auth', {input: input, platform: platform});
+      return $http.get('/api/profile/' + encodeURIComponent(input) + '/' + encodeURIComponent(platform));
     }
 
-    function getProfile(id)
+    function getProfileById(id)
     {
-      return $http.get('/api/profile/' + id);
+      return $http.get('/api/profileById/' + encodeURIComponent(id));
     }
 
-    function getLeaderboard(playlist)
+    function getLeaderboards()
     {
-      return $http.get('/api/leaderboard/' + playlist);
+      return $http.get('/api/leaderboards');
     }
 
     function getPlayerRanks(id)
     {
-      return $http.get('/api/rank/' + id);
+      return $http.get('/api/rank/' + encodeURIComponent(id));
     }
 
     function getStatus()
@@ -61,7 +61,7 @@
 
     function getPlayerStats(id)
     {
-      return $http.get('/api/stats/' + id);
+      return $http.get('/api/stats/' + encodeURIComponent(id));
     }
 
     function getTierThresholds()

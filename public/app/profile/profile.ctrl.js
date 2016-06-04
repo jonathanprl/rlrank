@@ -60,11 +60,11 @@
     function getPlayerDetails(rlrank_id, callback)
     {
       var player = {};
-      ApiSvc.getProfile(rlrank_id)
+      ApiSvc.getProfileById(rlrank_id)
         .then(
           function(response)
           {
-            player.profile = response.data.results;
+            player.profile = response.data;
 
             getPlayerRanks(player.profile,
               function(err, ranks)

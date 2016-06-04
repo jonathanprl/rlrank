@@ -1,7 +1,10 @@
 var db = require('../db');
+var profile = require('../controllers/profile');
 var psyonix = require('./psyonix');
 var swiftping = require('../helpers/swiftping');
 var ping = require('ping');
+var Promise = require('bluebird');
+var _ = require('lodash');
 
 module.exports = {
   leaderboards,
@@ -22,47 +25,66 @@ function refreshToken()
 
 function leaderboards()
 {
-  console.log('Updating leaderboards...'); // info
+  swiftping.logger('info', 'cron', 'Updating leaderboards.');
 
   psyonix.getLeaderboards(function(err, playlists)
   {
     if (err)
     {
-      console.log('Could not fetch leaderboard from Psyonix -', playlist, err); // error
+      return swiftping.logger('error', 'cron', 'Could not fetch leaderboards from Psyonix', err);
     }
+    var filteredResultsPromises = [];
+
     var playlistIndex = 10;
+    var leaderIndex = 0;
 
-    playlists.forEach(
-      function(playlist, index)
-      {
-        var filteredResults = [];
+    delete playlists[0];
+    delete playlists[2];
+    delete playlists[4];
+    delete playlists[6];
 
-        if (playlist.length > 0)
-        {
-          playlist.forEach(
-            function(result, index)
-            {
-              filteredResults.push({
-                username: result.UserName,
-                mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR)),
-                tier: result.Value,
-                platform: result.Platform,
-                rlrank_id: result.Platform == 'Steam' ? result.SteamID : result.UserName
-              });
-            }
-          );
+    var leaderboard = [];
+    playlists.forEach(function(leaders, index) {
+      leaders.map(function(leader) {
+        leader.playlist = ((index - 1) / 2) + 10;
+        leaderboard.push(leader);
+      });
+    });
 
-          db.upsert('leaderboards', {playlist: playlistIndex}, {playlist: playlistIndex, leaderboard: filteredResults},
-            function(err, doc)
-            {
-              console.log('Updated leaderboard from Psyonix'); // info
-            }
-          );
+    leaderboard.forEach(function(leader, index) {
+      var input = leader.Platform == 'Steam' ? _.clone(leader.SteamID) : _.clone(leader.UserName).toLowerCase();
+      var platform = _.clone(leader.Platform).toLowerCase();
 
-          playlistIndex++;
-        }
-      }
-    );
+      setTimeout(function() {
+        profile.getProfileByInput(input, platform, function(err, rlProfile) {
+          if (err)
+          {
+            swiftping.logger('critical', 'cron_leaderboard', 'Error getting profile for leaderboard player.', {input: input, platform: platform});
+          }
+          else
+          {
+            var leaderboardEntry = {
+              username: leader.UserName,
+              mmr: parseFloat(swiftping.MMRToSkillRating(leader.MMR)),
+              tier: leader.Value,
+              platform: leader.Platform,
+              rlrank_id: rlProfile.rlrank_id,
+              playlist: leader.playlist
+            };
+
+            db.upsert('leaderboards', {playlist: leaderboardEntry.playlist, rlrank_id: leaderboardEntry.rlrank_id}, leaderboardEntry,
+              function(err, doc)
+              {
+                if (doc.upserted)
+                {
+                  swiftping.logger('critical', 'cron_leaderboard', 'New leaderboard entry "' + leaderboardEntry.username + '"', leaderboardEntry);
+                }
+              }
+            );
+          }
+        });
+      }, 100 * index);
+    });
   });
 }
 

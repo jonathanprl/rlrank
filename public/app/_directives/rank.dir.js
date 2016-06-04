@@ -52,7 +52,7 @@ function rankForm(ApiSvc, Analytics, $location)
     function goToProfile()
     {
       scope.showLoader = true;
-      ApiSvc.authorise(scope.input, scope.platform.id)
+      ApiSvc.getProfile(scope.input, scope.platform.id)
         .then(
           function(response)
           {
@@ -60,16 +60,17 @@ function rankForm(ApiSvc, Analytics, $location)
 
             if (scope.compare)
             {
-              Analytics.trackEvent('profile', 'compare', scope.compare + '@' + scope.platform.id + ' & ' + response.data.profile.rlrank_id + '@' + scope.platform.id);
-              return $location.path('u/' + scope.compare + '/' + response.data.profile.rlrank_id);
+              Analytics.trackEvent('profile', 'compare', scope.compare + '@' + scope.platform.id + ' & ' + response.data.rlrank_id + '@' + scope.platform.id);
+              return $location.path('u/' + scope.compare + '/' + response.data.rlrank_id);
             }
 
-            $location.path('u/' + response.data.profile.rlrank_id);
+            $location.path('u/' + response.data.rlrank_id);
           })
         .catch(
           function(err)
           {
-            scope.profileError = err.data.message;
+            console.log(err);
+            scope.profileError = err.data.msg;
             scope.showLoader = false;
           }
         );

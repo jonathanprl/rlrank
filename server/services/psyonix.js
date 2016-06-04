@@ -2,8 +2,6 @@ var db = require('../db');
 var https = require('http');
 var Url = require('url');
 var querystring = require('querystring');
-var steam = require('../helpers/steam');
-var xbox = require('../helpers/xbox');
 var swiftping = require('../helpers/swiftping');
 var restler = require('restler');
 
@@ -28,68 +26,32 @@ function getPlayerRanks(id, platform, callback)
 
   if (platform === 'steam')
   {
-    procData = {
-      'Proc[]': 'GetPlayerSkillSteam',
-      'P0P[]': id
-    };
-
-    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
-    {
-      if (err)
-      {
-        return callback(err);
-      }
-
-      var data = parseResults(data);
-      callback(null, data);
-    });
+    procData = 'GetPlayerSkillSteam';
   }
   else if (platform == 'psn')
   {
-    procData = {
-      'Proc[]': 'GetPlayerSkillPS4',
-      'P0P[]': id
-    };
-
-    callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
-    {
-      if (err)
-      {
-        return callback(err);
-      }
-
-      var data = parseResults(data);
-      callback(null, data);
-    });
+    procData = 'GetPlayerSkillPS4';
   }
   else if (platform == 'xbox')
   {
-    xbox.getXuidFromGamertag(id,
-      function(err, xuid)
-      {
-        if (err)
-        {
-          return callback(err);
-        }
-
-        procData = {
-          'Proc[]': 'GetPlayerSkillXboxOne',
-          'P0P[]': xuid
-        };
-
-        callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
-        {
-          if (err)
-          {
-            return callback(err);
-          }
-
-          var data = parseResults(data);
-          callback(null, data);
-        });
-      }
-    );
+    procData = 'GetPlayerSkillXboxOne';
   }
+
+  procData = {
+    'Proc[]': procData,
+    'P0P[]': id
+  };
+
+  callProc('https://psyonix-rl.appspot.com/callproc105/', procData, function(err, data)
+  {
+    if (err)
+    {
+      return callback(err);
+    }
+
+    var data = parseResults(data);
+    callback(null, data);
+  });
 }
 
 function getPlayersRanks(profiles, callback)
@@ -115,16 +77,16 @@ function getPlayersRanks(profiles, callback)
         promises.push(new Promise(
           function (resolve, reject)
           {
-            xbox.getXuidFromGamertag(id,
-              function(err, xuid)
-              {
-                if (err)
-                {
-                  return callback(err);
-                }
-                resolve('Proc[]=GetPlayerSkillXboxOne&P' + index + 'P[]=' + xuid + '&');
-              }
-            );
+            // xbox.getXuidFromGamertag(id,
+            //   function(err, xuid)
+            //   {
+            //     if (err)
+            //     {
+            //       return callback(err);
+            //     }
+            //     resolve('Proc[]=GetPlayerSkillXboxOne&P' + index + 'P[]=' + xuid + '&');
+            //   }
+            // );
           }
         ));
       };

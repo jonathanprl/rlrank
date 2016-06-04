@@ -3,6 +3,7 @@ var leaderboard = require('./controllers/leaderboard');
 var stats = require('./controllers/stats');
 var statistics = require('./controllers/statistics');
 var status = require('./controllers/status');
+var profile = require('./controllers/profile');
 
 var psyonix = require('./services/psyonix');
 var cron = require('./services/cron');
@@ -26,14 +27,13 @@ module.exports = function(app)
 
   app.get('/sitemap.xml', sitemap.generateSitemap);
 
-  app.post('/api/auth', swiftping.auth);
-
-  app.get('/api/profile/:id', swiftping.getProfile);
+  app.get('/api/profile/:input/:platform', profile.getProfile);
+  app.get('/api/profileById/:id', profile.getProfileById);
 
   app.get('/api/rank/tiers', rank.getRankTiers);
   app.get('/api/rank/:id', rank.getPlayerRanks);
 
-  app.get('/api/leaderboard/:playlist', leaderboard.getLeaderboard);
+  app.get('/api/leaderboards', leaderboard.getLeaderboards);
 
   app.get('/api/stats/:id', stats.getPlayerStats);
 

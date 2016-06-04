@@ -3,7 +3,7 @@
     sp-header(page-title="Global Leaderboards" sub-title="Top 200 players (updated every hour)")
     .sp__leaderboards
       .row
-        .col-lg-3.col-md-4.col-sm-6(ng-repeat="(playlist, leaderboard) in vm.leaderboards")
+        .col-lg-3.col-md-4.col-sm-6(ng-repeat="playlist in vm.leaderboards")
           h3 {{ playlist | rlPlaylist }}
           table.table.table-responsive.sp__table
             thead
@@ -17,7 +17,7 @@
                 th
                   a(ng-click="vm.sortLeaderboard(playlist, 'mmr')" href="#") MMR
             tbody
-              tr(ng-repeat="player in leaderboard | orderBy: vm.sort[playlist] | limitTo: vm.limit")
+              tr(ng-repeat="player in playlist.players | orderBy: vm.sort[playlist] | limitTo: vm.limit")
                 td
                   strong {{ '#' + ($index + 1) }}
                 td

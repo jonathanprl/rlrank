@@ -84,6 +84,12 @@ function app($routeProvider, $locationProvider)
         pageTitle: 'Statistics'
       }
     })
+    .when('/find/:input/:platform', {
+      templateUrl: '/views/profile/profile',
+      controller: 'FindController as vm',
+      activeSection: 'profile',
+      showMMR: true
+    })
     .when('/u/:rlrank_id/:rlrank_id2?', {
       templateUrl: '/views/profile/profile',
       controller: 'ProfileController as vm',
