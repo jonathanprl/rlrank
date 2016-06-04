@@ -47,7 +47,7 @@ function getSteamProfileByURL(url, callback)
   else if (urlArray[0] == 'steamcommunity.com' || urlArray[0] == 'www.steamcommunity.com')
   {
     if (urlArray[1] == 'profiles') isSteamId = true;
-    
+
     if (urlArray[1] != 'id' || urlArray[1] != 'profiles')
     {
       return callback({code: 'invalid_url', msg: 'URL must be of the format: https://steamcommunity.com/profiles/<id> or https://steamcommunity.com/id/<name>'});
@@ -95,11 +95,13 @@ function getSteamProfileByName(id, callback)
 {
   rest.get('http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=' + steamApiKey + '&&vanityurl=' + id)
     .on('complete', function(result) {
-      if (!result.response.steamid)
+      if (!result.response || !('steamid' in result.response))
       {
+        swiftping.logger('debug', 'steam', 'getSteamProfileByName Steam profile could not be found from Steam API.', {id: id, profile: result});
         return callback({code: 'not_found', msg: 'Steam profile could not be found.'});
       }
 
+      swiftping.logger('debug', 'steam', 'Steam profile found from Steam API', {id: id, profile: result});
       getSteamProfileByID(result.response.steamid, function(err, profile) {
         callback(null, profile);
       });
@@ -118,8 +120,9 @@ function getSteamProfileByID(id, callback)
 {
   rest.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + steamApiKey + '&steamids=' + id)
     .on('complete', function(result) {
-      if (result.response.players.length == 0)
+      if (result.response || !result.response.players || result.response.players.length == 0)
       {
+        swiftping.logger('debug', 'steam', 'getSteamProfileByID Steam profile could not be found from Steam API.', {id: id, profile: result});
         return callback({code: 'not_found', msg: 'Steam profile could not be found.'});
       }
       callback(null, result.response.players[0]);
