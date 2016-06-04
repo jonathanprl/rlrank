@@ -7,7 +7,7 @@ module.exports = {
 
 function generateSitemap(req, res)
 {
-  db.aggregate('leaderboards', [ { $unwind: '$leaderboard' }, { $group: { '_id': '$leaderboard.rlrank_id' } }, { $limit : 10000 }, { $project: { 'rlrank_id': '$_id' } } ],
+  db.find('leaderboards',
     function(err, docs)
     {
       var urls = docs.map(function(doc) {
