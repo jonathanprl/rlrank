@@ -77,7 +77,7 @@ function getXuidByGamertag(gamertag, callback)
     }).on('complete', function(xuid) {
       if (xuid.success === false)
       {
-        swiftping.logger('info', 'xbox', 'Invalid Gamertag.', err);
+        swiftping.logger('info', 'xbox', 'Invalid Gamertag.', xuid);
         return callback({code: 'invalid_gamertag', msg: 'No Xbox profile could be found for that Gamertag.'});
       }
 
