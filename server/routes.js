@@ -31,6 +31,7 @@ module.exports = function(app)
   app.get('/api/profileById/:id', profile.getProfileById);
 
   app.get('/api/rank/tiers', rank.getRankTiers);
+  app.get('/api/rank/:id/historical', rank.getPlayerRanksHistorical);
   app.get('/api/rank/:id', rank.getPlayerRanks);
 
   app.get('/api/leaderboards', leaderboard.getLeaderboards);

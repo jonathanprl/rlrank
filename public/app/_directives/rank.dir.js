@@ -1,6 +1,7 @@
 angular
     .module('app')
-    .directive('rankForm', ['ApiSvc', 'Analytics', '$location', rankForm]);
+    .directive('rankForm', ['ApiSvc', 'Analytics', '$location', rankForm])
+    .directive('rankGraph', [rankGraph]);
 
 function rankForm(ApiSvc, Analytics, $location)
 {
@@ -75,5 +76,60 @@ function rankForm(ApiSvc, Analytics, $location)
           }
         );
     }
+  }
+}
+
+function rankGraph()
+{
+  var directive = {
+    restrict: 'E',
+    scope: {
+      playlists: '=',
+      playlist: '='
+    },
+    link: linkFn
+  };
+
+  return directive;
+
+  function linkFn(scope, element, attr, ctrl)
+  {
+    if(!scope.playlists) return false;
+
+    var playlist = scope.playlists.filter(function(playlist) {
+      return playlist._id == scope.playlist.playlist;
+    })[0];
+
+    var ranks = playlist.ranks.filter(function(rank, index) {
+      return index > playlist.ranks.length - 20 ? true : false;
+    });
+
+    var values = ranks.map(function(rank) { return rank.mmr; });
+    var dates = ranks.map(function(rank) {
+      return moment(parseInt(rank._id.substring(0, 8), 16) * 1000).fromNow();
+    });
+
+    if (values.length < 3)
+    {
+      return false;
+    }
+
+    $(element).sparkline(values, {
+      height: '30px',
+      width: '60px',
+      type: 'line',
+      lineColor: '#45B29D',
+      fillColor: null,
+      lineWidth: 1,
+      minSpotColor: '#E27A3F',
+      maxSpotColor: '#E27A3F',
+      highlightSpotColor: undefined,
+      highlightLineColor: '#334D5C',
+      spotRadius: 2,
+      tooltipFormat: '<strong>{{y:value}}</strong> | {{offset:dates}}',
+      tooltipValueLookups: {
+        dates: dates
+      }
+    });
   }
 }

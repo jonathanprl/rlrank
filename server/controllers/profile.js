@@ -36,8 +36,6 @@ function getProfile(req, res) {
 
 function getProfileByInput(input, platform, callback)
 {
-  swiftping.logger('info', 'profile_by_input', 'Checking if hash used before.', {input: input, platform: platform});
-
   getGameProfile(input, platform, function(err, hash, gameProfile) {
     if (err)
     {
@@ -54,7 +52,6 @@ function getProfileByInput(input, platform, callback)
 
       if (doc)
       {
-        swiftping.logger('info', 'profile_by_input', 'Found profile_by_input with matching hash.', {input: input, platform: platform, gameProfile: gameProfile});
         return callback(null, doc);
       }
 
@@ -111,6 +108,7 @@ function getGameProfile(input, platform, callback) {
     case 'steam':
       getSteamProfile(input, function(err, steamProfile) {
         if (err) return callback(err);
+        swiftping.logger('info', 'game_profile', 'Found Steam profile.', {input: input, platform: platform, gameProfile: steamProfile});
         var hash = swiftping.encryptHash(steamProfile.steamid);
         return callback(null, hash, steamProfile);
       });
@@ -118,6 +116,7 @@ function getGameProfile(input, platform, callback) {
     case 'xbox':
       getXboxProfile(input, function(err, xboxProfile) {
         if (err) return callback(err);
+        swiftping.logger('info', 'game_profile', 'Found Xbox profile.', {input: input, platform: platform, gameProfile: xboxProfile});
         var hash = swiftping.encryptHash(xboxProfile.id);
         return callback(null, hash, xboxProfile);
       });
@@ -125,6 +124,7 @@ function getGameProfile(input, platform, callback) {
     case 'psn':
       getPSNProfile(input, function(err, id) {
         if (err) return callback(err);
+        swiftping.logger('info', 'game_profile', 'Found PSN profile.', {input: input, platform: platform, gameProfile: id});
         var hash = swiftping.encryptHash(id);
         return callback(null, hash, null);
       });

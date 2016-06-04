@@ -4,7 +4,8 @@ var psyonix = require('../services/psyonix');
 
 module.exports = {
   getPlayerRanks,
-  getRankTiers
+  getRankTiers,
+  getPlayerRanksHistorical
 };
 
 /**
@@ -227,4 +228,34 @@ function _getRankThresholds(playlists, callback)
       callback(null, ranks);
     }
   );
+}
+
+/**
+ *
+ * @param {object} req - Express request
+ * @param {object} res - Express response
+ */
+function getPlayerRanksHistorical(req, res)
+{
+  db.aggregate('ranksHistorical', [{
+    $match: {
+      rlrank_id: req.params.id
+    }
+  }, {
+    $group: {
+      _id: '$playlist',
+      ranks: {
+        $push: {
+          '_id': '$_id', 'mmr': '$mmr'
+        }
+      }
+    }
+  }], function(err, docs) {
+      if (err)
+      {
+        swiftping.logger('critical', 'rank_historical', 'Error fetching ranksHistorical from DB', err);
+      }
+
+      return swiftping.apiResponse('ok', res, docs);
+    });
 }

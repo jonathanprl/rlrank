@@ -5,28 +5,14 @@
         div.alert.alert-danger(role="alert" ng-repeat="error in vm.errors")
           strong Sorry!&nbsp;
           | {{ error }}
-    .row(ng-if="vm.players.length > 0")
-      .col-md-5
+    .row(ng-if="vm.players.length > 0 && vm.players[0].stats")
+      .col-md-5(ng-if="vm.players[0].playlists")
         h1
           a(ng-href="{{ '/u/' + vm.players[0].profile.rlrank_id }}" title="{{ vm.players[0].profile.display_name }}") {{ vm.players[0].profile.display_name }}
-      .col-md-2.text-center(ng-if="vm.players.length > 1")
-        h1 vs
-      .col-md-5(ng-if="vm.players.length > 1")
-        h1
-          a(ng-href="{{ '/u/' + vm.players[1].profile.rlrank_id }}" title="{{ vm.players[1].profile.display_name }}") {{ vm.players[1].profile.display_name }}
-    .row(ng-if="vm.players")
-      .col-md-5
         span.sp__sub-header(ng-show="vm.players.length > 0")
           | Last updated&nbsp;
           span(am-time-ago="vm.players[0].lastUpdated")
           | &nbsp;(Updated every 15 minutes)
-      .col-md-5.col-md-offset-2
-        span.sp__sub-header(ng-show="vm.players.length > 1")
-          | Last updated&nbsp;
-          span(am-time-ago="vm.players[1].lastUpdated")
-          | &nbsp;(Updated every 15 minutes)
-    .row(ng-if="vm.players.length > 0 && vm.players[0].stats")
-      .col-md-5(ng-if="vm.players[0].playlists")
         h4 Ranks
         table.table.table-responsive.sp__table
           thead
@@ -34,31 +20,28 @@
               th
                 | Mode
               th(colspan="2")
-                | Rank
+                | Rank & Division
               th.text-center
-                span Div
-                span.hidden-xs ision
-              th.text-center
-                | # Played
-              th.text-right
+                | Matches
+              th(colspan="2").text-center
                 | MMR
           tbody
             tr(ng-repeat="playlist in vm.players[0].playlists")
               td 
                 span {{ playlist.playlist | rlPlaylist }}
               td 
-                img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:36px;")
+                img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:30px;")
               td.text-left 
                 span.hidden-xs {{ playlist.tier | rlTier }}
-              td.text-center
-                span(ng-if="playlist.division > 0 || playlist.division === 0") {{ playlist.division | roman }}
+                small(ng-if="playlist.division > 0 || playlist.division === 0")  &nbsp;{{ playlist.division | roman }}
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
                 a.sp__table-threshold(href="/rank-tiers" ng-class="{'text-success': playlist.threshold > 0, 'text-danger': playlist.threshold < 0}" ng-show="playlist.threshold" title="Based on global statistics, you may be close to a {{ playlist.threshold > 0 ? 'promotion' : 'demotion' }}.")
                   i.fa(ng-class="{'fa-caret-up': playlist.threshold > 0, 'fa-caret-down': playlist.threshold < 0}")
-                span
+                span.sp__table-mmr
                   | {{ playlist.mmr || 100 }}
+                rank-graph.sp_profile-graph(ng-if="vm.players[0].playlistsHistorical" playlists="vm.players[0].playlistsHistorical" playlist="playlist")
         p.sp__table-note * Promotion/Demotion indicators are only an estimation and may not be entirely accurate. <a href="/rank-tiers" title="Rocket League Rank Tiers">Click here</a> to view tiers
         h4 Stats
         table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[0].stats")
@@ -70,8 +53,18 @@
             tr
               td(ng-repeat="stat in vm.players[0].stats")
                | {{ stat.value }}
-      .col-md-5.col-md-offset-2
+               
+      .col-md-2.text-center(ng-if="vm.players.length > 1")
+        h1 vs
+        
+      .col-md-5
         .sp__spinner(ng-hide="(vm.compare && vm.players.length == 2) || !vm.compare || vm.errors.length > 0")
+        h1
+          a(ng-href="{{ '/u/' + vm.players[1].profile.rlrank_id }}" title="{{ vm.players[1].profile.display_name }}") {{ vm.players[1].profile.display_name }}
+        span.sp__sub-header(ng-show="vm.players.length > 1")
+          | Last updated&nbsp;
+          span(am-time-ago="vm.players[1].lastUpdated")
+          | &nbsp;(Updated every 15 minutes)
         h4(ng-if="vm.players[1].playlists") Ranks
         table.table.table-responsive.sp__table(ng-if="vm.players[1].playlists")
           thead
@@ -79,31 +72,28 @@
               th
                 | Mode
               th(colspan="2")
-                | Rank
-              th.text-center
-                span Div
-                span.hidden-xs ision
+                | Rank & Division
               th.text-center
                 | # Played
-              th.text-right
+              th.text-center(colspan="2")
                 | MMR
           tbody
             tr(ng-repeat="playlist in vm.players[1].playlists")
               td 
                 span {{ playlist.playlist | rlPlaylist }}
               td 
-                img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:36px;")
+                img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:30px;")
               td.text-left 
                 span.hidden-xs {{ playlist.tier | rlTier }}
-              td.text-center
-                span(ng-if="playlist.division > 0 || playlist.division === 0") {{ playlist.division | roman }}
+                small(ng-if="playlist.division > 0 || playlist.division === 0")  &nbsp;{{ playlist.division | roman }}
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
                 a.sp__table-threshold(href="/rank-tiers" ng-class="{'text-success': playlist.threshold > 0, 'text-danger': playlist.threshold < 0}" ng-show="playlist.threshold" title="Based on global statistics, you may be close to a {{ playlist.threshold > 0 ? 'promotion' : 'demotion' }}.")
                   i.fa(ng-class="{'fa-caret-up': playlist.threshold > 0, 'fa-caret-down': playlist.threshold < 0}")
-                span
+                span.sp__table-mmr
                   | {{ playlist.mmr || 100 }}
+                rank-graph.sp_profile-graph(ng-if="vm.players[1].playlistsHistorical" playlists="vm.players[1].playlistsHistorical" playlist="playlist")
         h4(ng-if="vm.players[1].stats") Stats
         table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[1].stats")
           thead

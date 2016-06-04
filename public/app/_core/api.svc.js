@@ -21,7 +21,8 @@
       getPlayerStats: getPlayerStats,
       getTierThresholds: getTierThresholds,
       getRankTiers: getRankTiers,
-      postPlayerRanksLive: postPlayerRanksLive
+      postPlayerRanksLive: postPlayerRanksLive,
+      getPlayerRanksHistorical: getPlayerRanksHistorical
     };
 
     function getProfile(input, platform)
@@ -42,6 +43,11 @@
     function getPlayerRanks(id)
     {
       return $http.get('/api/rank/' + encodeURIComponent(id));
+    }
+
+    function getPlayerRanksHistorical(id)
+    {
+      return $http.get('/api/rank/' + encodeURIComponent(id) + '/historical');
     }
 
     function getStatus()
