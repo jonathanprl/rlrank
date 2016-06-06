@@ -105,7 +105,7 @@
               td(ng-repeat="stat in vm.players[1].stats")
                | {{ stat.value }}
 
-      .col-md-4.col-sm-8(ng-class="{'col-md-offset-2': vm.players.length == 1}")
+      .col-md-4.col-sm-8
         .sp__share(ng-if="vm.players.length == 1 && !vm.compare")
            h4.m-t-0 Compare with another player! 
              span.label.label-danger NEW
@@ -121,5 +121,7 @@
                 | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
               .sp__share-btn
                 | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
-                
+        .sp__ad
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" css-style="display:block;")
+
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")

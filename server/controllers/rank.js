@@ -197,6 +197,11 @@ function _getRankThresholds(playlists, callback)
       var ranks = playlists.map(
         function(playlist) {
 
+          if (!(playlist.tier+1 in tiers))
+          {
+            return {};
+          }
+
           if (!playlist.tier || tiers[playlist.tier+1].tier != playlist.tier)
           {
             return playlist;

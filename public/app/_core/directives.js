@@ -50,17 +50,5 @@
           }
         };
       }
-    ).directive('googleAdsense',
-      function ()
-      {
-        return {
-          restrict: 'E',
-          replace: true,
-          templateUrl: '/views/widgets/ads',
-          controller: function () {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          }
-        };
-      }
     );
 }());

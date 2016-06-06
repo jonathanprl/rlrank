@@ -1,5 +1,5 @@
 angular
-  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment', 'djds4rce.angular-socialshare'])
+  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment', 'djds4rce.angular-socialshare', 'ngAdsense'])
   .config(['$routeProvider', '$locationProvider', app])
   .config(['AnalyticsProvider', analyticsProvider])
   .run(['$rootScope', 'TitleSvc', 'Analytics', '$FB', run]);
