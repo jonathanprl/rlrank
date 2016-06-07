@@ -135,6 +135,12 @@ function run($rootScope, TitleSvc, Analytics, $FB) {
       {
         TitleSvc.setDefault();
       }
+
+      Object.keys(window).filter(function(k) { return /google/.test(k) }).forEach(
+        function(key) {
+          delete(window[key]);
+        }
+      );
     }
   );
 
