@@ -4,6 +4,7 @@ var psyonix = require('../services/psyonix');
 
 module.exports = {
   getPlayerRanks,
+  getPlayerRanksById,
   getRankTiers,
   getPlayerRanksHistorical
 };
@@ -15,12 +16,24 @@ module.exports = {
  */
 function getPlayerRanks(req, res)
 {
-  db.findWhere('ranks', {rlrank_id: req.params.id}, {_id: 0, rlrank_id: 0},
+  getPlayerRanksById(req.params.id, function(err, ranks) {
+    if (err)
+    {
+      return swiftping.apiResponse('error', res, err);
+    }
+
+    return swiftping.apiResponse('ok', res, ranks);
+  });
+}
+
+function getPlayerRanksById(id, callback)
+{
+  db.findWhere('ranks', {rlrank_id: id}, {_id: 0, rlrank_id: 0},
     function(err, docs)
     {
       if (err)
       {
-        console.log('[RANKS] Error fetching ranks from DB', err); // ERROR
+        swiftping.logger('info', 'ranks', 'Error fetching ranks from DB', {id: id, mongoError: err});
       }
       else if (docs.length > 0)
       {
@@ -31,57 +44,62 @@ function getPlayerRanks(req, res)
 
         if (diffMins > 15)
         {
-          console.log('[RANKS] Found outdated ranks in DB [%s]', req.params.id);
-          return getUpdatedPlayerRanks(req, res);
+          swiftping.logger('info', 'ranks', 'Found outdated ranks in DB [' + id + ']');
+          return getUpdatedPlayerRanks(id, function(err, ranks) {
+            return callback(err, ranks);
+          });
         }
 
-        console.log('[RANKS] Found recent ranks in DB [%s]', req.params.id);
+        swiftping.logger('info', 'ranks', 'Found recent ranks in DB [' + id + ']');
 
         return _getRankThresholds(docs,
           function(err, ranks)
           {
             if (err)
             {
-              return swiftping.apiResponse('error', res, err);
+              callback(err);
             }
 
-            return swiftping.apiResponse('ok', res, ranks);
+            callback(null, ranks);
           }
         );
       }
 
-      return getUpdatedPlayerRanks(req, res);
+      return getUpdatedPlayerRanks(id, function(err, ranks) {
+        return callback(err, ranks);
+      });
     }
   );
 }
 
-function getUpdatedPlayerRanks(req, res)
+function getUpdatedPlayerRanks(rlrank_id, callback)
 {
-  console.log('[RANKS] Getting latest player ranks from Psyonix [%s]', req.params.id);
+  swiftping.logger('info', 'ranks', 'Getting latest player ranks from Psyonix [' + rlrank_id + ']');
 
-  db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
+  db.findOneWhere('profiles', {rlrank_id: rlrank_id}, {},
     function(err, doc)
     {
       if (err)
       {
-        console.log('[RANKS] [ERROR] Could not find profile in database [%s]', req.params.id);
-        return swiftping.apiResponse('error', res, {code:'not_found', message: 'Profile was not found.'});
+        swiftping.logger('error', 'ranks', 'Could not find profile in database [' + rlrank_id + ']');
+        return callback({code:'not_found', message: 'Profile was not found.'});
       }
 
       var profile = doc;
-      var id = swiftping.decryptHash(profile.hash);
+      var hashId = swiftping.decryptHash(profile.hash);
 
-      psyonix.getPlayerRanks(id, profile.platform,
+      psyonix.getPlayerRanks(hashId, profile.platform,
         function(err, results)
         {
           if (err)
           {
-            return swiftping.apiResponse('error', res, err);
+            return callback(err);
           }
 
           if (results.length === 0)
           {
-            return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
+            swiftping.logger('debug', 'ranks', 'Invalid user.', {rlrank_id: rlrank_id, hash: hashId, platform: profile.platform});
+            return callback({code: 'invalid_user', message: 'Invalid user.'});
           }
 
           var ranks = [];
@@ -96,7 +114,7 @@ function getUpdatedPlayerRanks(req, res)
 
               var data = {
                 created_at: new Date(),
-                rlrank_id: req.params.id,
+                rlrank_id: rlrank_id,
                 playlist: parseInt(result.Playlist),
                 mu: result.Mu,
                 sigma: result.Sigma,
@@ -113,7 +131,7 @@ function getUpdatedPlayerRanks(req, res)
                 {
                   if (err)
                   {
-                    console.log('[RANKS] Could not save player rank to "ranks" DB', data, err); // ERROR
+                    swiftping.logger('error', 'ranks', 'Could not save player rank to "ranks" DB', {data: data, mongoError: err});
                   }
                 }
               );
@@ -123,7 +141,7 @@ function getUpdatedPlayerRanks(req, res)
                 {
                   if (err)
                   {
-                    console.log('[RANKS] Could not save player rank to "ranksHistorical" DB', data, err); // ERROR
+                    swiftping.logger('error', 'ranks', 'Could not save player rank to "ranksHistorical" DB', {data: data, mongoError: err});
                   }
                 }
               );
@@ -135,10 +153,10 @@ function getUpdatedPlayerRanks(req, res)
             {
               if (err)
               {
-                return swiftping.apiResponse('error', res, err);
+                return callback(error);
               }
 
-              swiftping.apiResponse('ok', res, ranks);
+              return callback(null, ranks);
             }
           );
         }
@@ -176,7 +194,7 @@ function _getRankTiers(callback)
       if (err)
       {
         console.log('[RANK_TIERS] Could not get ranking tiers from ranksHistorical.', err);
-        return callback('Could not get ranking tiers.');
+        return callback({code: 'server_error', 'msg': 'Could not get ranking tiers.'});
       }
 
       callback(null, docs);

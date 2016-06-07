@@ -10,6 +10,7 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var swiftping = require('./helpers/swiftping');
+var discord = require('./services/discord').start();
 
 console.log(config.env);
 
