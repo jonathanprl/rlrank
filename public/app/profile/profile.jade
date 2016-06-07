@@ -54,10 +54,10 @@
               td(ng-repeat="stat in vm.players[0].stats")
                | {{ stat.value }}
                
-      .col-md-2.text-center(ng-if="vm.players.length > 1")
+      .col-md-2.text-center(ng-if="vm.players.length == 2")
         h1 vs
         
-      .col-md-5
+      .col-md-5(ng-if="vm.compare")
         .sp__spinner(ng-hide="(vm.compare && vm.players.length == 2) || !vm.compare || vm.errors.length > 0")
         h1
           a(ng-href="{{ '/u/' + vm.players[1].profile.rlrank_id }}" title="{{ vm.players[1].profile.display_name }}") {{ vm.players[1].profile.display_name }}
@@ -105,13 +105,13 @@
               td(ng-repeat="stat in vm.players[1].stats")
                | {{ stat.value }}
 
-      div(ng-class="{'col-md-4 col-md-offset-2 col-sm-5 col-sm-offset-1': vm.players.length < 2, 'col-md-12': vm.players.length > 1}")
-        div(ng-class="{'row': vm.players.length > 1}")
-          .sp__share(ng-if="vm.players.length == 1 && !vm.compare")
+      div(ng-class="{'col-md-4 col-md-offset-2 col-sm-5 col-sm-offset-1': !vm.compare, 'col-md-12': vm.compare}")
+        div(ng-class="{'row': vm.compare}")
+          .sp__compare(ng-if="!vm.compare")
              h4.m-t-0 Compare with another player! 
                span.label.label-danger NEW
              rank-form(button-text="Compare!" compare="vm.players[0].profile.rlrank_id" platform="vm.players[0].profile.platform")
-          div(ng-class="{'col-md-4': vm.players.length > 1}")
+          div(ng-class="{'col-md-4': vm.compare}")
             .sp__share
               h4 Share
               .row
@@ -123,8 +123,8 @@
                     | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
                   .sp__share-btn
                     | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
-          div(ng-class="{'col-md-8': vm.players.length > 1}")
+          div(ng-class="{'col-md-8': vm.compare}")
             .sp__ad
               adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;")
             
-      .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")
+    .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")

@@ -124,7 +124,7 @@ function analyticsProvider(AnalyticsProvider)
 }
 
 function run($rootScope, TitleSvc, Analytics, $FB) {
-  var routeChange = $rootScope.$on('$routeChangeStart',
+  $rootScope.$on('$routeChangeStart',
     function(event, next, current)
     {
       if ('data' in next && 'pageTitle' in next.data && next.data.pageTitle != 'default')
@@ -135,8 +135,7 @@ function run($rootScope, TitleSvc, Analytics, $FB) {
       {
         TitleSvc.setDefault();
       }
-
-      Object.keys(window).filter(function(k) { return /google/.test(k) }).forEach(
+      Object.keys(window).filter(function(k) { return k.indexOf('google') >= 0 }).forEach(
         function(key) {
           delete(window[key]);
         }

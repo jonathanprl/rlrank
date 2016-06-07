@@ -2,7 +2,7 @@
   .container
     sp-header(page-title="Rocket League Rank Tiers" sub-title="Season 2 rank and division MMR thresholds")
     .row
-      .col-md-8.col-md-offset-2
+      .col-md-8
         .row.sp__rank-tiers
           div(ng-repeat="range in vm.tierRanges | orderBy: '-' + range.tier" ng-class="{'col-sm-4': $index < 3, 'col-sm-3': $index >= 3}" ng-if="range.tier || range.tier === 0")
             .sp__rank-tier
@@ -10,3 +10,5 @@
               p
                 strong {{ range.tier | rlTier }}
               span(ng-repeat="division in range.divisions | orderBy: '-division'") Div {{ division.division | roman }}: {{ ::division.minMMR }} - {{ ::division.maxMMR }} <br>
+      .col-md-3.col-md-offset-1
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1220220447" ad-format="auto" css-style="display:block;")

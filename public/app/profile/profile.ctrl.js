@@ -36,6 +36,7 @@
 
         if ($routeParams.rlrank_id2)
         {
+          vm.comparison = true;
           getPlayerDetails($routeParams.rlrank_id2,
             function(err, player)
             {
