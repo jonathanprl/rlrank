@@ -69,7 +69,7 @@
 
     return directive;
 
-    function linkFn()
+    function linkFn(scope)
     {
       scope.discordAuth = function() {
         Analytics.trackEvent('discord', 'auth', 'bot button click');
