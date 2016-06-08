@@ -21,13 +21,14 @@ app.use(require('prerender-node').set('prerenderToken', 'It894S0HIa5KY4kogyI2'))
 app.use(bodyParser.json());
 app.use(express.static(path.normalize(__dirname + '/../public')));
 
+discord.start();
+
 if (config.env == 'dev')
 {
   app.listen(config.port);
 }
 else
 {
-  discord.start();
   http.createServer(function (req, res) {
     res.writeHead(301, { 'Location': 'https://' + req.headers['host'] + req.url });
     res.end();

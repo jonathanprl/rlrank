@@ -2,6 +2,7 @@ var Discord = require('discord.io');
 var swiftping = require('../helpers/swiftping');
 var profile = require('../controllers/profile');
 var rank = require('../controllers/rank');
+var config = require('../../config');
 
 var moment = require('moment');
 
@@ -78,11 +79,11 @@ var romans = {
 function start() {
 
   var bot = new Discord.Client({
-    token: 'MTg5NDUzODUxMzcwMzIzOTY4.CjdaJg.PHxPZEiXEqDpdPXk1bxZqS6gWCE',
+    token: config.discord.token,
     autorun: true
   });
 
-  bot.on('ready', function() {
+  bot.on('ready', function(a) {
     swiftping.logger('info', 'discord', bot.username + ' bot online! (' + bot.id + ')');
   });
 
@@ -117,13 +118,25 @@ function start() {
     {
       bot.sendMessage({
         to: channelID,
-        message: 'Hello ' + user + '!\n\nEnter your **Steam Profile URL**, **PSN Username** or **Xbox Gamertag**, optionally followed by a Rocket League playlist.\n\n**Steam**\n\n`!rlrank http://steamcommunity.com/id/<profile_name> steam`\n\n`!rlrank 76561198076736523 steam`\n\n`!rlrank kronovirl steam`\n\n**PS4**\n\n`!rlrank KronoviRL ps4` \n\n**Xbox One**\n\n`!rlrank KronoviRL xbox`\n\nIf you want to view a specific playlist, enter either `1v1`, `2v2`, `3v3` (Solo), `3v3solo` or `3v3team` after your chosen platform\n\ne.g. `!rlrank KronoviRL steam 1v1`.' +
-        '\n\nView your full ranks, stats and graphs any time at https://rocketleaguerank.com.'
+        message: '**Usage:** `!rlrank <username/id/url> <platform> <playlist?> <addtoname?>`\n' +
+        '\n`<username/id/url>` - Steam Profile/Xbox/PSN name or url e.g. `KronoviRL`, `http://steamcommunity.com/id/<profile_name>` or `76561198076736523`\n' +
+        '\n`<platform>` - Platform e.g. `steam`, `pc`, `ps4`, `psn` or `xbox`\n' +
+        '\n`<playlist>` - *(Optional)* RL Playlist e.g. `1v1`, `2v2`, `3v3team`, `3v3solo` or `normal`\n' +
+        '\n`<addtoname>` - *(Optional)* Add to your Discord name e.g `KronoviRL [Prospect Elite]`\n' +
+        '\ne.g `!rlrank KronoviRL ps4 3v3solo`\n' +
+        '\n**View your full ranks, stats and graphs any time at https://rocketleaguerank.com.**'
       });
     }
 
     function showRanks()
     {
+      var addToName = false;
+      if (input[input.length - 1].toLowerCase() == 'addtoname')
+      {
+        addToName = true;
+        input.pop();
+      }
+
       var lastWord = input.pop().toLowerCase();
       var playlist;
       var platform;
@@ -171,19 +184,19 @@ function start() {
             return swiftping.logger('error', 'discord', 'Could not find player ranks.', {rlrank_id: profile.rlrank_id, platform: platform, error: err});
           }
           var lastUpdated;
-          var threshold = '';
+          var highestRank = {
+            mmr: -1000
+          };
+
           var rankStrings = ranks.filter(function(rank) {
             return rank.playlist === validPlaylists[playlist] || (playlist == 'all' && rank.matches_played > 0);
           }).map(function(rank) {
             lastUpdated = rank.created_at;
 
-            if (rank.threshold == 1)
+            if (rank.mmr > highestRank.mmr)
             {
-              threshold = '\n**' + profile.display_name + '** is close to going up a division in ' + playlists[rank.playlist] + '.\n';
-            }
-            else if (rank.threshold == -1)
-            {
-              threshold = '\n**' + profile.display_name + '** is close to going down a division in ' + playlists[rank.playlist] + '.\n';
+              highestRank.mmr = rank.mmr;
+              highestRank.tier = rank.tier;
             }
 
             return '__**' + playlists[rank.playlist] + '**__ **-** ' + tiers[rank.tier] + ' **-** Division ' + romans[rank.division] + ' **-** MMR: ' + rank.mmr;
@@ -202,9 +215,15 @@ function start() {
               to: channelID,
               message: 'Ranks for **' + profile.display_name + '!**\n\n' +
               rankStrings.join('\n------------\n') +
-              '\n\n**More details and stats:** https://rocketleaguerank.com/u/' + profile.rlrank_id + '\n' +
-              '\n*Last updated: ' + moment(lastUpdated).fromNow() + '*. Type `rlrank help` for more options.'
+              '\n\n**More details and stats:** https://rocketleaguerank.com/u/' + profile.rlrank_id + '\n'
             });
+
+            if (addToName && highestRank.tier && highestRank.tier > 0)
+            {
+              bot.editNickname({serverID: channelID, userID: userID, nick: user + ' [' + tiers[highestRank.tier] + ']'}, function(err, response) {
+                swiftping.logger('info', 'discord', 'A rank was added to a user\'s name.', {serverID: channelID, userID: userID, nick: user + ' [' + tiers[highestRank.tier] + ']', message: message});
+              });
+            }
           }
 
         });
