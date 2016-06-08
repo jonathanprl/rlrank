@@ -88,14 +88,14 @@ function start() {
 
   bot.on('message', function(user, userID, channelID, message, event) {
     swiftping.logger('info', 'discord', 'A message was sent to ' + bot.username + ' bot.', {user: user, userID: userID, channelID: channelID, message: message, event: event});
-    if (message.split(' ')[0] != 'rlrank')
-    {
-      return false;
-    }
-
-    if (message == 'rlrank help')
+    if (message == '!rlrank help' || message == 'rlrank help')
     {
       return showHelp();
+    }
+
+    if (message.split(' ')[0] != '!rlrank')
+    {
+      return false;
     }
 
     var input = message.split(' ');
@@ -115,7 +115,7 @@ function start() {
     {
       bot.sendMessage({
         to: channelID,
-        message: 'Hello ' + user + '!\n\nEnter your **Steam Profile URL**, **PSN Username** or **Xbox Gamertag**, optionally followed by a Rocket League playlist.\n\n**Steam**\n\n`rlrank http://steamcommunity.com/id/<profile_name> steam`\n\n`rlrank 76561198076736523 steam`\n\n`rlrank kronovirl steam`\n\n**PS4**\n\n`rlrank KronoviIRL ps4` \n\n**Xbox One**\n\n`rlrank KronoviRL xbox`\n\nIf you want to view a specific playlist, enter either `1v1`, `2v2`, `3v3` (Solo), `3v3solo` or `3v3team` after your chosen platform\n\ne.g. `rlrank KronoviRL steam 1v1`.' +
+        message: 'Hello ' + user + '!\n\nEnter your **Steam Profile URL**, **PSN Username** or **Xbox Gamertag**, optionally followed by a Rocket League playlist.\n\n**Steam**\n\n`!rlrank http://steamcommunity.com/id/<profile_name> steam`\n\n`!rlrank 76561198076736523 steam`\n\n`!rlrank kronovirl steam`\n\n**PS4**\n\n`!rlrank KronoviIRL ps4` \n\n**Xbox One**\n\n`!rlrank KronoviRL xbox`\n\nIf you want to view a specific playlist, enter either `1v1`, `2v2`, `3v3` (Solo), `3v3solo` or `3v3team` after your chosen platform\n\ne.g. `!rlrank KronoviRL steam 1v1`.' +
         '\n\nView your full ranks, stats and graphs any time at https://rocketleaguerank.com.'
       });
     }
@@ -143,12 +143,12 @@ function start() {
 
       if (!(playlist in validPlaylists))
       {
-        return showError('The playlist you entered does not appear to be valid. :sweat: Enter either `1v1`, `2v2`, `3v3` (Solo), `3v3solo`, `3v3team`, `all` or leave it blank for all.\n\nExample: `rlrank KronoviRL steam 2v2`');
+        return showError('The playlist you entered does not appear to be valid. :sweat: Enter either `1v1`, `2v2`, `3v3` (Solo), `3v3solo`, `3v3team`, `all` or leave it blank for all.\n\nExample: `!rlrank KronoviRL steam 2v2`');
       }
 
       if (!(platform in validPlatforms))
       {
-        return showError('The platform you entered does not appear to be valid. :sweat: Enter either `steam`, `pc`, `xbox`, `xboxone`, `psn` or `ps4`.\n\nExample: `rlrank KronoviRL steam 1v1`');
+        return showError('The platform you entered does not appear to be valid. :sweat: Enter either `steam`, `pc`, `xbox`, `xboxone`, `psn` or `ps4`.\n\nExample: `!rlrank KronoviRL steam 1v1`');
       }
 
       profile.getProfileByInput(input.join(' '), platform, function(err, profile) {
