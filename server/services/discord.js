@@ -87,9 +87,9 @@ function start() {
   });
 
   bot.on('message', function(user, userID, channelID, message, event) {
-    swiftping.logger('info', 'discord', 'A message was sent to ' + bot.username + ' bot.', {user: user, userID: userID, channelID: channelID, message: message, event: event});
     if (message == '!rlrank help' || message == 'rlrank help')
     {
+      swiftping.logger('info', 'discord', 'A help message was sent to ' + bot.username + ' bot.', {user: user, userID: userID, channelID: channelID, message: message, event: event});
       return showHelp();
     }
 
@@ -97,6 +97,8 @@ function start() {
     {
       return false;
     }
+
+    swiftping.logger('info', 'discord', 'A !rlrank message was sent to ' + bot.username + ' bot.', {user: user, userID: userID, channelID: channelID, message: message, event: event});
 
     var input = message.split(' ');
     input.splice(0, 1);
@@ -115,7 +117,7 @@ function start() {
     {
       bot.sendMessage({
         to: channelID,
-        message: 'Hello ' + user + '!\n\nEnter your **Steam Profile URL**, **PSN Username** or **Xbox Gamertag**, optionally followed by a Rocket League playlist.\n\n**Steam**\n\n`!rlrank http://steamcommunity.com/id/<profile_name> steam`\n\n`!rlrank 76561198076736523 steam`\n\n`!rlrank kronovirl steam`\n\n**PS4**\n\n`!rlrank KronoviIRL ps4` \n\n**Xbox One**\n\n`!rlrank KronoviRL xbox`\n\nIf you want to view a specific playlist, enter either `1v1`, `2v2`, `3v3` (Solo), `3v3solo` or `3v3team` after your chosen platform\n\ne.g. `!rlrank KronoviRL steam 1v1`.' +
+        message: 'Hello ' + user + '!\n\nEnter your **Steam Profile URL**, **PSN Username** or **Xbox Gamertag**, optionally followed by a Rocket League playlist.\n\n**Steam**\n\n`!rlrank http://steamcommunity.com/id/<profile_name> steam`\n\n`!rlrank 76561198076736523 steam`\n\n`!rlrank kronovirl steam`\n\n**PS4**\n\n`!rlrank KronoviRL ps4` \n\n**Xbox One**\n\n`!rlrank KronoviRL xbox`\n\nIf you want to view a specific playlist, enter either `1v1`, `2v2`, `3v3` (Solo), `3v3solo` or `3v3team` after your chosen platform\n\ne.g. `!rlrank KronoviRL steam 1v1`.' +
         '\n\nView your full ranks, stats and graphs any time at https://rocketleaguerank.com.'
       });
     }
