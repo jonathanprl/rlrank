@@ -1,16 +1,15 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', '$scope', '$window', ProfileController]);
+    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', ProfileController]);
 
-  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics, $scope, $window)
+  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics)
   {
     'use strict';
 
     var vm = this;
 
     vm.compare = false;
-    vm.discordAuth = discordAuth;
     vm.errors = [];
     vm.getPlayerRanks = getPlayerRanks;
     vm.leaderboards = {};
@@ -178,11 +177,6 @@
           callback('Stats could not be retrieved for  "' + profile.display_name + '". Please try again later. Our developers have been notified.');
         }
       );
-    }
-
-    function discordAuth()
-    {
-      $window.open('https://discordapp.com/oauth2/authorize?client_id=189453138158157825&scope=bot&permissions=0', 'Discord Authentication', 'width=745,height=725');
     }
   };
 })();

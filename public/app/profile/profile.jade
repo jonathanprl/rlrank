@@ -123,8 +123,7 @@
                     | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
                   .sp__share-btn
                     | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
-            a.sp__discord(ng-click="vm.discordAuth()" title="Get access to rocketleaguerank Bot in Discord")
-              img(src="/img/discord.png")
+            discord-button
           div(ng-class="{'col-md-8': vm.compare}")
             .sp__ad
               adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;")

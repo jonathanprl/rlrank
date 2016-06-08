@@ -171,7 +171,6 @@ function start() {
           var lastUpdated;
           var threshold = '';
           var rankStrings = ranks.filter(function(rank) {
-            console.log(rank.playlist, validPlaylists[playlist], rank);
             return rank.playlist === validPlaylists[playlist] || (playlist == 'all' && rank.matches_played > 0);
           }).map(function(rank) {
             lastUpdated = rank.created_at;
@@ -185,11 +184,7 @@ function start() {
               threshold = '\n**' + profile.display_name + '** is close to going down a division in ' + playlists[rank.playlist] + '.\n';
             }
 
-            return '__**' + playlists[rank.playlist] + '**__ - **' + tiers[rank.tier] + '**\n\n' +
-                   '**Division**: ' + romans[rank.division] + '\n' +
-                   '**MMR**: ' + rank.mmr + '\n' +
-                   '**Matches played**: ' + rank.matches_played + '\n' +
-                   threshold;
+            return '__**' + playlists[rank.playlist] + '**__ **-** ' + tiers[rank.tier] + ' **-** Division ' + romans[rank.division] + ' **-** MMR: ' + rank.mmr;
           });
 
           if (rankStrings.length == 0)
@@ -203,10 +198,10 @@ function start() {
           {
             bot.sendMessage({
               to: channelID,
-              message: 'Ranks for **' + profile.display_name + '!**\n------------------------------------\n' +
-              rankStrings.join('------------------------------------\n') +
-              '\n*Last updated: ' + moment(lastUpdated).fromNow() + '*' +
-              '\n\nFor more detailed ranks, graphs and stats, view your profile at https://rocketleaguerank.com/u/' + profile.rlrank_id + '\n'
+              message: 'Ranks for **' + profile.display_name + '!**\n\n' +
+              rankStrings.join('\n------------\n') +
+              '\n\n**More details and stats:** https://rocketleaguerank.com/u/' + profile.rlrank_id + '\n' +
+              '\n*Last updated: ' + moment(lastUpdated).fromNow() + '*. Type `rlrank help` for more options.'
             });
           }
 

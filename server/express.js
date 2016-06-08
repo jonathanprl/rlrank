@@ -10,7 +10,7 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var swiftping = require('./helpers/swiftping');
-var discord = require('./services/discord').start();
+var discord = require('./services/discord');
 
 console.log(config.env);
 
@@ -27,6 +27,7 @@ if (config.env == 'dev')
 }
 else
 {
+  discord.start();
   http.createServer(function (req, res) {
     res.writeHead(301, { 'Location': 'https://' + req.headers['host'] + req.url });
     res.end();
