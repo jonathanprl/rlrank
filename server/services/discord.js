@@ -151,7 +151,7 @@ function start() {
         return showError('The platform you entered does not appear to be valid. :sweat: Enter either `steam`, `pc`, `xbox`, `xboxone`, `psn` or `ps4`.\n\nExample: `!rlrank KronoviRL steam 1v1`');
       }
 
-      profile.getProfileByInput(input.join(' '), platform, function(err, profile) {
+      profile.getProfileByInput(input.join(' '), validPlatforms[platform], function(err, profile) {
         if (err)
         {
           if (nameErrors.indexOf(err.code) > -1)
