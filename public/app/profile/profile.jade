@@ -43,6 +43,8 @@
                   | {{ playlist.mmr || 100 }}
                 rank-graph.sp_profile-graph(ng-if="vm.players[0].playlistsHistorical" playlists="vm.players[0].playlistsHistorical" playlist="playlist")
         p.sp__table-note * Promotion/Demotion indicators are only an estimation and may not be entirely accurate. <a href="/rank-tiers" title="Rocket League Rank Tiers">Click here</a> to view tiers
+        .sp__ad
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;")
         h4 Stats
         table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[0].stats")
           thead
@@ -94,6 +96,9 @@
                 span.sp__table-mmr
                   | {{ playlist.mmr || 100 }}
                 rank-graph.sp_profile-graph(ng-if="vm.players[1].playlistsHistorical" playlists="vm.players[1].playlistsHistorical" playlist="playlist")
+        p.sp__table-note(ng-if="vm.players[1].playlists") * Promotion/Demotion indicators are only an estimation and may not be entirely accurate. <a href="/rank-tiers" title="Rocket League Rank Tiers">Click here</a> to view tiers
+        .sp__ad
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;")
         h4(ng-if="vm.players[1].stats") Stats
         table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[1].stats")
           thead
@@ -123,8 +128,5 @@
                     | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
                   .sp__share-btn
                     | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
-            discord-button
-          div(ng-class="{'col-md-8': vm.compare}")
-            .sp__ad
-              adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;")
+            discord-button          
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")
