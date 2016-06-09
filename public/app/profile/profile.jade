@@ -33,7 +33,9 @@
                 img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:30px;")
               td.text-left 
                 span.hidden-xs {{ playlist.tier | rlTier }}
-                small(ng-if="playlist.division > 0 || playlist.division === 0")  &nbsp;{{ playlist.division | roman }}
+                small(ng-if="playlist.division > 0 || playlist.division === 0")  &nbsp;
+                  strong DIV&nbsp;
+                  | {{ playlist.division | roman }}
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
@@ -87,7 +89,8 @@
                 img(ng-src="/img/ranks/{{ playlist.tier || 0 }}_w.png" title="{{ playlist.tier | rlTier }}" style="width:30px;")
               td.text-left 
                 span.hidden-xs {{ playlist.tier | rlTier }}
-                small(ng-if="playlist.division > 0 || playlist.division === 0")  &nbsp;{{ playlist.division | roman }}
+                small(ng-if="playlist.division > 0 || playlist.division === 0")  &nbsp;
+                  strong DIV&nbsp;
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
@@ -128,5 +131,8 @@
                     | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
                   .sp__share-btn
                     | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
-            discord-button          
+            discord-button
+          div(ng-if="!vm.compare")
+            .sp__ad
+              adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4506274043" ad-format="auto" css-style="display:block;")  
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")
