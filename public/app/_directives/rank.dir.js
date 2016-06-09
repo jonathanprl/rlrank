@@ -29,6 +29,8 @@ function rankForm(ApiSvc, Analytics, $location)
       'xbox': 'Enter a Xbox Live gamertag'
     };
 
+    scope.steamLogin = attr.steamLogin || false;
+
     if (scope.platform)
     {
       setPlatform(scope.platform);

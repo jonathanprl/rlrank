@@ -1,5 +1,5 @@
-.row
-  .col-md-9
+div(ng-class="{'row': steamLogin}")
+  div(ng-class="{'col-md-9': steamLogin}")
     form.sp__rank-form
       .input-group
         input.form-control(ng-model="input" placeholder="{{ placeholder[platform.id] }}")
@@ -26,6 +26,6 @@
       button.btn.btn-primary.btn-block(ng-click="goToProfile()")
         | {{ buttonText }}
         span.sp__spinner.sp__spinner-mini.pull-right(ng-if="showLoader")
-  .col-md-3
+  div(ng-if="steamLogin")
     p(style="margin-top:5px;") - OR -
     steam-openid
