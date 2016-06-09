@@ -7,7 +7,7 @@
           .col-md-4.col-md-offset-4
             rank-form
         .sp__hero-sub
-          discord-button
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4173686840" ad-format="auto" css-style="display:block;")
           //- .row
           //-   .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
           //-     .sp__graph(ng-if="vm.populationHistorical")
@@ -27,7 +27,7 @@
       .sp__leaderboards
         h2 Global Leaderboards
         .row
-          .col-md-3.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist'")
+          .col-md-3.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:3")
             h3 {{ playlist.playlist | rlPlaylist }}
             table.table.table-responsive.sp__table
               tr
@@ -39,7 +39,7 @@
                   strong Username
                 td
                   strong MMR
-              tr(ng-repeat="player in playlist.players | orderBy:'-mmr' | limitTo:5")
+              tr(ng-repeat="player in playlist.players | orderBy:'-mmr' | limitTo:10")
                 td
                   strong {{ '#' + ($index + 1) }}
                 td
@@ -48,6 +48,9 @@
                   a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
                 td
                   span(ng-if="player.mmr") {{ player.mmr }}
+          .col-md-3.col-sm-6
+            h3 Advertisment
+              adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1369507640" ad-format="auto" css-style="display:block;")
         .row
           .col-md-4.col-md-offset-4
             a.btn.btn-primary.btn-block(href="/leaderboards" title="Rocket League Leaderboards") See Top 200
@@ -125,8 +128,6 @@
                 li <strong>Crown & Jewels Blaze:</strong> Yeezy / xXKhaelanXx
               p.lead.text-right
                 a(href="https://www.reddit.com/r/RocketLeague/comments/4m9im0/esports_eu_power_rankings_week_of_531/", title="Read more..." target="_blank") Read more...
-          .sp__news-ad
-            adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4173686840" ad-format="auto" css-style="display:block;")
           article.panel.sp__panel-trans.sp__news
             .panel-body
               header

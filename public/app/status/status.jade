@@ -1,6 +1,6 @@
 .sp__wrapper
   .container
-    sp-header(page-title="Server Status" sub-title="Status of the official Rocket League servers")
+    sp-header(page-title="Server Status" sub-title="Status of the official Rocket League servers. Updated every minute.")
     .row
       .col-md-4
         .sp__spinner(ng-if="!vm.regions")
@@ -14,6 +14,8 @@
               td {{ region.region | rlRegion }}
               td
                 span.sp__indicator(ng-class="{'online': region.online, 'offline': !region.online}") {{ region.online ? 'Online' : 'Offline' }}
+      .col-md-4.col-md-offset-4
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="2287837646" ad-format="auto" css-style="display:block;")
     .sp__mini-rank-form.visible-xs.visible-sm
       form.sp__rank-form
         .form-group

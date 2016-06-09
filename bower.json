@@ -20,7 +20,6 @@
     "jquery.sparkline": "gwatts/jquery.sparkline#v2.1.2",
     "angular-google-analytics": "^1.1.6",
     "angular-moment": "^0.10.3",
-    "angular-socialshare": "^1.4.5",
-    "ngAdsense": "git@bitbucket.org:swiftping/ngadsense.git"
+    "angular-socialshare": "^1.4.5"
   }
 }

@@ -51,7 +51,10 @@ html
     .wrapper
       header(ng-include="'/views/navbar/navbar'")
       .inner-wrapper(ng-view)
+        
     footer
+      .sp__mm-full
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4962102446" ad-format="auto" css-style="display:block;")
       .container
         .sp__footer
           .row
@@ -69,8 +72,12 @@ html
                   a(title="Advertise on Rocket League Rank" href="/advertise") Advertise
             .col-sm-6.text-right
               ul
+                li Rocket League ranks are pulled directly from Psyonix. We are not affiliated with Psyonix.
+              ul
                 li &copy; Swiftping 2016
-                li This website is not affiliated with <a href="http://psyonix.com">Psyonix</a>.
+          .row
+            .col-md-2
+              discord-button
     
     script(type="text/javascript" src="/vendor/socket.io-client/socket.io.js")
     script(type="text/javascript" src="//platform.twitter.com/widgets.js")
