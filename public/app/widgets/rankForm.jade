@@ -1,26 +1,31 @@
-form.sp__rank-form
-  .input-group
-    input.form-control(ng-model="input" placeholder="{{ placeholder[platform.id] }}")
-    .input-group-btn
-      button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-        i.socicon(ng-class="{'socicon-steam': platform.id == 'steam', 'socicon-playstation': platform.id == 'psn', 'socicon-xbox': platform.id == 'xbox'}")
-        | &nbsp;{{ platform.name }}&nbsp;
-        span.caret
-      ul.dropdown-menu.dropdown-menu-right
-        li
-          a(ng-click="setPlatform('steam')" href="#")
-            i.socicon.socicon-steam
-            | &nbsp;Steam
-        li
-          a(ng-click="setPlatform('psn')" href="#")
-            i.socicon.socicon-playstation
-            | &nbsp;Playstation
-        li
-          a(ng-click="setPlatform('xbox')" href="#")
-            i.socicon.socicon-xbox
-            | &nbsp;Xbox
-  p.help-block(ng-if="profileError")
-    | {{ profileError }}
-  button.btn.btn-primary.btn-block(ng-click="goToProfile()")
-    | {{ buttonText }}
-    span.sp__spinner.sp__spinner-mini.pull-right(ng-if="showLoader")
+.row
+  .col-md-9
+    form.sp__rank-form
+      .input-group
+        input.form-control(ng-model="input" placeholder="{{ placeholder[platform.id] }}")
+        .input-group-btn
+          button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+            i.socicon(ng-class="{'socicon-steam': platform.id == 'steam', 'socicon-playstation': platform.id == 'psn', 'socicon-xbox': platform.id == 'xbox'}")
+            | &nbsp;{{ platform.name }}&nbsp;
+            span.caret
+          ul.dropdown-menu.dropdown-menu-right
+            li
+              a(ng-click="setPlatform('steam')" href="#")
+                i.socicon.socicon-steam
+                | &nbsp;Steam
+            li
+              a(ng-click="setPlatform('psn')" href="#")
+                i.socicon.socicon-playstation
+                | &nbsp;Playstation
+            li
+              a(ng-click="setPlatform('xbox')" href="#")
+                i.socicon.socicon-xbox
+                | &nbsp;Xbox
+      p.help-block(ng-if="profileError")
+        | {{ profileError }}
+      button.btn.btn-primary.btn-block(ng-click="goToProfile()")
+        | {{ buttonText }}
+        span.sp__spinner.sp__spinner-mini.pull-right(ng-if="showLoader")
+  .col-md-3
+    p(style="margin-top:5px;") - OR -
+    steam-openid

@@ -9,6 +9,7 @@ var path = require('path');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
+var passport = require('passport');
 var swiftping = require('./helpers/swiftping');
 var discord = require('./services/discord');
 
@@ -20,6 +21,14 @@ app.set('view engine', 'jade');
 app.use(require('prerender-node').set('prerenderToken', 'It894S0HIa5KY4kogyI2'));
 app.use(bodyParser.json());
 app.use(express.static(path.normalize(__dirname + '/../public')));
+
+app.use(passport.initialize());
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 discord.start();
 

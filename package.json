@@ -46,6 +46,8 @@
     "mongodb": "^2.1.4",
     "mongojs": "^2.2.2",
     "node-rest-client": "^1.5.1",
+    "passport": "^0.3.2",
+    "passport-steam": "^1.0.2",
     "ping": "^0.1.10",
     "prerender-node": "^2.2.0",
     "promise": "^7.1.1",

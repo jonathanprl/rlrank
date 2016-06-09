@@ -1,3 +1,8 @@
+var passport = require('passport');
+var SteamStrategy = require('passport-steam').Strategy;
+
+var config = require('../config');
+
 var rank = require('./controllers/rank');
 var leaderboard = require('./controllers/leaderboard');
 var stats = require('./controllers/stats');
@@ -7,9 +12,21 @@ var profile = require('./controllers/profile');
 
 var psyonix = require('./services/psyonix');
 var cron = require('./services/cron');
+var steam = require('./services/steam');
 
 var swiftping = require('./helpers/swiftping');
 var sitemap = require('./helpers/sitemap');
+
+passport.use(new SteamStrategy({
+    returnURL: config.url + 'steam/return',
+    realm: config.url,
+    apiKey: config.steam.key
+  },
+  function(identifier, profile, done) {
+    profile.identifier = identifier;
+    return done(null, profile);
+  }
+));
 
 module.exports = function(app)
 {
@@ -26,6 +43,9 @@ module.exports = function(app)
   });
 
   app.get('/sitemap.xml', sitemap.generateSitemap);
+
+  app.get('/steam/auth', passport.authenticate('steam'), function(req, res) {});
+  app.get('/steam/return', passport.authenticate('steam', { failureRedirect: '/' }), profile.steamOpenid);
 
   app.get('/api/profile/:input/:platform', profile.getProfile);
   app.get('/api/profileById/:id', profile.getProfileById);

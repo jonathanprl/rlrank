@@ -4,7 +4,8 @@
   angular
       .module('app')
       .directive('sparkline', [sparkline])
-      .directive('discordButton', ['$window', 'Analytics', discordButton]);
+      .directive('discordButton', ['$window', 'Analytics', discordButton])
+      .directive('steamOpenid', ['$window', 'Analytics', steamOpenid]);
 
   function sparkline()
   {
@@ -65,7 +66,7 @@
       restrict: 'E',
       templateUrl: '/views/widgets/discord',
       link: linkFn
-    }
+    };
 
     return directive;
 
@@ -74,7 +75,26 @@
       scope.discordAuth = function() {
         Analytics.trackEvent('discord', 'auth', 'bot button click');
         $window.open('https://discordapp.com/oauth2/authorize?client_id=189453138158157825&scope=bot&permissions=0', 'Discord Authentication', 'width=745,height=725');
-      }
+      };
+    }
+  }
+
+  function steamOpenid($window, Analytics)
+  {
+    var directive = {
+      restrict: 'E',
+      templateUrl: '/views/widgets/steam',
+      link: linkFn
+    };
+
+    return directive;
+
+    function linkFn(scope)
+    {
+      scope.steamAuth = function() {
+        Analytics.trackEvent('steam', 'auth', 'openid click');
+        $window.open('/steam/auth', 'Steam Authentication', 'width=900,height=725');
+      };
     }
   }
 }());

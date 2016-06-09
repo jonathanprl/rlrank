@@ -7,7 +7,8 @@ var xbox = require('../services/xbox');
 module.exports = {
   getProfile,
   getProfileById,
-  getProfileByInput
+  getProfileByInput,
+  steamOpenid
 };
 
 /**
@@ -214,5 +215,18 @@ function createNewProfile(input, platform, hash, gameProfile, callback)
     }
 
     return callback(null, profile);
+  });
+}
+
+function steamOpenid(req, res)
+{
+  swiftping.logger('info', 'steam', 'Login via OpenID', {user: req.user});
+  getProfileByInput(req.user._json.steamid, 'steam', function(err, profile) {
+    if (err)
+    {
+      res.redirect('/');
+    }
+
+    res.set('Content-Type', 'text/html').send('<script type="text/javascript">window.opener.location.href = "/u/' + profile.rlrank_id + '";window.close();</script>');
   });
 }

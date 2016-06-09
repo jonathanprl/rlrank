@@ -3,14 +3,13 @@ var swiftping = require('../helpers/swiftping');
 var psyonix = require('../services/psyonix');
 var rest = require('restler');
 var cheerio = require('cheerio');
+var config = require('../../config');
 
 module.exports = {
   getSteamProfileByURL,
   getSteamProfileByName,
   getSteamProfileByID
 };
-
-var steamApiKey = '386CE59F095593AC9CF2199578C90A40';
 
 /**
  * getSteamProfileByURL
@@ -93,7 +92,7 @@ function getSteamProfileByURL(url, callback)
  */
 function getSteamProfileByName(id, callback)
 {
-  rest.get('http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=' + steamApiKey + '&&vanityurl=' + id)
+  rest.get('http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=' + config.steam.key + '&&vanityurl=' + id)
     .on('complete', function(result) {
       if (!result.response || !('steamid' in result.response))
       {
@@ -118,7 +117,7 @@ function getSteamProfileByName(id, callback)
  */
 function getSteamProfileByID(id, callback)
 {
-  rest.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + steamApiKey + '&steamids=' + id)
+  rest.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + config.steam.key + '&steamids=' + id)
     .on('complete', function(result) {
       if (!result.response || !result.response.players || result.response.players.length == 0)
       {
