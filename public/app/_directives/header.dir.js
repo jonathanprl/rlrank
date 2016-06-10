@@ -1,6 +1,6 @@
 angular
     .module('app')
-    .directive('spHeader', spHeader);
+    .directive('spHeader', ['$sce', spHeader]);
 
 function spHeader()
 {

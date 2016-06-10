@@ -110,16 +110,33 @@ section {
   margin-bottom: 15px;
 }
 
+.sp__rank {
+  background-color: rgba(0,0,0,0.5);
+  border: 1px solid #696969;
+  margin-bottom: 15px;
+}
+
 .sp__rank-tier {
   color: #fff;
   white-space: pre;
-  background-color: rgba(0,0,0,0.5);
-  border: 1px solid #696969;
   text-align:center;
   padding: 1rem;
-  margin-bottom: 2rem;
   img {
     width: 50%;
+  }
+}
+
+.sp__rank-mmr {
+  color: #fff;
+  padding: 0 3rem;
+  text-align: center;
+  @media (min-width: 768px) {
+    .dl-horizontal dd {
+      margin-left: 15%;
+    }
+    .dl-horizontal dt {
+      width: 15%;
+    }
   }
 }
 
