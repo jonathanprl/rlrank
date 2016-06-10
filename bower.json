@@ -19,7 +19,7 @@
     "angular-socket-io": "^0.7.0",
     "jquery.sparkline": "gwatts/jquery.sparkline#v2.1.2",
     "angular-google-analytics": "^1.1.6",
-    "angular-moment": "^0.10.3",
+    "angular-moment": "^1.0.0",
     "angular-socialshare": "^1.4.5"
   }
 }

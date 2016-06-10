@@ -9,6 +9,7 @@ var _ = require('lodash');
 module.exports = {
   leaderboards,
   serverStatus,
+  serverList,
   population,
   playersRanks,
   playersStats,
@@ -88,74 +89,66 @@ function leaderboards()
   });
 }
 
+function serverList()
+{
+  psyonix.getServers(function(err, servers) {
+    servers.forEach(function(server) {
+      if ('Region' in server && 'IP' in server)
+      {
+        db.upsert('status', {region: server.Region}, {region: server.Region, host: server.IP},function(err, doc) {
+          if (err)
+          {
+            swiftping.logger('error', 'cron', 'Could not update DB with Psyonix server details.', {mongoError: err});
+          }
+        });
+      }
+    });
+  });
+}
+
 function serverStatus()
 {
-  console.log('[CRON] Updating server statuses...'); // info
+  swiftping.logger('info', 'cron', 'Updating server statuses...');
 
   db.find('status',
     function(err, doc)
     {
       var servers = doc[0];
-      if (doc.length > 0)
+      if (doc.length == 0)
       {
-        doc.forEach(
-          function(server)
-          {
-            if ('host' in server)
-            {
-              var ip = server.host.split(':')[0];
+        return false;
+      }
 
-              ping.sys.probe(ip,
-                function(isAlive)
-                {
-                  db.update('status', {region: server.region}, {$set: { online: isAlive ? true : false } },
-                    function(err, doc)
-                    {
-                      if (!isAlive)
-                        console.log("[CRON] %s is offline", server.region);
-                    }
-                  );
-                }
-              );
-            }
-          }
-        );
-      }
-      else
-      {
-        psyonix.getServers(
-          function(err, servers)
+      var hosts = doc.filter(function(server) {
+        return 'host' in server;
+      }).map(function(server) {
+        return server.host.split(':')[0];
+      });
+
+      hosts.forEach(function(host) {
+        ping.promise.probe(host)
+        .then(function (res) {
+          // var ping = res.output.splice(res.output.indexOf('Average = '), 5);
+          var ping = 'N/A';
+          if (res.alive)
           {
-            servers.forEach(
-              function(server)
-              {
-                if ('Region' in server && 'IP' in server)
-                {
-                  db.upsert('status', {region: server.Region}, {region: server.Region, host: server.IP},
-                    function(err, doc)
-                    {
-                      if (err)
-                      {
-                        console.log('[CRON] [ERROR] Could not update DB with Psyonix server details', err); // ERROR
-                      }
-                    }
-                  );
-                }
-              }
-            );
+            ping = res.output.split('Average = ')[1].split('ms')[0];
           }
-        )
-      }
+
+
+          db.update('status', {host: {$regex : '.*' + host + '.*'} }, {$set: { online: res.alive, ping: ping, updatedAt: new Date() } },
+            function(err, doc)
+            {
+              if (ping > 500)
+              {
+                swiftping.logger('info', 'cron', 'Server host has high ping.', res);
+              }
+            }
+          );
+        });
+      });
     }
   );
-  //
-  // psyonix.getServers(function(err, results)
-  // {
-  //   if (err)
-  //   {
-  //     console.log('[CRON] [ERROR] Could not fetch server status from Psyonix', err); // error
-  //   }
-  // });
 }
 
 function population()

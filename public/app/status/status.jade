@@ -1,21 +1,30 @@
 .sp__wrapper
   .container
-    sp-header(page-title="Server Status" sub-title="Status of the official Rocket League servers. Updated every minute.")
+    sp-header(page-title="Server Status" sub-title="Official Rocket League server statuses. (Auto-updated every minute.)")
     .row
-      .col-md-4
+      .col-md-6
         .sp__spinner(ng-if="!vm.regions")
         table.table.table-responsive.sp__table(ng-if="vm.regions")
           thead
             tr
               th Region
               th Status
+              th Latency
+              th Last Checked
           tbody
             tr(ng-repeat="region in vm.regions | orderBy:'name'")
               td {{ region.region | rlRegion }}
               td
-                span.sp__indicator(ng-class="{'online': region.online, 'offline': !region.online}") {{ region.online ? 'Online' : 'Offline' }}
-      .col-md-4.col-md-offset-4
-        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="2287837646" ad-format="auto" css-style="display:block;")
+                span(ng-style="!region.online ? {'color':'#CA4A4A'} : {}")
+                  i.fa(ng-class="{'fa-exclamation-triangle': !region.online}")&nbsp;
+                  | {{ region.online ? 'Online' : 'Offline' }}
+              td(ng-bind-html="region.ping | rlRegionPing : region.region")
+              td {{ region.updatedAt | amUtc | amLocal | amDateFormat:'HH:mm' }}
+        .sp__mm-full
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4166366848" ad-format="auto" css-style="display:block;")
+      .col-md-4.col-md-offset-2
+        .sp__mm-full
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="2287837646" ad-format="auto" css-style="display:block;")
     .sp__mini-rank-form.visible-xs.visible-sm
       form.sp__rank-form
         .form-group

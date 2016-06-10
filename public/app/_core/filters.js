@@ -65,6 +65,30 @@ angular.module('app')
       return regions[input] || input;
     };
   })
+  .filter('rlRegionPing', ['$sce', function($sce)
+  {
+    return function(ping, region)
+    {
+      if (ping == 'N/A')
+      {
+        return ping;
+      }
+
+      var regions = {
+        'ASC': 270,
+        'EU': 20,
+        'JPN': 260,
+        'ME': 25,
+        'nrt': 320,
+        'OCE': 300,
+        'SAM': 200,
+        'USE': 80,
+        'USW': 120
+      };
+
+      return $sce.trustAsHtml(ping > (regions[region] * 1.2) ? '<span style="color:#CA4A4A"><i class="fa fa-exclamation-triangle"></i>&nbsp;High</span>' : 'Normal');
+    };
+  }])
   .filter('roman', function()
   {
     return function(input)

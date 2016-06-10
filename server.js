@@ -7,20 +7,30 @@ require('./server/routes.js')(app);
 require('./server/db.js');
 
 var cron = require('./server/services/cron.js');
+var swiftping = require('./server/helpers/swiftping');
 var CronJob = require('cron').CronJob;
 
-new CronJob('0 * * * *',
+cron.serverStatus();
+new CronJob('* * * * *',
   function()
   {
-    console.log('[CRON] Running serverStatus cronjob...', (new Date()).toTimeString());
+    swiftping.logger('info', 'cron', 'Running serverStatus cronjob...', (new Date()).toTimeString());
     cron.serverStatus();
+  }, function(){}, true
+);
+
+new CronJob('30 1 * * *',
+  function()
+  {
+    swiftping.logger('info', 'cron', 'Running serverList cronjob...', (new Date()).toTimeString());
+    cron.serverList();
   }, function(){}, true
 );
 
 new CronJob('*/20 * * * *',
   function()
   {
-    console.log('[CRON] Running token refresh cronjob...', (new Date()).toTimeString());
+    swiftping.logger('info', 'cron', 'Running token refresh cronjob...', (new Date()).toTimeString());
     cron.refreshToken();
   }, function(){}, true
 );
