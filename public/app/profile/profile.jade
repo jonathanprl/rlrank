@@ -6,9 +6,10 @@
           strong Sorry!&nbsp;
           | {{ error }}
     .row(ng-if="vm.players.length > 0 && vm.players[0].stats")
-      .col-md-5(ng-if="vm.players[0].playlists")
+      .col-md-6(ng-if="vm.players[0].playlists")
         h1
           a(ng-href="{{ '/u/' + vm.players[0].profile.rlrank_id }}" title="{{ vm.players[0].profile.display_name }}") {{ vm.players[0].profile.display_name }}
+          span.pull-right(ng-if="vm.players.length == 2") vs
         span.sp__sub-header(ng-show="vm.players.length > 0")
           | Last updated&nbsp;
           span(am-time-ago="vm.players[0].lastUpdated")
@@ -57,11 +58,8 @@
             tr
               td(ng-repeat="stat in vm.players[0].stats")
                | {{ stat.value }}
-               
-      .col-md-2.text-center(ng-if="vm.players.length == 2")
-        h1 vs
         
-      .col-md-5(ng-if="vm.compare")
+      .col-md-6(ng-if="vm.compare")
         .sp__spinner(ng-hide="(vm.compare && vm.players.length == 2) || !vm.compare || vm.errors.length > 0")
         h1
           a(ng-href="{{ '/u/' + vm.players[1].profile.rlrank_id }}" title="{{ vm.players[1].profile.display_name }}") {{ vm.players[1].profile.display_name }}

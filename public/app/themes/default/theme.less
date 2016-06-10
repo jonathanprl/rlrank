@@ -188,13 +188,18 @@ section {
   color: #D6D6D6;
   background-color: rgba(45, 45, 45, 0.9);
 
+  > thead > tr > th {
+    border-bottom: 2px solid #525252;
+  }
+
   > tbody > tr > td,
   > tbody > tr > th {
     border-top: 1px solid #3E3E3E;
     max-width: 140px;
     vertical-align: middle;
     line-height: 32px;
-    padding: 4px 8px;
+    padding: 10px 12px;
+    font-size: 15px;
 
     span,
     a {
@@ -206,6 +211,7 @@ section {
 
     a {
       display: inline-block;
+      vertical-align: middle;
     }
 
     span + span {
@@ -299,7 +305,7 @@ footer {
 }
 
 .sp_profile-graph {
-  padding-left: 10px;
+  padding-left: 15px;
 }
 .sp__spinner {
   margin: 60px auto;
