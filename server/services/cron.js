@@ -111,41 +111,33 @@ function serverStatus()
   swiftping.logger('info', 'cron', 'Updating server statuses...');
 
   db.find('status',
-    function(err, doc)
+    function(err, docs)
     {
-      var servers = doc[0];
-      if (doc.length == 0)
+      if (docs.length == 0)
       {
         return false;
       }
 
-      var hosts = doc.filter(function(server) {
-        return 'host' in server;
-      }).map(function(server) {
-        return server.host.split(':')[0];
-      });
+      docs.forEach(function(server) {
+        ping.promise.probe(server.host)
+          .then(function (res) {
+            var ping = 'N/A';
 
-      hosts.forEach(function(host) {
-        ping.promise.probe(host)
-        .then(function (res) {
-          // var ping = res.output.splice(res.output.indexOf('Average = '), 5);
-          var ping = 'N/A';
-          if (res.alive)
-          {
-            ping = res.output.split('Average = ')[1].split('ms')[0];
-          }
-
-
-          db.update('status', {host: {$regex : '.*' + host + '.*'} }, {$set: { online: res.alive, ping: ping, updatedAt: new Date() } },
-            function(err, doc)
+            if (res.alive)
             {
-              if (ping > 500)
-              {
-                swiftping.logger('info', 'cron', 'Server host has high ping.', res);
-              }
+              ping = res.output.split('Average = ')[1].split('ms')[0];
             }
-          );
-        });
+
+            db.update('status', {region: server.region }, {$set: { online: res.alive, ping: ping, updatedAt: new Date() } },
+              function(err, doc)
+              {
+                if (ping > 500)
+                {
+                  swiftping.logger('info', 'cron', 'Server host has high ping.', res);
+                }
+              }
+            );
+          });
       });
     }
   );
