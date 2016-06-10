@@ -137,7 +137,7 @@ function serverStatus()
               }
             }
 
-            db.update('status', {region: server.region }, {$set: { online: res.alive, ping: ping, updatedAt: new Date() } },
+            db.update('status', {region: server.region }, {$set: { online: res.alive, ping: Math.round(ping), updatedAt: new Date() } },
               function(err, doc)
               {
                 if (ping > 500)
