@@ -119,7 +119,7 @@ function serverStatus()
       }
 
       docs.forEach(function(server) {
-        ping.promise.probe(server.host)
+        ping.promise.probe(server.host.split(':')[0])
           .then(function (res) {
             var ping = 'N/A';
 
