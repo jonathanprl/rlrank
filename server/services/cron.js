@@ -125,7 +125,16 @@ function serverStatus()
 
             if (res.alive)
             {
-              ping = res.output.split('Average = ')[1].split('ms')[0];
+              if (res.output.indexOf('Average = ') > -1)
+              {
+                // Windows
+                ping = res.output.split('Average = ')[1].split('ms')[0];
+              }
+              else if (res.output.indexOf('time=') > -1)
+              {
+                // Linux
+                ping = res.output.split('time=')[1].split(' ms')[0];
+              }
             }
 
             db.update('status', {region: server.region }, {$set: { online: res.alive, ping: ping, updatedAt: new Date() } },
