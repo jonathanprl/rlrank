@@ -69,9 +69,9 @@ angular.module('app')
   {
     return function(ping, region)
     {
-      if (ping == 'N/A')
+      if (ping == 0)
       {
-        return ping;
+        return $sce.trustAsHtml('N/A');
       }
 
       var regions = {

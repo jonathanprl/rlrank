@@ -121,7 +121,7 @@ function serverStatus()
       docs.forEach(function(server) {
         ping.promise.probe(server.host.split(':')[0])
           .then(function (res) {
-            var ping = 'N/A';
+            var ping = 0;
 
             if (res.alive)
             {
