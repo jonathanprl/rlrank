@@ -58,7 +58,6 @@
             tr
               td(ng-repeat="stat in vm.players[0].stats")
                | {{ stat.value }}
-        
       .col-md-6(ng-if="vm.compare")
         .sp__spinner(ng-hide="(vm.compare && vm.players.length == 2) || !vm.compare || vm.errors.length > 0")
         h1
@@ -112,7 +111,7 @@
               td(ng-repeat="stat in vm.players[1].stats")
                | {{ stat.value }}
                
-      div(ng-class="{'col-md-4 col-md-offset-2 col-sm-5 col-sm-offset-1': !vm.compare, 'col-md-12': vm.compare}")
+      div(ng-class="{'col-md-4 col-sm-5': !vm.compare, 'col-md-12': vm.compare}")
         div(ng-class="{'row': vm.compare}")
           .sp__compare(ng-if="!vm.compare")
              h4.m-t-0 Compare with another player! 
@@ -131,7 +130,11 @@
                   .sp__share-btn
                     | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
             discord-button
-          div(ng-if="!vm.compare")
+          div(ng-class="{'col-md-8': vm.compare}" style="margin-top: 54px;")
             .sp__ad
-              adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4506274043" ad-format="auto" css-style="display:block;")  
+              adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4506274043" ad-format="auto" css-style="display:block;")
+              
+      .col-md-2.col-sm-1
+        .sp__ad(ng-if="!vm.compare")
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;")  
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")
