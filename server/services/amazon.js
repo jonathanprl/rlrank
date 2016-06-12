@@ -34,6 +34,9 @@ function getClient(req, res, next)
     case 'DE':
       amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
       break;
+    case 'CH':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
     case 'CA':
       amazonAffiliate = { id: 'rocketleaguerankca-20', site: 'Amazon.ca', asin: 'B015WKY3IM', domain: 'webservices.amazon.ca' };
       break;
@@ -62,10 +65,13 @@ function getClient(req, res, next)
       amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', asin: 'B01649J65K', domain: 'webservices.amazon.co.uk' };
       break;
     case 'ES':
-      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      amazonAffiliate = { id: 'rocketleaguerankes-21', site: 'Amazon.es', asin: 'B01649J65K', domain: 'webservices.amazon.es' };
+      break;
+    case 'PT':
+      amazonAffiliate = { id: 'rocketleaguerankes-21', site: 'Amazon.es', asin: 'B01649J65K', domain: 'webservices.amazon.es' };
       break;
     case 'IT':
-      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      amazonAffiliate = { id: 'rocketleaguerankit-21', site: 'Amazon.it', asin: 'B01649J65K', domain: 'webservices.amazon.it' };
       break;
     default:
       amazonAffiliate = { id: 'rocketleaguerank-20', site: 'Amazon.com', asin: 'B015WKY3IM', domain: 'webservices.amazon.com' };
