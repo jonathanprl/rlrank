@@ -7,7 +7,7 @@
   function TitleSvc($window)
   {
     var base = ' - Rocket League Rank';
-    var defaultTitle = 'Rocket League Rank - Rocket League Ranks, Player Stats, Player Comparison, and Player Leaderboards';
+    var defaultTitle = 'Rocket League Ranks, Stats, Comparison, Leaderboards and more!';
     var currentTitle = $window.document.title;
 
     return {
