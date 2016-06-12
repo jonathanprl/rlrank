@@ -153,9 +153,18 @@
             }
           );
 
+          var lastUpdated = null;
+          angular.forEach(response.data.results, function(result) {
+            if ('created_at' in result)
+            {
+              lastUpdated = result.created_at;
+              return false;
+            }
+          });
+
           callback(null, {
             playlists: playlists,
-            lastUpdated: response.data.results[0].created_at
+            lastUpdated: lastUpdated
           });
         })
         .catch(function(err)
