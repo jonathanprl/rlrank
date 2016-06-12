@@ -96,6 +96,14 @@ function app($routeProvider, $locationProvider)
       activeSection: 'profile',
       showMMR: true
     })
+    .when('/amazon/redirect/:asin', {
+      templateUrl: '/views/amazon/redirect',
+      controller: 'AmazonController as vm',
+      activeSection: 'amazon',
+      data: {
+        pageTitle: 'default'
+      }
+    })
     .when('/', {
       templateUrl: '/views/home/home',
       controller: 'HomeController as vm',

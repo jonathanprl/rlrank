@@ -13,6 +13,7 @@ var profile = require('./controllers/profile');
 var psyonix = require('./services/psyonix');
 var cron = require('./services/cron');
 var steam = require('./services/steam');
+var amazon = require('./services/amazon');
 
 var swiftping = require('./helpers/swiftping');
 var sitemap = require('./helpers/sitemap');
@@ -64,6 +65,9 @@ module.exports = function(app)
 
   app.get('/api/population', status.getPopulation);
   app.get('/api/population/historical', status.getPopulationHistorical);
+
+  app.get('/api/amazon/product/:asin', amazon.getProduct);
+  app.get('/api/amazon/redirect/:asin', amazon.getRedirectUrl);
 
   app.get('/views/*', function(req, res)
   {

@@ -129,12 +129,13 @@
                     | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
                   .sp__share-btn
                     | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'></a>
-            discord-button
-          div(ng-class="{'col-md-8': vm.compare}" style="margin-top: 54px;")
-            .sp__ad
-              adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4506274043" ad-format="auto" css-style="display:block;")
+            mm-product(asin="B015WKY3IM")
+          //- div(ng-class="{'col-md-8': vm.compare}" style="margin-top: 54px;")
+            //- .sp__ad
+            //-   adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4506274043" ad-format="auto" css-style="display:block;")
               
       .col-md-2.col-sm-1
+        discord-button
         .sp__ad(ng-if="!vm.compare")
           adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;")  
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")

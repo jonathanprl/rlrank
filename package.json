@@ -31,6 +31,7 @@
     "stream-series": "^0.1.1"
   },
   "dependencies": {
+    "amazon-product-api": "^0.3.10",
     "bluebird": "^3.3.3",
     "body-parser": "^1.14.2",
     "cheerio": "^0.20.0",
