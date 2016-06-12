@@ -89,6 +89,7 @@
                 span.hidden-xs {{ playlist.tier | rlTier }}
                 small(ng-if="playlist.division > 0 || playlist.division === 0")  &nbsp;
                   strong DIV&nbsp;
+                  | {{ playlist.division | roman }}
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
