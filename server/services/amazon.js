@@ -1,23 +1,96 @@
 var amazon = require('amazon-product-api');
+var maxmind = require('maxmind');
+var path = require('path');
+
 var swiftping = require('../helpers/swiftping');
 
-var client = amazon.createClient({
-  awsId: 'AKIAJ3Z36PLOH4GGSO3A',
-  awsSecret: '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',
-  awsTag: 'rocketleaguerank-20'
-});
-
 module.exports = {
+  getClient,
   getProduct,
   getRedirectUrl
 };
 
+function getClient(req, res, next)
+{
+  var geoLookup = maxmind.open(path.normalize(__dirname + '/../resources/GeoLite2-Country.mmdb'));
+  var geo = geoLookup.get(req.ip);
+
+  var countryCode = 'US';
+
+  var amazonAffiliate = {};
+
+  if (geo && 'country' in geo)
+  {
+    countryCode = geo.country.iso_code;
+  }
+
+  switch (countryCode) {
+    case 'GB':
+      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', asin: 'B01649J65K', domain: 'webservices.amazon.co.uk' };
+      break;
+    case 'FR':
+      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      break;
+    case 'DE':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
+    case 'CA':
+      amazonAffiliate = { id: 'rocketleaguerankca-20', site: 'Amazon.ca', asin: 'B015WKY3IM', domain: 'webservices.amazon.ca' };
+      break;
+    case 'NL':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
+    case 'FI':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
+    case 'NO':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
+    case 'BE':
+      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      break;
+    case 'SE':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
+    case 'PL':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
+    case 'DK':
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      break;
+    case 'IE':
+      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', asin: 'B01649J65K', domain: 'webservices.amazon.co.uk' };
+      break;
+    case 'ES':
+      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      break;
+    case 'IT':
+      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      break;
+    default:
+      amazonAffiliate = { id: 'rocketleaguerank-20', site: 'Amazon.com', asin: 'B015WKY3IM', domain: 'webservices.amazon.com' };
+      break;
+  }
+
+  res.locals.amazon = amazonAffiliate;
+
+  res.locals.amazon.client = amazon.createClient({
+    awsId: 'AKIAJ3Z36PLOH4GGSO3A',
+    awsSecret: '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',
+    awsTag: amazonAffiliate.id
+  });
+
+  next();
+}
+
 function getProduct(req, res)
 {
+  var client = res.locals.amazon.client;
   client.itemLookup({
     idType: 'ASIN',
-    itemId: req.params.asin,
-    responseGroup: 'ItemAttributes,Images,OfferSummary'
+    itemId: res.locals.amazon.asin,
+    responseGroup: 'ItemAttributes,Images,OfferSummary',
+    domain: res.locals.amazon.domain
   }).then(function(results){
     var product = results[0];
     res.send({
@@ -26,7 +99,7 @@ function getProduct(req, res)
       images: product.ImageSets[0].ImageSet.map(function(imageSet) { return imageSet.LargeImage[0].URL[0]; }),
       link: '/amazon/redirect/' + product.ASIN[0],
       price: product.OfferSummary[0].LowestNewPrice[0].FormattedPrice[0],
-      source: 'Amazon.com'
+      source: res.locals.amazon.site
     });
   }).catch(function(err){
     swiftping.logger('error', 'amazon', 'Error looking up item.', err);
@@ -36,10 +109,13 @@ function getProduct(req, res)
 
 function getRedirectUrl(req, res)
 {
+  var client = res.locals.amazon.client;
+
   client.itemLookup({
     idType: 'ASIN',
     itemId: req.params.asin,
-    responseGroup: ''
+    responseGroup: '',
+    domain: res.locals.amazon.domain
   }).then(function(results){
     swiftping.logger('info', 'amazon', 'Redirecting to Amazon!', results[0].DetailPageURL[0]);
     res.send(results[0].DetailPageURL[0]);

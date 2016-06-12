@@ -43,6 +43,7 @@
     "html2canvas": "^0.5.0-beta4",
     "jade": "^1.11.0",
     "lodash": "^4.0.0",
+    "maxmind": "^1.1.0",
     "moment": "^2.13.0",
     "mongodb": "^2.1.4",
     "mongojs": "^2.2.2",

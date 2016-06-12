@@ -21,6 +21,7 @@ app.set('view engine', 'jade');
 app.use(require('prerender-node').set('prerenderToken', 'It894S0HIa5KY4kogyI2'));
 app.use(bodyParser.json());
 app.use(express.static(path.normalize(__dirname + '/../public')));
+app.enable('trust proxy');
 
 app.use(passport.initialize());
 passport.serializeUser(function(user, done) {

@@ -1,5 +1,5 @@
+h4 Want to improve your Skill Rating?
 .sp__mm-amz
-  h4 Want to improve your Skill Rating?
   p We recommend using the:
   p.lead.text-center SteelSeries Stratus XL
     br
@@ -13,5 +13,5 @@
       a(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank")
         img(ng-src="{{ product.images[product.images.length - 1] }}")
   a.btn.btn-primary.btn-block(ng-href="{{ product.link }}" title="{{ product.title }}" style="margin-top:15px")
-    | Shop now at Amazon&nbsp;
+    | Shop now at {{ product.source }}&nbsp;
     sup <small><i class="fa fa-external-link" aria-hidden="true"></i></small>
