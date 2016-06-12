@@ -33,6 +33,7 @@
 
         vm.players[0] = player;
         TitleSvc.setTitle(player.profile.display_name);
+        TitleSvc.setDescription(player.profile.display_name + ' ranking and statistics. Compare your own Rocket League rank with ' + player.profile.display_name + ' and view historical MMR, global leaderboards, rank tiers and server status.');
 
         if ($routeParams.rlrank_id2)
         {
@@ -47,6 +48,7 @@
 
               vm.players[1] = player;
               TitleSvc.setTitle(vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name);
+              TitleSvc.setDescription(vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name + ' ranking and statistics. Compare your own Rocket League rank with ' + vm.players[0].profile.display_name + ' and view historical MMR, global leaderboards, rank tiers and server status.');
               vm.shareText = vm.players[0].profile.display_name + ' vs ' + vm.players[1].profile.display_name + ' - Rocket League rank and stats lookup';
             }
           );

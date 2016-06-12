@@ -1,7 +1,7 @@
 (function() {
   angular
     .module('app')
-    .controller('StatusController', ['ApiSvc', 'RouteSvc', 'TitleSvc', 'moment', '$interval', function(ApiSvc, RouteSvc, TitleSvc, moment, $interval) {
+    .controller('StatusController', ['ApiSvc', 'RouteSvc', 'moment', '$interval', function(ApiSvc, RouteSvc, moment, $interval) {
         'use strict';
 
         var vm = this;
@@ -10,7 +10,6 @@
 
         (function()
         {
-          TitleSvc.setTitle('Server Status');
           getStatus();
           $interval(function() {
             getStatus();

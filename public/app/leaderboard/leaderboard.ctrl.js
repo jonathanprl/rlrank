@@ -13,10 +13,10 @@
         vm.leaderboards = {};
         vm.limit = 50;
         vm.sort = {
-          10: "-mmr",
-          11: "-mmr",
-          12: "-mmr",
-          13: "-mmr"
+          10: '-mmr',
+          11: '-mmr',
+          12: '-mmr',
+          13: '-mmr'
         };
 
         ApiSvc.getLeaderboards()

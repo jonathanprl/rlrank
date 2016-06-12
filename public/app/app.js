@@ -17,7 +17,8 @@ function app($routeProvider, $locationProvider)
       controller: 'LeaderboardController as vm',
       activeSection: 'leaderboard',
       data: {
-        pageTitle: 'Leaderboards'
+        pageTitle: 'Global Leaderboards',
+        pageDescription: 'Global top 200 Rocket League players MMR, ranks and statistics. Compare your own rank with the leaders by viewing their profiles!'
       }
     })
     .when('/status', {
@@ -25,7 +26,8 @@ function app($routeProvider, $locationProvider)
       controller: 'StatusController as vm',
       activeSection: 'status',
       data: {
-        pageTitle: 'Server Status'
+        pageTitle: 'Server Status',
+        pageDescription: 'Status of the official Rocket League servers.'
       }
     })
     .when('/about', {
@@ -73,7 +75,8 @@ function app($routeProvider, $locationProvider)
       controller: 'PagesController as vm',
       data: {
         activeSection: 'ranks',
-        pageTitle: 'Rocket League Ranking Tiers'
+        pageTitle: 'Rocket League Ranking Tiers',
+        pageDescription: 'Skill rating and MMR breakdown of current Rocket League ranking system. Find out when you will be promoted to the next tier or division.'
       }
     })
     .when('/statistics', {
@@ -135,6 +138,11 @@ function run($rootScope, TitleSvc, Analytics, $FB) {
   $rootScope.$on('$routeChangeStart',
     function(event, next, current)
     {
+      if ('data' in next && 'pageDescription' in next.data && next.data.pageDescription != 'default')
+      {
+        TitleSvc.setDescription(next.data.pageDescription);
+      }
+
       if ('data' in next && 'pageTitle' in next.data && next.data.pageTitle != 'default')
       {
         TitleSvc.setTitle(next.data.pageTitle);
@@ -143,6 +151,7 @@ function run($rootScope, TitleSvc, Analytics, $FB) {
       {
         TitleSvc.setDefault();
       }
+
       Object.keys(window).filter(function(k) { return k.indexOf('google') >= 0 }).forEach(
         function(key) {
           delete(window[key]);
