@@ -11,7 +11,6 @@ module.exports = {
 
 function getProfileByGamertag(gamertag, callback)
 {
-  console.log(gamertag, 'gt');
   db.findOneWhere('xboxProfiles', { Gamertag: gamertag.toLowerCase() }, {}, function(err, doc) {
     if (err)
     {
@@ -63,7 +62,7 @@ function getProfileByXuid(xuid, callback)
 
     }).on('error', function(err) {
       swiftping.logger('critical', 'xbox', 'Xboxapi.com PROFILE error.');
-      console.log(gamertag, err);
+      console.log(xuid, err);
       return callback({code: 'server_error', msg: 'There was a problem fetching your Xbox profile. Devs have been notified!'});
     });
 }
