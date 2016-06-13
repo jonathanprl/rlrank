@@ -26,9 +26,9 @@ function getProfileByGamertag(gamertag, callback)
 
     swiftping.logger('info', 'xbox', 'Xbox profile not found in DB. Fetching from xboxapi.com.', err);
     getXuidByGamertag(gamertag, function(err, xuid) {
-      if (err) callback(err);
+      if (err) return callback(err);
       getProfileByXuid(xuid, function(err, profile) {
-        if (err) callback(err);
+        if (err) return callback(err);
         profile.Gamertag = profile.Gamertag.toLowerCase();
         db.insert('xboxProfiles', profile, function(err, doc) {
           if (err)
