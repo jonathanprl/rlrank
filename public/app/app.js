@@ -1,5 +1,5 @@
 angular
-  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment', 'djds4rce.angular-socialshare', 'spAdsense'])
+  .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment', 'djds4rce.angular-socialshare', 'spAdsense', 'btford.markdown'])
   .config(['$routeProvider', '$locationProvider', app])
   .config(['AnalyticsProvider', analyticsProvider])
   .run(['$rootScope', 'TitleSvc', 'Analytics', '$FB', run]);
@@ -103,6 +103,14 @@ function app($routeProvider, $locationProvider)
       templateUrl: '/views/amazon/redirect',
       controller: 'AmazonController as vm',
       activeSection: 'amazon',
+      data: {
+        pageTitle: 'default'
+      }
+    })
+    .when('/blog', {
+      templateUrl: '/views/blog/blog',
+      controller: 'BlogController as vm',
+      activeSection: 'blog',
       data: {
         pageTitle: 'default'
       }

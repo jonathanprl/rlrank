@@ -1,0 +1,17 @@
+.sp__wrapper  
+  .container  
+    .row
+      .col-md-8
+        .sp__blog-post(ng-repeat="post in vm.posts")
+          .row
+            .col-md-9
+              h1 {{ post.title }}
+            .col-md-3
+              h5
+                | 1st June 2016 23:04
+                br
+                | By Jonathan
+          h3 {{ post.sub_title }}
+          div(btf-markdown="post.content")
+      .col-md-4
+        | Sidebar

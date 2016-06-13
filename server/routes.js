@@ -9,6 +9,7 @@ var stats = require('./controllers/stats');
 var statistics = require('./controllers/statistics');
 var status = require('./controllers/status');
 var profile = require('./controllers/profile');
+var blog = require('./controllers/blog');
 
 var psyonix = require('./services/psyonix');
 var cron = require('./services/cron');
@@ -68,6 +69,8 @@ module.exports = function(app)
 
   app.get('/api/amazon/product/:asin', amazon.getClient, amazon.getProduct);
   app.get('/api/amazon/redirect/:asin', amazon.getClient, amazon.getRedirectUrl);
+
+  app.get('/api/blog/posts', blog.getPosts);
 
   app.get('/views/*', function(req, res)
   {
