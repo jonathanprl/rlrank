@@ -54,14 +54,16 @@ function getProfileByXuid(xuid, callback)
     }).on('complete', function(profile) {
       if (profile.code)
       {
-        swiftping.logger('critical', 'xbox', 'Xboxapi.com PROFILE error.', {xuid: xuid, xboxapiError: profile});
+        swiftping.logger('critical', 'xbox', 'Xboxapi.com PROFILE error.');
+        console.log(xuid, profile);
         return callback({code: 'server_error', msg: 'There was a problem fetching your Xbox profile. Devs have been notified!'});
       }
 
       callback(null, profile);
 
     }).on('error', function(err) {
-      swiftping.logger('critical', 'xbox', 'Xboxapi.com PROFILE error.', {gamertag: gamertag, xboxapiError: err});
+      swiftping.logger('critical', 'xbox', 'Xboxapi.com PROFILE error.');
+      console.log(gamertag, err);
       return callback({code: 'server_error', msg: 'There was a problem fetching your Xbox profile. Devs have been notified!'});
     });
 }
@@ -77,14 +79,15 @@ function getXuidByGamertag(gamertag, callback)
     }).on('complete', function(xuid) {
       if (xuid.success === false)
       {
-        swiftping.logger('info', 'xbox', 'Invalid Gamertag.', xuid);
+        swiftping.logger('info', 'xbox', 'Invalid Gamertag.');
         return callback({code: 'invalid_gamertag', msg: 'No Xbox profile could be found for that Gamertag.'});
       }
 
       callback(null, xuid);
 
     }).on('error', function(err) {
-      swiftping.logger('critical', 'xbox', 'Xboxapi.com error.', {gamertag: gamertag, xboxapiError: err});
+      swiftping.logger('critical', 'xbox', 'Xboxapi.com error.');
+      console.log(gamertag, err);
       return callback({code: 'server_error', msg: 'There was a problem fetching your Xbox profile. Devs have been notified!'});
     });
 }
