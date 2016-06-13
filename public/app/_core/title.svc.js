@@ -33,7 +33,7 @@
 
     function setDescription(description)
     {
-      console.log($('meta[name="description"]').attr('content', description));
+      $('meta[name="description"]').attr('content', description);
     }
   };
 }());
