@@ -92,7 +92,6 @@ function getClient(req, res, next)
 
 function getProduct(req, res)
 {
-  console.log(req.params.code);
   db.findOneWhere('amazon', {code: req.params.code}, {}, function(err, doc) {
     if (err)
     {
@@ -123,7 +122,6 @@ function getProduct(req, res)
       });
     }).catch(function(err){
       swiftping.logger('error', 'amazon', 'Error looking up item.', err);
-      console.log(err.Error[0].Message);
       res.status(500).send({code: 'server_error', msg: 'Error connecting to Amazon servers.'});
     });
   });
