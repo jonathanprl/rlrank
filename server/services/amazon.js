@@ -16,7 +16,7 @@ function getClient(req, res, next)
   var geoLookup = maxmind.open(path.normalize(__dirname + '/../resources/GeoLite2-Country.mmdb'));
   var geo = geoLookup.get(req.ip);
 
-  var countryCode = 'US';
+  var countryCode = 'GB';
 
   var amazonAffiliate = {};
 
@@ -117,7 +117,6 @@ function getProduct(req, res)
         images: product.ImageSets[0].ImageSet.map(function(imageSet) { return imageSet.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'); }),
         link: '/amazon/redirect/' + product.ASIN[0],
         price: product.OfferSummary[0].LowestNewPrice[0].FormattedPrice[0],
-        used_price: product.OfferSummary[0].LowestUsedPrice[0].FormattedPrice[0],
         source: res.locals.amazon.site
       });
     }).catch(function(err){
