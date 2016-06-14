@@ -18,7 +18,7 @@
 
     function linkFn(scope, element, attrs)
     {
-      AmazonSvc.getProduct(attrs.asin)
+      AmazonSvc.getProduct(attrs.code)
         .then(function(response) {
           scope.product = response.data;
           Analytics.trackEvent('amazon', 'impression', response.data.source);

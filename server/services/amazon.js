@@ -99,9 +99,9 @@ function getProduct(req, res)
       swiftping.logger('error', 'amazon', 'Error retrieving product ASINs from DB', {code: code, mongoError: err});
     }
 
-    if (doc.length === 0)
+    if (!doc || doc.length === 0)
     {
-      res.status(404).send({code: 'not_found', msg: 'Code not found.'});
+      return res.status(404).send({code: 'not_found', msg: 'Code not found.'});
     }
 
     var client = res.locals.amazon.client;
