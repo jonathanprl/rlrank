@@ -27,7 +27,7 @@ function getClient(req, res, next)
 
   switch (countryCode) {
     case 'GB':
-      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', domain: 'webservices.amazon.co.uk', country_code: 'UK' };
+      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', domain: 'webservices.amazon.co.uk', country_code: 'GB' };
       break;
     case 'FR':
       amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', domain: 'webservices.amazon.fr', country_code: 'FR' };
