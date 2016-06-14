@@ -1,17 +1,21 @@
 .sp__wrapper  
-  .container  
+  .container
+    sp-header(page-title="Rocket League Rank Blog" sub-title="Tips on how to build your Rocket League stats and climb the rankings.")
     .row
-      .col-md-8
-        .sp__blog-post(ng-repeat="post in vm.posts")
-          .row
-            .col-md-9
-              h1 {{ post.title }}
-            .col-md-3
-              h5
-                | 1st June 2016 23:04
-                br
-                | By Jonathan
-          h3 {{ post.sub_title }}
-          div(btf-markdown="post.content")
+      .col-md-2
+        h4.text-center Advertisement
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;")
+      .col-md-6
+        article.sp__blog-post(itemscope itemtype="http://schema.org/NewsArticle" ng-repeat="post in vm.posts")
+          header
+            h1(itemprop="name") {{ post.title }}
+            p
+              span(itemprop="by-author") By Jonathan Lambert
+              | &nbsp;/&nbsp;
+              time(itemprop="datePublished" datetime="{{ post.published_at }}") {{ post.published_at | amTimeAgo}}
+            h2(itemprop="headline") {{ post.sub_title }}
+          section
+            div(itemprop="articleBody" btf-markdown="post.content")
       .col-md-4
-        | Sidebar
+        h4.text-center Advertisement
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;")

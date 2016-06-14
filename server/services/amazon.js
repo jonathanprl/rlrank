@@ -2,6 +2,7 @@ var amazon = require('amazon-product-api');
 var maxmind = require('maxmind');
 var path = require('path');
 
+var db = require('../db');
 var swiftping = require('../helpers/swiftping');
 
 module.exports = {
@@ -26,55 +27,55 @@ function getClient(req, res, next)
 
   switch (countryCode) {
     case 'GB':
-      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', asin: 'B01649J65K', domain: 'webservices.amazon.co.uk' };
+      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', domain: 'webservices.amazon.co.uk', country_code: 'UK' };
       break;
     case 'FR':
-      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', domain: 'webservices.amazon.fr', country_code: 'FR' };
       break;
     case 'DE':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'CH':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'CA':
-      amazonAffiliate = { id: 'rocketleaguerankca-20', site: 'Amazon.ca', asin: 'B015WKY3IM', domain: 'webservices.amazon.ca' };
+      amazonAffiliate = { id: 'rocketleaguerankca-20', site: 'Amazon.ca', domain: 'webservices.amazon.ca', country_code: 'CA' };
       break;
     case 'NL':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'FI':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'NO':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'BE':
-      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', asin: 'B01649J65K', domain: 'webservices.amazon.fr' };
+      amazonAffiliate = { id: 'rocketleaguerankfr-21', site: 'Amazon.fr', domain: 'webservices.amazon.fr', country_code: 'FR' };
       break;
     case 'SE':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'PL':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'DK':
-      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', asin: 'B01649J65K', domain: 'webservices.amazon.de' };
+      amazonAffiliate = { id: 'rocketleaguerankde-21', site: 'Amazon.de', domain: 'webservices.amazon.de', country_code: 'DE' };
       break;
     case 'IE':
-      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', asin: 'B01649J65K', domain: 'webservices.amazon.co.uk' };
+      amazonAffiliate = { id: 'rocketleaguerank-21', site: 'Amazon.co.uk', domain: 'webservices.amazon.co.uk', country_code: 'UK' };
       break;
     case 'ES':
-      amazonAffiliate = { id: 'rocketleaguerankes-21', site: 'Amazon.es', asin: 'B01649J65K', domain: 'webservices.amazon.es' };
+      amazonAffiliate = { id: 'rocketleaguerankes-21', site: 'Amazon.es', domain: 'webservices.amazon.es', country_code: 'ES' };
       break;
     case 'PT':
-      amazonAffiliate = { id: 'rocketleaguerankes-21', site: 'Amazon.es', asin: 'B01649J65K', domain: 'webservices.amazon.es' };
+      amazonAffiliate = { id: 'rocketleaguerankes-21', site: 'Amazon.es', domain: 'webservices.amazon.es', country_code: 'ES' };
       break;
     case 'IT':
-      amazonAffiliate = { id: 'rocketleaguerankit-21', site: 'Amazon.it', asin: 'B01649J65K', domain: 'webservices.amazon.it' };
+      amazonAffiliate = { id: 'rocketleaguerankit-21', site: 'Amazon.it', domain: 'webservices.amazon.it', country_code: 'IT' };
       break;
     default:
-      amazonAffiliate = { id: 'rocketleaguerank-20', site: 'Amazon.com', asin: 'B015WKY3IM', domain: 'webservices.amazon.com' };
+      amazonAffiliate = { id: 'rocketleaguerank-20', site: 'Amazon.com', domain: 'webservices.amazon.com', country_code: 'US' };
       break;
   }
 
@@ -91,25 +92,40 @@ function getClient(req, res, next)
 
 function getProduct(req, res)
 {
-  var client = res.locals.amazon.client;
-  client.itemLookup({
-    idType: 'ASIN',
-    itemId: res.locals.amazon.asin,
-    responseGroup: 'ItemAttributes,Images,OfferSummary',
-    domain: res.locals.amazon.domain
-  }).then(function(results){
-    var product = results[0];
-    res.send({
-      name: product.ItemAttributes[0].Title[0],
-      image: product.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'),
-      images: product.ImageSets[0].ImageSet.map(function(imageSet) { return imageSet.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'); }),
-      link: '/amazon/redirect/' + product.ASIN[0],
-      price: product.OfferSummary[0].LowestNewPrice[0].FormattedPrice[0],
-      source: res.locals.amazon.site
+  console.log(req.params.code);
+  db.findOneWhere('amazon', {code: req.params.code}, {}, function(err, doc) {
+    if (err)
+    {
+      swiftping.logger('error', 'amazon', 'Error retrieving product ASINs from DB', {code: code, mongoError: err});
+    }
+
+    if (doc.length === 0)
+    {
+      res.status(404).send({code: 'not_found', msg: 'Code not found.'});
+    }
+
+    var client = res.locals.amazon.client;
+    client.itemLookup({
+      idType: 'ASIN',
+      itemId: doc.asin[res.locals.amazon.country_code],
+      responseGroup: 'ItemAttributes,Images,OfferSummary',
+      domain: res.locals.amazon.domain
+    }).then(function(results){
+      var product = results[0];
+      res.send({
+        name: product.ItemAttributes[0].Title[0],
+        image: product.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'),
+        images: product.ImageSets[0].ImageSet.map(function(imageSet) { return imageSet.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'); }),
+        link: '/amazon/redirect/' + product.ASIN[0],
+        price: product.OfferSummary[0].LowestNewPrice[0].FormattedPrice[0],
+        used_price: product.OfferSummary[0].LowestUsedPrice[0].FormattedPrice[0],
+        source: res.locals.amazon.site
+      });
+    }).catch(function(err){
+      swiftping.logger('error', 'amazon', 'Error looking up item.', err);
+      console.log(err.Error[0].Message);
+      res.status(500).send({code: 'server_error', msg: 'Error connecting to Amazon servers.'});
     });
-  }).catch(function(err){
-    swiftping.logger('error', 'amazon', 'Error looking up item.', err);
-    res.status(500).send({code: 'server_error', msg: 'Error connecting to Amazon servers.'});
   });
 }
 

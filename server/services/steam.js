@@ -1,4 +1,3 @@
-var db = require('../db');
 var swiftping = require('../helpers/swiftping');
 var psyonix = require('../services/psyonix');
 var rest = require('restler');

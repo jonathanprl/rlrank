@@ -67,7 +67,7 @@ module.exports = function(app)
   app.get('/api/population', status.getPopulation);
   app.get('/api/population/historical', status.getPopulationHistorical);
 
-  app.get('/api/amazon/product/:asin', amazon.getClient, amazon.getProduct);
+  app.get('/api/amazon/product/:code', amazon.getClient, amazon.getProduct);
   app.get('/api/amazon/redirect/:asin', amazon.getClient, amazon.getRedirectUrl);
 
   app.get('/api/blog/posts', blog.getPosts);
