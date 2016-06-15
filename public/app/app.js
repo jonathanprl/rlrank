@@ -99,7 +99,7 @@ function app($routeProvider, $locationProvider)
       activeSection: 'profile',
       showMMR: true
     })
-    .when('/amazon/redirect/:asin', {
+    .when('/amazon/redirect/:code/:type', {
       templateUrl: '/views/amazon/redirect',
       controller: 'AmazonController as vm',
       activeSection: 'amazon',
@@ -107,7 +107,7 @@ function app($routeProvider, $locationProvider)
         pageTitle: 'default'
       }
     })
-    .when('/blog', {
+    .when('/blog/:seo_title?', {
       templateUrl: '/views/blog/blog',
       controller: 'BlogController as vm',
       activeSection: 'blog',
@@ -139,7 +139,8 @@ function analyticsProvider(AnalyticsProvider)
     .setAccount({
       tracker: 'UA-74393698-1',
       trackEvent: true,
-    });
+    })
+    .disableAnalytics(window.location.hostname == 'localhost');
 }
 
 function run($rootScope, TitleSvc, Analytics, $FB) {

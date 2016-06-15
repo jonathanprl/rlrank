@@ -4,6 +4,7 @@
   angular
       .module('app')
       .directive('mmProduct', ['AmazonSvc', 'Analytics', mmProduct])
+      .directive('mmBanner', ['AmazonSvc', 'Analytics', mmBanner])
       .directive('mmProductClick', ['Analytics', mmProductClick]);
 
   function mmProduct(AmazonSvc, Analytics)
@@ -22,6 +23,26 @@
         .then(function(response) {
           scope.product = response.data;
           Analytics.trackEvent('amazon', 'impression', response.data.source);
+        });
+    }
+  }
+
+  function mmBanner(AmazonSvc, Analytics)
+  {
+    var directive = {
+      restrict: 'E',
+      templateUrl: '/views/amazon/banner',
+      link: linkFn
+    };
+
+    return directive;
+
+    function linkFn(scope, element, attrs)
+    {
+      AmazonSvc.getBanner(attrs.code)
+        .then(function(response) {
+          scope.banner = response.data;
+          Analytics.trackEvent('amazon', 'impression', response.data.link);
         });
     }
   }

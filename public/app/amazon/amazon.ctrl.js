@@ -9,8 +9,7 @@
 
     var vm = this;
 
-    Analytics.trackEvent('amazon', 'redirect', $routeParams.asin);
-    AmazonSvc.getRedirectUrl($routeParams.asin)
+    AmazonSvc.getRedirectUrl($routeParams.code, $routeParams.type)
       .then(function(response) {
         $window.location = response.data;
       });

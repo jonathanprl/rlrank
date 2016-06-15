@@ -9,6 +9,7 @@
 
     return {
       getProduct: getProduct,
+      getBanner: getBanner,
       getRedirectUrl: getRedirectUrl,
       shortcodes: shortcodes
     };
@@ -18,9 +19,14 @@
       return $http.get('/api/amazon/product/' + encodeURIComponent(code));
     }
 
-    function getRedirectUrl(asin)
+    function getBanner(code)
     {
-      return $http.get('/api/amazon/redirect/' + encodeURIComponent(asin));
+      return $http.get('/api/amazon/banner/' + encodeURIComponent(code));
+    }
+
+    function getRedirectUrl(code, type)
+    {
+      return $http.get('/api/amazon/redirect/' + encodeURIComponent(code) + '/' + encodeURIComponent(type));
     }
 
     function shortcodes(content, callback)
@@ -60,15 +66,15 @@
       {
         if (shortcode.indexOf('AMAZON_PRICE=') > -1)
         {
-          return content.replace(shortcode, '[' + product.price + '](' + product.link + ' "' + product.name + '"){:rel="nofollow"}');
+          return content.replace(shortcode, '<a href="' + product.link + '" title="' + product.name + '" rel="nofollow">' + product.price + '</a>');
         }
         else if (shortcode.indexOf('AMAZON_PRICE_USED=') > -1)
         {
-          return content.replace(shortcode, '[' + product.used_price + '](' + product.link + ' "' + product.name + '"){:rel="nofollow"}');
+          return content.replace(shortcode, '<a href="' + product.link + '" title="' + product.name + '" rel="nofollow">' + product.used_price + '</a>');
         }
         else if (shortcode.indexOf('AMAZON_SOURCE=') > -1)
         {
-          return content.replace(shortcode, '[' + product.source + '](' + product.link + ' "' + product.name + '"){:rel="nofollow"}');
+          return content.replace(shortcode, '<a href="' + product.link + '" title="' + product.name + '" rel="nofollow">' + product.source + '</a>');
         }
       }
     }

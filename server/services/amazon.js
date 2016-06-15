@@ -8,6 +8,7 @@ var swiftping = require('../helpers/swiftping');
 module.exports = {
   getClient,
   getProduct,
+  getBanner,
   getRedirectUrl
 };
 
@@ -16,7 +17,7 @@ function getClient(req, res, next)
   var geoLookup = maxmind.open(path.normalize(__dirname + '/../resources/GeoLite2-Country.mmdb'));
   var geo = geoLookup.get(req.ip);
 
-  var countryCode = 'GB';
+  var countryCode = 'US';
 
   var amazonAffiliate = {};
 
@@ -92,10 +93,11 @@ function getClient(req, res, next)
 
 function getProduct(req, res)
 {
-  db.findOneWhere('amazon', {code: req.params.code}, {}, function(err, doc) {
+  db.findOneWhere('amazon', {code: req.params.code, type: 'product'}, {}, function(err, doc) {
     if (err)
     {
       swiftping.logger('error', 'amazon', 'Error retrieving product ASINs from DB', {code: code, mongoError: err});
+      res.status(500).send({code: 'server_error', msg: 'There was an error.'});
     }
 
     if (!doc || doc.length === 0)
@@ -115,7 +117,7 @@ function getProduct(req, res)
         name: product.ItemAttributes[0].Title[0],
         image: product.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'),
         images: product.ImageSets[0].ImageSet.map(function(imageSet) { return imageSet.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'); }),
-        link: '/amazon/redirect/' + product.ASIN[0],
+        link: '/amazon/redirect/' + product.ASIN[0] + '/product',
         price: product.OfferSummary[0].LowestNewPrice[0].FormattedPrice[0],
         source: res.locals.amazon.site
       });
@@ -126,20 +128,62 @@ function getProduct(req, res)
   });
 }
 
+function getBanner(req, res)
+{
+  db.findOneWhere('amazon', {code: req.params.code, type: 'banner'}, {}, function(err, doc) {
+    if (err)
+    {
+      swiftping.logger('error', 'amazon', 'Error retrieving banners from DB', {code: code, mongoError: err});
+      return res.status(500).send({code: 'server_error', msg: 'There was an error.'});
+    }
+
+    if (!doc || doc.length === 0)
+    {
+      return res.status(404).send({code: 'not_found', msg: 'Code not found.'});
+    }
+
+    res.send({
+      link: '/amazon/redirect/' + req.params.code + '/banner',
+      image: doc.images[res.locals.amazon.country_code],
+      title: doc.titles[res.locals.amazon.country_code]
+    });
+  });
+}
+
 function getRedirectUrl(req, res)
 {
-  var client = res.locals.amazon.client;
+  if (req.params.type == 'banner')
+  {
+    db.findOneWhere('amazon', {code: req.params.code, type: 'banner'}, {}, function(err, doc) {
+      if (err)
+      {
+        swiftping.logger('error', 'amazon', 'Error retrieving banners from DB', {code: code, mongoError: err});
+        return res.status(500).send({code: 'server_error', msg: 'There was an error.'});
+      }
 
-  client.itemLookup({
-    idType: 'ASIN',
-    itemId: req.params.asin,
-    responseGroup: '',
-    domain: res.locals.amazon.domain
-  }).then(function(results){
-    swiftping.logger('info', 'amazon', 'Redirecting to Amazon!', results[0].DetailPageURL[0]);
-    res.send(results[0].DetailPageURL[0]);
-  }).catch(function(err){
-    swiftping.logger('critical', 'amazon', 'Could not redirect to Amazon', err);
-    res.status(500).send({code: 'server_error', msg: 'Error connecting to Amazon servers.'});
-  });
+      if (!doc || doc.length === 0)
+      {
+        return res.status(404).send({code: 'not_found', msg: 'Code not found.'});
+      }
+
+      res.send(doc.links[res.locals.amazon.country_code]);
+    });
+  }
+  else if (req.params.type == 'product')
+  {
+    var client = res.locals.amazon.client;
+
+    client.itemLookup({
+      idType: 'ASIN',
+      itemId: req.params.code,
+      responseGroup: '',
+      domain: res.locals.amazon.domain
+    }).then(function(results){
+      swiftping.logger('info', 'amazon', 'Redirecting to Amazon!', results[0].DetailPageURL[0]);
+      res.send(results[0].DetailPageURL[0]);
+    }).catch(function(err){
+      swiftping.logger('critical', 'amazon', 'Could not redirect to Amazon', err);
+      res.status(500).send('/');
+    });
+  }
 }
