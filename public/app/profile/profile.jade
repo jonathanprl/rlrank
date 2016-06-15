@@ -46,8 +46,7 @@
                   | {{ playlist.mmr || 100 }}
                 rank-graph.sp_profile-graph(ng-if="vm.players[0].playlistsHistorical" playlists="vm.players[0].playlistsHistorical" playlist="playlist")
         p.sp__table-note * Promotion/Demotion indicators are only an estimation and may not be entirely accurate. <a href="/rank-tiers" title="Rocket League Rank Tiers">Click here</a> to view tiers
-        .sp__ad
-          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;")
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;" full-width="true")
         h4 Stats
         table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[0].stats")
           thead
@@ -98,8 +97,7 @@
                   | {{ playlist.mmr || 100 }}
                 rank-graph.sp_profile-graph(ng-if="vm.players[1].playlistsHistorical" playlists="vm.players[1].playlistsHistorical" playlist="playlist")
         p.sp__table-note(ng-if="vm.players[1].playlists") * Promotion/Demotion indicators are only an estimation and may not be entirely accurate. <a href="/rank-tiers" title="Rocket League Rank Tiers">Click here</a> to view tiers
-        .sp__ad
-          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;")
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;" full-width="true")
         h4(ng-if="vm.players[1].stats") Stats
         table.table.table-responsive.sp__table.profile__stats(ng-if="vm.players[1].stats")
           thead
@@ -136,6 +134,5 @@
               
       .col-md-2.col-sm-1
         discord-button
-        .sp__ad(ng-if="!vm.compare")
-          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;")  
+        adsense-directive(ng-if="!vm.compare" ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;" full-width="true")  
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")

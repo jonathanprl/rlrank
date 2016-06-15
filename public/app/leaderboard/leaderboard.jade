@@ -26,8 +26,7 @@
                   a(ng-if="player.username" ng-title="player.username" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
                 td
                   span(ng-if="player.mmr") {{ player.mmr }}
-      .sp__mm-full
-        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="8743487243" ad-format="auto" css-style="display:block;")
+      adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="8743487243" ad-format="auto" css-style="display:block;" full-width="true")
       .row
         .col-lg-3.col-md-4.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:4")
           table.table.table-responsive.sp__table
@@ -46,5 +45,4 @@
                   
       button.btn.btn-info.btn-block.hidden-xs.hidden-sm(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More
       
-      .sp__mm-full
-        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5407597647" ad-format="auto" css-style="display:block;")
+      adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5407597647" ad-format="auto" css-style="display:block;" full-width="true")

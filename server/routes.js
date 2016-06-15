@@ -2,6 +2,7 @@ var passport = require('passport');
 var SteamStrategy = require('passport-steam').Strategy;
 
 var config = require('../config');
+var db = require('./db');
 
 var rank = require('./controllers/rank');
 var leaderboard = require('./controllers/leaderboard');
@@ -69,6 +70,16 @@ module.exports = function(app)
 
   app.get('/api/amazon/product/:code', amazon.getClient, amazon.getProduct);
   app.get('/api/amazon/redirect/:asin', amazon.getClient, amazon.getRedirectUrl);
+
+  app.get('/api/mm/status', function(req, res) {
+    db.findOneWhere('config', {_id: 'adverts'}, {_id: 0}, function(err, doc) {
+      if (err)
+      {
+        res.sendStatus(400);
+      }
+      res.send(doc);
+    });
+  });
 
   app.get('/api/blog/posts', blog.getPosts);
 

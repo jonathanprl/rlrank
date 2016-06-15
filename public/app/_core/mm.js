@@ -3,7 +3,7 @@
  * @author Peter Szrnka (szrnka.peter@gmail.com)
  * @version 1.2
  */
-var ngAdSense = angular.module('spAdsense', []);
+var ngAdSense = angular.module('app');
 ngAdSense.constant('SCRIPT_URL', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js');
 /**
  * This directive is necessary for keeping track of Google Ads <script> creation.
@@ -13,36 +13,46 @@ ngAdSense.constant('SCRIPT_URL', '//pagead2.googlesyndication.com/pagead/js/adsb
  */
 ngAdSense.service('AdsenseTracker', [function()
 {
-    this.isLoaded = false;
-    this.mobileAd = false;
+  this.isLoaded = false;
+  this.mobileAd = false;
 }]);
 /**
  * This controller is necessary for handling the DOM manipulation.
  * @controller
  * @since 1.0
  */
-ngAdSense.controller('AdsenseController', ['SCRIPT_URL', 'AdsenseTracker', function(SCRIPT_URL, AdsenseTracker) {
+ngAdSense.controller('AdsenseController', ['SCRIPT_URL', 'AdsenseTracker', 'MmSvc', '$scope', function(SCRIPT_URL, AdsenseTracker, MmSvc, $scope) {
 
-    if (AdsenseTracker.isLoaded)
-    {
-      $('script[src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]').remove();
-    }
+  MmSvc.getStatus()
+    .then(function(response) {
+      if (!response.data.google)
+      {
+        return false;
+      }
 
-    if (AdsenseTracker.mobileAd == false)
-    {
-      (window.adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: 'ca-pub-6993069428952088',
-        enable_page_level_ads: true
-      });
-      AdsenseTracker.mobileAd = true;
-    }
+      $scope.disabled = false;
 
-    var s = document.createElement('script');
-    s.src = SCRIPT_URL;
-    document.body.appendChild(s);
-    AdsenseTracker.isLoaded = true;
+      if (AdsenseTracker.isLoaded)
+      {
+        $('script[src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]').remove();
+      }
 
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
+      if (AdsenseTracker.mobileAd == false)
+      {
+        (window.adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-6993069428952088',
+          enable_page_level_ads: true
+        });
+        AdsenseTracker.mobileAd = true;
+      }
+
+      var s = document.createElement('script');
+      s.src = SCRIPT_URL;
+      document.body.appendChild(s);
+      AdsenseTracker.isLoaded = true;
+
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    });
 }]);
 /**
  * @directive adsenseDirective
@@ -54,13 +64,20 @@ ngAdSense.directive('adsenseDirective', function() {
     return {
         restrict : 'E',
         replace : true,
-        template : '<div><ins class="adsbygoogle" style="{{cssStyle}}" data-ad-client="{{adClient}}" data-ad-slot="{{adSlot}}" data-ad-format="{{adFormat}}"></ins></div>',
+        template : '<div ng-class="{\'sp__mm-full\': fullWidth}" ng-if="!disabled"><ins class="adsbygoogle" style="{{cssStyle}}" data-ad-client="{{adClient}}" data-ad-slot="{{adSlot}}" data-ad-format="{{adFormat}}"></ins></div>',
         scope : {
             adClient : '@',
             adSlot : '@',
             adFormat : '@',
-            cssStyle : '@'
+            cssStyle : '@',
+            fullWidth: '@'
         },
+        link: linkFn,
         controller : 'AdsenseController'
     };
+
+    function linkFn(scope)
+    {
+      scope.disabled = true;
+    }
 });

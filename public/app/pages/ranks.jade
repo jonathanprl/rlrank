@@ -16,8 +16,7 @@
                     dt {{ division.division | roman }}
                     dd {{ ::division.minMMR }} - {{ ::division.maxMMR }}
           
-        .sp__mm-full(style="padding-top:10px;")
-          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="6179653649" ad-format="auto" css-style="display:block;")
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="6179653649" ad-format="auto" css-style="display:block;" full-width="true")
         .row.sp__rank-tiers
           div.col-sm-3(ng-repeat="range in vm.tierRanges | orderBy: '-' + range.tier | limitTo:20:7" ng-if="range.tier || range.tier === 0")
             .sp__rank

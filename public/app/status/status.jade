@@ -20,11 +20,9 @@
                   | {{ region.online ? 'Online' : 'Offline' }}
               td(ng-bind-html="region.ping | rlRegionPing : region.region")
               td {{ region.updatedAt | amUtc | amLocal | amDateFormat:'HH:mm' }}
-        .sp__mm-full
-          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4166366848" ad-format="auto" css-style="display:block;")
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4166366848" ad-format="auto" css-style="display:block;" full-width="true")
       .col-md-4.col-md-offset-2
-        .sp__mm-full
-          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="2287837646" ad-format="auto" css-style="display:block;")
+        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="2287837646" ad-format="auto" css-style="display:block;" full-width="true")
     .sp__mini-rank-form.visible-xs.visible-sm
       form.sp__rank-form
         .form-group
