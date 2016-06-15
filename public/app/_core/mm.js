@@ -64,7 +64,7 @@ ngAdSense.directive('adsenseDirective', function() {
     return {
         restrict : 'E',
         replace : true,
-        template : '<div ng-class="{\'sp__mm-full\': fullWidth}" ng-if="!disabled"><ins class="adsbygoogle" style="{{cssStyle}}" data-ad-client="{{adClient}}" data-ad-slot="{{adSlot}}" data-ad-format="{{adFormat}}"></ins></div>',
+        template : '<div><div ng-class="{\'sp__mm-full\': fullWidth}" ng-if="!disabled"><ins class="adsbygoogle" style="{{cssStyle}}" data-ad-client="{{adClient}}" data-ad-slot="{{adSlot}}" data-ad-format="{{adFormat}}"></ins></div></div>',
         scope : {
             adClient : '@',
             adSlot : '@',
