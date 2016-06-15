@@ -60,15 +60,15 @@
       {
         if (shortcode.indexOf('AMAZON_PRICE=') > -1)
         {
-          return content.replace(shortcode, '[' + product.price + '](' + product.link + ' "' + product.name + '")');
+          return content.replace(shortcode, '[' + product.price + '](' + product.link + ' "' + product.name + '"){:rel=nofollow}');
         }
         else if (shortcode.indexOf('AMAZON_PRICE_USED=') > -1)
         {
-          return content.replace(shortcode, '[' + product.used_price + '](' + product.link + ' "' + product.name + '")');
+          return content.replace(shortcode, '[' + product.used_price + '](' + product.link + ' "' + product.name + '"){:rel=nofollow}');
         }
         else if (shortcode.indexOf('AMAZON_SOURCE=') > -1)
         {
-          return content.replace(shortcode, '[' + product.source + '](' + product.link + ' "' + product.name + '")');
+          return content.replace(shortcode, '[' + product.source + '](' + product.link + ' "' + product.name + '"){:rel=nofollow}');
         }
       }
     }

@@ -4,14 +4,14 @@ h4(ng-if="product") Want to improve your Skill Rating?
   p.lead.text-center SteelSeries Stratus XL
     br
     small
-      a(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" mm-product-click="product") Only {{ product.price }} at {{ product.source }}
+      a(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" rel="nofollow" mm-product-click="product") Only {{ product.price }} at {{ product.source }}
   .row
     .col-md-6
-      a(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" mm-product-click="product")
+      a(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" rel="nofollow" mm-product-click="product")
         img(ng-src="{{ product.images[0] }}")
     .col-md-6
-      a(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" mm-product-click="product")
+      a(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" rel="nofollow" mm-product-click="product")
         img(ng-src="{{ product.images[product.images.length - 1] }}")
-  a.btn.btn-primary.btn-block(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" style="margin-top:15px" mm-product-click="product")
+  a.btn.btn-primary.btn-block(ng-href="{{ product.link }}" title="{{ product.title }}" target="_blank" rel="nofollow" style="margin-top:15px" mm-product-click="product")
     | Shop now at {{ product.source }}&nbsp;
     sup <small><i class="fa fa-external-link" aria-hidden="true"></i></small>
