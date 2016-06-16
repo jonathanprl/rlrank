@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', ProfileController]);
+    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', 'BlogSvc', ProfileController]);
 
-  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics)
+  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics, BlogSvc)
   {
     'use strict';
 
@@ -59,6 +59,14 @@
         }
       }
     );
+
+    BlogSvc.getPosts()
+      .then(function(response) {
+        vm.latestPost = response.data[0];
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
 
     function getPlayerDetails(rlrank_id, callback)
     {
