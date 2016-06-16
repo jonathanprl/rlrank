@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('BlogController', ['BlogSvc', 'Analytics', 'AmazonSvc', 'TitleSvc', '$routeParams', 'Analytics', BlogController]);
+    .controller('BlogController', ['BlogSvc', 'Analytics', 'AmazonSvc', 'TitleSvc', '$routeParams', BlogController]);
 
-  function BlogController(BlogSvc, Analytics, AmazonSvc, TitleSvc, $routeParams, Analytics)
+  function BlogController(BlogSvc, Analytics, AmazonSvc, TitleSvc, $routeParams)
   {
     'use strict';
 
