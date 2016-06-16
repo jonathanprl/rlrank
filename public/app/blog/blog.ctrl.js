@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('BlogController', ['BlogSvc', 'Analytics', 'AmazonSvc', 'TitleSvc', '$routeParams', BlogController]);
+    .controller('BlogController', ['BlogSvc', 'Analytics', 'AmazonSvc', 'TitleSvc', '$routeParams', 'Analytics', BlogController]);
 
-  function BlogController(BlogSvc, Analytics, AmazonSvc, TitleSvc, $routeParams)
+  function BlogController(BlogSvc, Analytics, AmazonSvc, TitleSvc, $routeParams, Analytics)
   {
     'use strict';
 
@@ -25,6 +25,8 @@
           TitleSvc.setTitle(vm.posts[0].title);
           TitleSvc.setDescription(vm.posts[0].content.substring(0,300));
         }
+        
+        Analytics.trackEvent('blog', 'view', vm.posts[0].title);
       })
       .catch(function(err) {
         console.log(err);
