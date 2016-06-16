@@ -153,7 +153,7 @@ function logger(level, subject, message, metadata)
     }
   }, {
     message: '[' + subject.toUpperCase() + ']' + ' ' + message,
-    metadata: metadata
+    metadata: JSON.stringify(metadata)
   });
 
 
