@@ -109,6 +109,14 @@ function app($routeProvider, $locationProvider, $compileProvider)
         pageTitle: 'default'
       }
     })
+    .when('/mm/redirect/:code/:type', {
+      templateUrl: '/views/amazon/mmredirect',
+      controller: 'AmazonController as vm',
+      activeSection: 'amazon',
+      data: {
+        pageTitle: 'default'
+      }
+    })
     .when('/blog/:seo_title?', {
       templateUrl: '/views/blog/blog',
       controller: 'BlogController as vm',

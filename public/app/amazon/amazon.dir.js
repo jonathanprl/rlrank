@@ -5,7 +5,8 @@
       .module('app')
       .directive('mmProduct', ['AmazonSvc', 'Analytics', mmProduct])
       .directive('mmBanner', ['AmazonSvc', 'Analytics', mmBanner])
-      .directive('mmProductClick', ['Analytics', mmProductClick]);
+      .directive('mmProductClick', ['Analytics', mmProductClick])
+      .directive('mmLoot', ['Analytics', mmLoot]);
 
   function mmProduct(AmazonSvc, Analytics)
   {
@@ -39,7 +40,7 @@
 
     function linkFn(scope, element, attrs)
     {
-      AmazonSvc.getBanner(attrs.code)
+      AmazonSvc.getBanner(attrs.code, attrs.type)
         .then(function(response) {
           scope.banner = response.data;
           Analytics.trackEvent('amazon', 'impression', response.data.link);

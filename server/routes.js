@@ -69,7 +69,8 @@ module.exports = function(app)
   app.get('/api/population/historical', status.getPopulationHistorical);
 
   app.get('/api/amazon/product/:code', amazon.getClient, amazon.getProduct);
-  app.get('/api/amazon/banner/:code', amazon.getClient, amazon.getBanner);
+  app.get('/api/amazon/banner/:code', amazon.getClient, amazon.getAmazonBanner);
+  app.get('/api/mm/banner/:code', amazon.getClient, amazon.getBanner);
   app.get('/api/amazon/redirect/:code/:type', amazon.getClient, amazon.getRedirectUrl);
 
   app.get('/api/mm/status', function(req, res) {

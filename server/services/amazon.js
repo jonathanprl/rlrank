@@ -8,6 +8,7 @@ var swiftping = require('../helpers/swiftping');
 module.exports = {
   getClient,
   getProduct,
+  getAmazonBanner,
   getBanner,
   getRedirectUrl
 };
@@ -128,9 +129,9 @@ function getProduct(req, res)
   });
 }
 
-function getBanner(req, res)
+function getAmazonBanner(req, res)
 {
-  db.findOneWhere('amazon', {code: req.params.code, type: 'banner'}, {}, function(err, doc) {
+  db.findOneWhere('amazon', {code: req.params.code, type: 'amazonBanner'}, {}, function(err, doc) {
     if (err)
     {
       swiftping.logger('error', 'amazon', 'Error retrieving banners from DB', {code: code, mongoError: err});
@@ -150,9 +151,31 @@ function getBanner(req, res)
   });
 }
 
+function getBanner(req, res)
+{
+  db.findOneWhere('amazon', {code: req.params.code, type: 'banner'}, {}, function(err, doc) {
+    if (err)
+    {
+      swiftping.logger('error', 'banner', 'Error retrieving banners from DB', {code: code, mongoError: err});
+      return res.status(500).send({code: 'server_error', msg: 'There was an error.'});
+    }
+
+    if (!doc || doc.length === 0)
+    {
+      return res.status(404).send({code: 'not_found', msg: 'Code not found.'});
+    }
+
+    res.send({
+      link: '/mm/redirect/' + req.params.code + '/banner',
+      image: doc.image,
+      title: doc.title
+    });
+  });
+}
+
 function getRedirectUrl(req, res)
 {
-  if (req.params.type == 'banner')
+  if (req.params.type == 'amazonBanner')
   {
     db.findOneWhere('amazon', {code: req.params.code, type: 'banner'}, {}, function(err, doc) {
       if (err)
@@ -167,6 +190,23 @@ function getRedirectUrl(req, res)
       }
 
       res.send(doc.links[res.locals.amazon.country_code]);
+    });
+  }
+  else if (req.params.type == 'banner')
+  {
+    db.findOneWhere('amazon', {code: req.params.code, type: 'banner'}, {}, function(err, doc) {
+      if (err)
+      {
+        swiftping.logger('error', 'banner', 'Error retrieving banners from DB', {code: code, mongoError: err});
+        return res.status(500).send({code: 'server_error', msg: 'There was an error.'});
+      }
+
+      if (!doc || doc.length === 0)
+      {
+        return res.status(404).send({code: 'not_found', msg: 'Code not found.'});
+      }
+
+      res.send(doc.link);
     });
   }
   else if (req.params.type == 'product')

@@ -19,9 +19,14 @@
       return $http.get('/api/amazon/product/' + encodeURIComponent(code));
     }
 
-    function getBanner(code)
+    function getBanner(code, type)
     {
-      return $http.get('/api/amazon/banner/' + encodeURIComponent(code));
+      if (type && type == 'A')
+      {
+        return $http.get('/api/amazon/banner/' + encodeURIComponent(code));
+      }
+
+      return $http.get('/api/mm/banner/' + encodeURIComponent(code));
     }
 
     function getRedirectUrl(code, type)
