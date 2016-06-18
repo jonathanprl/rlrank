@@ -1,12 +1,14 @@
 angular
   .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment', 'djds4rce.angular-socialshare', 'btford.markdown'])
-  .config(['$routeProvider', '$locationProvider', app])
+  .config(['$routeProvider', '$locationProvider', '$compileProvider', app])
   .config(['AnalyticsProvider', analyticsProvider])
   .run(['$rootScope', 'TitleSvc', 'Analytics', '$FB', run]);
 
-function app($routeProvider, $locationProvider)
+function app($routeProvider, $locationProvider, $compileProvider)
 {
   'use strict';
+
+  $compileProvider.debugInfoEnabled(false);
 
   // Remove hashes from URL
   $locationProvider.html5Mode(true);
