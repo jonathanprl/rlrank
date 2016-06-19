@@ -5,8 +5,7 @@
       .module('app')
       .directive('mmProduct', ['AmazonSvc', 'Analytics', mmProduct])
       .directive('mmBanner', ['AmazonSvc', 'Analytics', mmBanner])
-      .directive('mmProductClick', ['Analytics', mmProductClick])
-      .directive('mmLoot', ['Analytics', mmLoot]);
+      .directive('mmProductClick', ['Analytics', mmProductClick]);
 
   function mmProduct(AmazonSvc, Analytics)
   {
