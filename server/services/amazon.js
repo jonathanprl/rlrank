@@ -189,6 +189,7 @@ function getRedirectUrl(req, res)
         return res.status(404).send({code: 'not_found', msg: 'Code not found.'});
       }
 
+      swiftping.logger('info', 'ads', 'Redirecting to Amazon banner ' + req.params.code, doc.links[res.locals.amazon.country_code]);
       res.send(doc.links[res.locals.amazon.country_code]);
     });
   }
@@ -206,6 +207,7 @@ function getRedirectUrl(req, res)
         return res.status(404).send({code: 'not_found', msg: 'Code not found.'});
       }
 
+      swiftping.logger('info', 'ads', 'Redirecting to banner ' + req.params.code, doc.link);
       res.send(doc.link);
     });
   }
@@ -219,7 +221,7 @@ function getRedirectUrl(req, res)
       responseGroup: '',
       domain: res.locals.amazon.domain
     }).then(function(results){
-      swiftping.logger('info', 'amazon', 'Redirecting to Amazon!', results[0].DetailPageURL[0]);
+      swiftping.logger('info', 'ads', 'Redirecting to Amazon product!', results[0].DetailPageURL[0]);
       res.send(results[0].DetailPageURL[0]);
     }).catch(function(err){
       swiftping.logger('critical', 'amazon', 'Could not redirect to Amazon', err);
