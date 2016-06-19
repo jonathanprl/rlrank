@@ -123,8 +123,34 @@ function getProduct(req, res)
         source: res.locals.amazon.site
       });
     }).catch(function(err){
-      swiftping.logger('error', 'amazon', 'Error looking up item.', err);
-      res.status(500).send({code: 'server_error', msg: 'Error connecting to Amazon servers.'});
+      swiftping.logger('error', 'amazon', 'Error looking up item, trying US lookup.', {code: req.params.code, amazonLocals: res.locals.amazon, error: err});
+
+      client.itemLookup({
+        idType: 'ASIN',
+        itemId: doc.asin['US'],
+        responseGroup: 'ItemAttributes,Images,OfferSummary',
+        domain: 'webservices.amazon.com'
+      }).then(function(results){
+        var product = results[0];
+        res.send({
+          name: product.ItemAttributes[0].Title[0],
+          image: product.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'),
+          images: product.ImageSets[0].ImageSet.map(function(imageSet) { return imageSet.LargeImage[0].URL[0].replace('http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com'); }),
+          link: '/amazon/redirect/' + product.ASIN[0] + '/product',
+          price: product.OfferSummary[0].LowestNewPrice[0].FormattedPrice[0],
+          source: res.locals.amazon.site
+        });
+      }).catch(function(err){
+        swiftping.logger('error', 'amazon', 'Error looking up item (Forced US), sending blank details.', {code: req.params.code, amazonLocals: res.locals.amazon, error: err});
+        res.send({
+          name: 'N/A',
+          image: '#',
+          images: [],
+          link: '#',
+          price: 'N/A',
+          source: res.locals.amazon.site
+        });
+      });
     });
   });
 }
