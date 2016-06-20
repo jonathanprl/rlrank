@@ -121,7 +121,8 @@ function getUpdatedPlayerRanks(rlrank_id, callback)
                 tier: parseInt(result.Tier),
                 division: parseInt(result.Division),
                 matches_played: parseInt(result.MatchesPlayed),
-                mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR))
+                mmr: parseFloat(swiftping.MMRToSkillRating(result.MMR)),
+                season: 3
               };
 
               ranks.push(data);
