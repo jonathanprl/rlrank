@@ -17,6 +17,7 @@
       getPopulation();
       getPopulationHistorical();
       getTwitchStreams();
+      getAlerts();
     })();
 
     function getLeaderboards()
@@ -25,6 +26,19 @@
         .then(function(response)
         {
           vm.leaderboards = response.data.results;
+        }, function(err)
+        {
+          console.log(err.code);
+        }
+      );
+    }
+
+    function getAlerts()
+    {
+      ApiSvc.getAlerts()
+        .then(function(response)
+        {
+          vm.alerts = response.data.results;
         }, function(err)
         {
           console.log(err.code);

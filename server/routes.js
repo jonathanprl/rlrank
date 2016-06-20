@@ -11,6 +11,7 @@ var statistics = require('./controllers/statistics');
 var status = require('./controllers/status');
 var profile = require('./controllers/profile');
 var blog = require('./controllers/blog');
+var alerts = require('./controllers/alerts');
 
 var psyonix = require('./services/psyonix');
 var cron = require('./services/cron');
@@ -49,6 +50,8 @@ module.exports = function(app)
 
   app.get('/steam/auth', passport.authenticate('steam'), function(req, res) {});
   app.get('/steam/return', passport.authenticate('steam', { failureRedirect: '/' }), profile.steamOpenid);
+
+  app.get('/api/alerts', alerts.getAlerts);
 
   app.get('/api/profile/:input/:platform', profile.getProfile);
   app.get('/api/profileById/:id', profile.getProfileById);

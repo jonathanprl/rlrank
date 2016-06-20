@@ -22,7 +22,8 @@
       getTierThresholds: getTierThresholds,
       getRankTiers: getRankTiers,
       postPlayerRanksLive: postPlayerRanksLive,
-      getPlayerRanksHistorical: getPlayerRanksHistorical
+      getPlayerRanksHistorical: getPlayerRanksHistorical,
+      getAlerts: getAlerts
     };
 
     function getProfile(input, platform)
@@ -83,6 +84,11 @@
     function postPlayerRanksLive(id, ranks)
     {
       return $http.post('/api/rank/' + id + '/live', {ranks: ranks});
+    }
+
+    function getAlerts()
+    {
+      return $http.get('/api/alerts');
     }
   };
 })();
