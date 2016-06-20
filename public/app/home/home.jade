@@ -6,7 +6,7 @@
         .row
           .col-md-6.col-md-offset-3
             .sp__alert.text-left(ng-repeat="alert in vm.alerts")
-              .label(ng-class="'label-' + alert.type") {{ alert.type.toUpperCase() }}
+              .label(ng-class="'label-' + alert.type") {{ alert.subject.toUpperCase() }}
               | &nbsp;{{ alert.message }}
             rank-form(steam-login="true")
         .sp__hero-sub

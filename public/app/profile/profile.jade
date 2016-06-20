@@ -3,7 +3,7 @@
     .row(ng-if="vm.errors.length > 0")
       .col-md-4.col-md-offset-4
         .sp__alert.text-left(ng-repeat="alert in vm.alerts")
-          .label(ng-class="'label-' + alert.type") {{ alert.type.toUpperCase() }}
+          .label(ng-class="'label-' + alert.type") {{ alert.subject.toUpperCase() }}
           | &nbsp;{{ alert.message }}
         div.alert.alert-danger(role="alert" ng-repeat="error in vm.errors")
           strong Sorry!&nbsp;
@@ -18,7 +18,7 @@
           span(am-time-ago="vm.players[0].lastUpdated")
           | &nbsp;(Updated every 15 minutes)
         .sp__alert.text-left(ng-repeat="alert in vm.alerts")
-          .label(ng-class="'label-' + alert.type") {{ alert.type.toUpperCase() }}
+          .label(ng-class="'label-' + alert.type") {{ alert.subject.toUpperCase() }}
           | &nbsp;{{ alert.message }}
         h4 Ranks
         table.table.table-responsive.sp__table
