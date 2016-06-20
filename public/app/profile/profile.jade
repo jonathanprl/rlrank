@@ -14,6 +14,9 @@
           | Last updated&nbsp;
           span(am-time-ago="vm.players[0].lastUpdated")
           | &nbsp;(Updated every 15 minutes)
+        .sp__alert.text-left(ng-repeat="alert in vm.alerts")
+          .label(ng-class="'label-' + alert.type") {{ alert.type.toUpperCase() }}
+          | &nbsp;{{ alert.message }}
         h4 Ranks
         table.table.table-responsive.sp__table
           thead

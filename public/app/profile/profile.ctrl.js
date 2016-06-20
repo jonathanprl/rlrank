@@ -23,6 +23,16 @@
       vm.compare = true;
     }
 
+    ApiSvc.getAlerts()
+      .then(function(response)
+      {
+        vm.alerts = response.data.results;
+      }, function(err)
+      {
+        console.log(err.code);
+      }
+    );
+
     getPlayerDetails($routeParams.rlrank_id,
       function(err, player)
       {
