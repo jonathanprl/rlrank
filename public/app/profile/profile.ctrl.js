@@ -98,7 +98,7 @@
                 player.playlists = ranks.playlists;
                 player.lastUpdated = ranks.lastUpdated;
 
-                ApiSvc.getPlayerRanksHistorical(rlrank_id)
+                ApiSvc.getPlayerRanksHistorical(rlrank_id, 3)
                   .then(function(response) {
                     player.playlistsHistorical = response.data.results;
                   })

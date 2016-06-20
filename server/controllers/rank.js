@@ -263,7 +263,8 @@ function getPlayerRanksHistorical(req, res)
 {
   db.aggregate('ranksHistorical', [{
     $match: {
-      rlrank_id: req.params.id
+      rlrank_id: req.params.id,
+      season: req.query.season
     }
   }, {
     $group: {
