@@ -171,7 +171,7 @@ function getUpdatedPlayerStats(req, res)
 
           if (results.length === 0)
           {
-            return swiftping.apiResponse('error', res, {code: 'server_error_1', message: 'There was a problem.'});
+            return swiftping.apiResponse('error', res, {code: 'invalid_user', message: 'Invalid user.'});
           }
 
           var stats = [];

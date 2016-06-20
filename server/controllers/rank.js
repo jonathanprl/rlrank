@@ -98,8 +98,8 @@ function getUpdatedPlayerRanks(rlrank_id, callback)
 
           if (results.length === 0)
           {
-            swiftping.logger('debug', 'ranks', 'Invalid user.', {rlrank_id: rlrank_id, hash: hashId, platform: profile.platform});
-            return callback({code: 'invalid_user', message: 'Invalid user.'});
+            swiftping.logger('debug', 'ranks', 'Played no ranked.', {rlrank_id: rlrank_id, hash: hashId, platform: profile.platform});
+            return callback(null, []);
           }
 
           var ranks = [];
