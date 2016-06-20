@@ -2,6 +2,9 @@
   .container
     .row(ng-if="vm.errors.length > 0")
       .col-md-4.col-md-offset-4
+        .sp__alert.text-left(ng-repeat="alert in vm.alerts")
+          .label(ng-class="'label-' + alert.type") {{ alert.type.toUpperCase() }}
+          | &nbsp;{{ alert.message }}
         div.alert.alert-danger(role="alert" ng-repeat="error in vm.errors")
           strong Sorry!&nbsp;
           | {{ error }}
