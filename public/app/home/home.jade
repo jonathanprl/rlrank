@@ -60,6 +60,21 @@
       .row
         .col-sm-4
           h2 Site Updates
+          .panel.sp__panel-trans.sp__news(ng-repeat="post in vm.siteUpdates")
+            .panel-body
+              header
+                h4 {{ post.title }}
+                  small.pull-right {{ post.published_at | amTimeAgo }}
+              section
+                {{ post.content }}
+          .panel.sp__panel-trans.sp__news
+            .panel-body
+              header
+                h4 Season 3 Update
+                  small.pull-right 21 June 2016
+              p The new Season 3 update has officially been release by Psyonix, and our website is now displaying Season 3 ranks.
+              p The leaderboards will shortly switch over the season 3 ranks.
+              p Season 2 ranks will be available shortly in a new area within your profile.
           .panel.sp__panel-trans.sp__news
             .panel-body
               header
@@ -115,8 +130,21 @@
                 a(href="/u/76561198076736523/76561198025037610", title="Try it out..." target="_blank") Try it out...
         .col-md-7.col-md-offset-1
           h2 Rocket League News
-
-
+          article.sp__blog-post(itemscope itemtype="http://schema.org/NewsArticle" ng-repeat="post in vm.blogPosts | limitTo: 5")
+            header
+              h2(itemprop="name") {{ post.title }}
+              p
+                span(itemprop="by-author") By {{ post.author }}
+                | &nbsp;/&nbsp;
+                time(itemprop="datePublished" datetime="{{ post.published_at }}") {{ post.published_at | amTimeAgo }}
+              .sp__blog-social
+                | <a twitter data-lang="en" data-count="horizontal" data-url="https://owstats.net/blog/{{post.seo_title}}" data-via='overwatchstats' data-text="{{post.title}} https://owstats.net/blog/{{post.seo_title}} #overwatch" data-hashtags="overwatch" data-size="medium" data-text='Tweet' ></a>
+              .sp__blog-social
+                | <a facebook class="facebookShare" data-url='https://owstats.net/blog/{{post.seo_title}}'>1</a>
+              h3(itemprop="headline") {{ post.sub_title }}
+            div
+              div(itemprop="disambiguatingDescription" markdown-to-html="post.short_content")
+            a.btn.btn-primary.btn-block(itemprop="mainEntityOfPage" ng-href="/blog/{{ post.seo_title }}") Read More
           .panel.sp__panel-trans.sp__news
             .panel-body
               header

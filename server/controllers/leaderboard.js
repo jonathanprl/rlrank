@@ -13,7 +13,7 @@ module.exports = {
  */
 function getLeaderboards(req, res)
 {
-  db.aggregate('leaderboards', [ { $group: {'_id': '$playlist', players: { $push: '$$ROOT' } } }, { $project: { _id: 0, players: 1, playlist: '$_id' } } ], function(err, docs) {
+  db.aggregate('leaderboards', [ { $match: { season: req.query.season } }, { $group: {'_id': '$playlist', players: { $push: '$$ROOT' } } }, { $project: { _id: 0, players: 1, playlist: '$_id' } } ], function(err, docs) {
     if (err)
     {
       return swiftping.apiResponse('error', res, err);

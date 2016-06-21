@@ -16,17 +16,20 @@
       .then(function(response) {
         vm.posts = response.data;
 
-        AmazonSvc.shortcodes(vm.posts[0].content, function(err, content) {
-          vm.posts[0].content = content;
-        });
-
         if ($routeParams.seo_title)
         {
+          vm.posts = vm.posts.filter(function(post) {
+            return post.seo_title == $routeParams.seo_title;
+          });
           TitleSvc.setTitle(vm.posts[0].title);
           TitleSvc.setDescription(vm.posts[0].content.substring(0,300));
         }
-        
-        Analytics.trackEvent('blog', 'view', vm.posts[0].title);
+
+        angular.forEach(vm.posts, function(post, index) {
+          AmazonSvc.shortcodes(post.content, function(err, content) {
+            vm.posts[index].content = content;
+          });
+        });
       })
       .catch(function(err) {
         console.log(err);

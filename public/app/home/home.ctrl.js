@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TwitchSvc', '$routeParams', '$location', 'Analytics', HomeController]);
+    .controller('HomeController', ['ApiSvc', 'RouteSvc', 'TwitchSvc', 'BlogSvc', '$routeParams', '$location', 'Analytics', HomeController]);
 
-  function HomeController(ApiSvc, RouteSvc, TwitchSvc, $routeParams, $location, Analytics)
+  function HomeController(ApiSvc, RouteSvc, TwitchSvc, BlogSvc, $routeParams, $location, Analytics)
   {
     'use strict';
 
@@ -18,11 +18,12 @@
       getPopulationHistorical();
       getTwitchStreams();
       getAlerts();
+      getPosts();
     })();
 
     function getLeaderboards()
     {
-      ApiSvc.getLeaderboards()
+      ApiSvc.getLeaderboards(3)
         .then(function(response)
         {
           vm.leaderboards = response.data.results;
@@ -79,6 +80,22 @@
       TwitchSvc.getStreams()
         .then(function(response) {
           vm.twitchStreams = response.data.streams;
+        });
+    }
+
+    function getPosts()
+    {
+      BlogSvc.getPosts(['rocketleague', 'rocketleaguerank.com'])
+        .then(function(response) {
+          vm.blogPosts = response.data.filter(function(post) {
+            return ~post.tags.indexOf('rocketleague');
+          });
+          vm.siteUpdates = response.data.filter(function(post) {
+            return ~post.tags.indexOf('rocketleaguerank.com');
+          });
+        })
+        .catch(function(err) {
+          console.log(err);
         });
     }
   }

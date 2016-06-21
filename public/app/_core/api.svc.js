@@ -36,9 +36,9 @@
       return $http.get('/api/profileById/' + encodeURIComponent(id));
     }
 
-    function getLeaderboards()
+    function getLeaderboards(season)
     {
-      return $http.get('/api/leaderboards');
+      return $http.get('/api/leaderboards?season=' + season);
     }
 
     function getPlayerRanks(id)

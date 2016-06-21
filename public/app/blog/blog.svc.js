@@ -11,9 +11,17 @@
       getPosts: getPosts
     };
 
-    function getPosts()
+    function getPosts(tags)
     {
-      return $http.get('/api/blog/posts');
+      var queryString = '';
+
+      if (typeof tags !== 'undefined')
+      {
+        queryString = '?tags=' + encodeURIComponent(tags.join(','));
+      }
+
+      return $http.get('/api/blog/posts' + queryString);
+
     }
   }
 })();

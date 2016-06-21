@@ -70,7 +70,7 @@
       }
     );
 
-    BlogSvc.getPosts()
+    BlogSvc.getPosts(['rocketleague'])
       .then(function(response) {
         vm.latestPost = response.data[0];
       })

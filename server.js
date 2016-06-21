@@ -52,7 +52,7 @@ new CronJob('*/20 * * * *',
 // );
 //
 
-new CronJob('0 */2 * * *',
+new CronJob('0 */4 * * *',
   function()
   {
     console.log('[CRON] Running leaderboards cronjob...', (new Date()).toTimeString());

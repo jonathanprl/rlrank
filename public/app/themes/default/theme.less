@@ -283,15 +283,32 @@ h1,h2,h3,h4,h5,h6 {
   font-family: 'Open Sans', Helvetica, sans-serif;
   background-color: rgba(255, 255, 255, 0.89);
   padding: 3rem;
+  color: @app-text;
+  margin-bottom: 15px;
   h1,h2,h3,h4,h5,h6 {
     font-family: @font-family-sans-serif;
     color: #3A3A3A;
   }
-  h1 {
-    font-weight: 700;
-    font-size: 42px;
-    letter-spacing: -0.1rem;
-    margin-top: 0;
+  header {
+    h1 {
+      font-weight: 700;
+      font-size: 42px;
+      letter-spacing: -0.1rem;
+      margin-top: 0;
+    }
+    h2 {
+      font-weight: 700;
+      font-size: 36px;
+      letter-spacing: -0.1rem;
+      margin-top: 0;
+    }
+    h3 {
+      margin: 0 0 2rem 0;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.1rem;
+      text-transform: none;
+    }
   }
   h2 {
     font-weight: 600;
@@ -305,13 +322,15 @@ h1,h2,h3,h4,h5,h6 {
     width: 100%;
     padding: 15px 30px;
   }
+  iframe {
+    width: 100%;
+  }
 }
 
 .sp__blog-side {
   font-family: 'Open Sans', Helvetica, sans-serif;
   padding: 15px;
   background: rgba(45, 45, 45, 0.9);
-  margin-bottom: 15px;
   ul {
     list-style: none;
     padding: 0;

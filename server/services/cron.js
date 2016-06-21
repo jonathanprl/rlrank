@@ -70,7 +70,8 @@ function leaderboards()
               tier: leader.Value,
               platform: leader.Platform,
               rlrank_id: rlProfile.rlrank_id,
-              playlist: leader.playlist
+              playlist: leader.playlist,
+              season: 3
             };
 
             db.upsert('leaderboards', {playlist: leaderboardEntry.playlist, rlrank_id: leaderboardEntry.rlrank_id}, leaderboardEntry,
@@ -84,7 +85,7 @@ function leaderboards()
             );
           }
         });
-      }, 100 * index);
+      }, 2000 * index);
     });
   });
 }

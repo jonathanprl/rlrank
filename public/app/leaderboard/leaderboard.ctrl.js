@@ -19,7 +19,7 @@
           13: '-mmr'
         };
 
-        ApiSvc.getLeaderboards()
+        ApiSvc.getLeaderboards(3)
           .then(function(response)
           {
             vm.leaderboards = response.data.results;
