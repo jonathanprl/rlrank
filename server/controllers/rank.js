@@ -63,6 +63,7 @@ function getPlayerRanksById(id, callback)
         //     callback(null, ranks);
         //   }
         // );
+        callback(null, docs);
       }
 
       return getUpdatedPlayerRanks(id, function(err, ranks) {
