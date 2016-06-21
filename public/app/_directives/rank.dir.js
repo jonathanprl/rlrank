@@ -102,7 +102,7 @@ function rankGraph()
       return playlist._id == scope.playlist.playlist;
     })[0];
 
-    if(!playlist.ranks) return false;
+    if(!playlist) return false;
 
     var ranks = playlist.ranks.filter(function(rank, index) {
       return index > playlist.ranks.length - 20 ? true : false;
