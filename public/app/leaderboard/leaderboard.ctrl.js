@@ -9,6 +9,7 @@
         vm.goToProfile = goToProfile;
         vm.increaseLeaderboard = increaseLeaderboard;
         vm.sortLeaderboard = sortLeaderboard;
+        vm.currentTab = 10;
 
         vm.leaderboards = {};
         vm.limit = 50;

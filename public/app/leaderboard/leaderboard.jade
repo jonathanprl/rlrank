@@ -1,10 +1,15 @@
 .sp__wrapper
   .container
     sp-header(page-title="Global Leaderboards" sub-title="Top 200 players (updated every hour)")
+    .sp__tabs
+      ul
+        li.active(ng-class="{'active': vm.currentTab == 10}" ng-click="vm.currentTab = 10") 1v1
+        li(ng-class="{'active': vm.currentTab == 11}" ng-click="vm.currentTab = 11") 2v2
+        li(ng-class="{'active': vm.currentTab == 12}" ng-click="vm.currentTab = 12") 3v3 Solo
+        li(ng-class="{'active': vm.currentTab == 13}" ng-click="vm.currentTab = 13") 3v3 Team
     .sp__leaderboards
       .row
-        .col-lg-3.col-md-4.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:4")
-          h3 {{ playlist.playlist | rlPlaylist }}
+        .col-md-6(ng-repeat="playlist in vm.leaderboards" ng-if="playlist.playlist == vm.currentTab")
           table.table.table-responsive.sp__table
             thead
               tr
@@ -17,32 +22,16 @@
                 th
                   a(ng-click="vm.sortLeaderboard('mmr')" href="#") MMR
             tbody
-              tr(ng-repeat="player in playlist.players | orderBy: vm.sort | limitTo: 10")
+              tr(ng-repeat="player in playlist.players | orderBy: vm.sort | limitTo: vm.limit")
                 td
                   strong {{ '#' + ($index + 1) }}
                 td
-                  img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
+                  img.sp__table-rank(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
                 td
                   a(ng-if="player.username" ng-title="player.username" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
                 td
                   span(ng-if="player.mmr") {{ player.mmr }}
-      adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="8743487243" ad-format="auto" css-style="display:block;" full-width="true")
-      .row
-        .col-lg-3.col-md-4.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:4")
-          table.table.table-responsive.sp__table
-            tbody
-              tr(ng-repeat="player in playlist.players | orderBy: vm.sort | limitTo: vm.limit:10")
-                td
-                  strong {{ '#' + ($index + 11) }}
-                td
-                  img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
-                td
-                  a(ng-if="player.username" ng-title="player.username" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
-                td
-                  span(ng-if="player.mmr") {{ player.mmr }}
-                  
-          button.btn.btn-info.btn-block.visible-xs.visible-sm(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More
-                  
-      button.btn.btn-info.btn-block.hidden-xs.hidden-sm(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More
-      
-      adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5407597647" ad-format="auto" css-style="display:block;" full-width="true")
+          button.btn.btn-info.btn-block.hidden-xs.hidden-sm(ng-click="vm.increaseLeaderboard()" href="#" ng-if="vm.limit < 200") View More
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="8743487243" ad-format="auto" css-style="display:block;" full-width="true")
+        .col-md-4
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5407597647" ad-format="auto" css-style="display:block;" full-width="true")

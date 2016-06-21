@@ -32,7 +32,7 @@
         .row
           .col-md-3.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:4")
             h3 {{ playlist.playlist | rlPlaylist }}
-            table.table.table-responsive.sp__table
+            table.table.table-responsive.sp__table.sp__table-condensed
               tr
                 td
                   strong Pos
@@ -46,7 +46,7 @@
                 td
                   strong {{ '#' + ($index + 1) }}
                 td
-                  img.img-responsive(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
+                  img.sp__table-rank(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
                 td
                   a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
                 td
