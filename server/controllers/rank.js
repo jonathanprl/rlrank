@@ -52,17 +52,17 @@ function getPlayerRanksById(id, callback)
 
         swiftping.logger('info', 'ranks', 'Found recent ranks in DB [' + id + ']');
 
-        return _getRankThresholds(docs,
-          function(err, ranks)
-          {
-            if (err)
-            {
-              callback(err);
-            }
-
-            callback(null, ranks);
-          }
-        );
+        // return _getRankThresholds(docs,
+        //   function(err, ranks)
+        //   {
+        //     if (err)
+        //     {
+        //       callback(err);
+        //     }
+        //
+        //     callback(null, ranks);
+        //   }
+        // );
       }
 
       return getUpdatedPlayerRanks(id, function(err, ranks) {
@@ -149,17 +149,17 @@ function getUpdatedPlayerRanks(rlrank_id, callback)
             }
           );
 
-          _getRankThresholds(ranks,
-            function(err, ranks)
-            {
-              if (err)
-              {
-                return callback(error);
-              }
-
-              return callback(null, ranks);
-            }
-          );
+          // _getRankThresholds(ranks,
+          //   function(err, ranks)
+          //   {
+          //     if (err)
+          //     {
+          //       return callback(error);
+          //     }
+          //
+          //     return callback(null, ranks);
+          //   }
+          // );
         }
       );
     }
