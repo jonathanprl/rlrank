@@ -12,15 +12,5 @@
     vm.headerUrl = '/views/navbar/header';
     vm.pageTitle = TitleSvc.currentPage;
 
-    (function() {
-      ApiSvc.getRankTiers(3)
-        .then(
-          function(response)
-          {
-            vm.tierRanges = response.data.results;
-          }
-        );
-    }());
-
   };
 })();

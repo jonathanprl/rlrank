@@ -5,7 +5,6 @@
       .row
         .col-lg-3.col-md-4.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:4")
           h3 {{ playlist.playlist | rlPlaylist }}
-          {{ vm.sort }}
           table.table.table-responsive.sp__table
             thead
               tr

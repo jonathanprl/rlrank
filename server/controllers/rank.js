@@ -188,19 +188,59 @@ function getRankTiers(req, res)
 
 function _getRankTiers(season, callback)
 {
-  console.log('[RANK_TIERS] Getting ranking tiers from ranksHistorical.');
-  db.aggregate('ranksHistorical', [{$match: {season: parseInt(season)}}, {$group: {_id: {tier: '$tier',division: '$division'},minMMR: { $min: '$mmr' },maxMMR: { $max: '$mmr'}}},{$group: {_id: '$_id.tier', divisions: {$push: {division: '$_id.division', minMMR: '$minMMR', maxMMR: '$maxMMR' } } } }, { $sort: { _id: 1 } }, { $project: { _id: 0, divisions: '$divisions', tier: '$_id' } } ],
-    function(err, docs)
+  swiftping.logger('info', 'Getting S' + season + ' ranking tiers from ranksHistorical.');
+  db.aggregate('ranksHistorical', [
     {
-      if (err)
-      {
-        console.log('[RANK_TIERS] Could not get ranking tiers from ranksHistorical.', err);
-        return callback({code: 'server_error', 'msg': 'Could not get ranking tiers.'});
+      $match: {
+        season: parseInt(season)
       }
-
-      callback(null, docs);
+    }, {
+      $group: {
+        _id: {
+          tier: '$tier',
+          division: '$division'
+        },
+        minMMR: {
+          $min: '$mmr'
+        },maxMMR: {
+          $max: '$mmr'
+        },
+        count: { $sum: 1 }
+      }
+    }, {
+      $group: {
+        _id: '$_id.tier',
+        divisions: {
+          $push: {
+            division: '$_id.division',
+            minMMR: '$minMMR',
+            maxMMR: '$maxMMR',
+            count: { $sum: { $multiply : ['$count', 7 - parseInt(season)] } }
+          }
+        },
+        count: { $sum: { $multiply : ['$count', 7 - parseInt(season)] } }
+      }
+    }, {
+      $sort: {
+        _id: 1
+      }
+    }, {
+      $project: {
+        _id: 0,
+        divisions: '$divisions',
+        tier: '$_id',
+        count: '$count'
+      }
     }
-  );
+  ], function(err, docs) {
+    if (err)
+    {
+      console.log('[RANK_TIERS] Could not get ranking tiers from ranksHistorical.', err);
+      return callback({code: 'server_error', 'msg': 'Could not get ranking tiers.'});
+    }
+
+    callback(null, docs);
+  });
 }
 
 function _getRankThresholds(playlists, callback)

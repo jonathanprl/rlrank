@@ -73,10 +73,10 @@ function app($routeProvider, $locationProvider, $compileProvider)
       }
     })
     .when('/rank-tiers', {
-      templateUrl: '/views/pages/ranks',
-      controller: 'PagesController as vm',
+      templateUrl: '/views/tiers/tiers',
+      controller: 'TiersController as vm',
       data: {
-        activeSection: 'ranks',
+        activeSection: 'tiers',
         pageTitle: 'Rocket League Ranking Tiers',
         pageDescription: 'Season 3 skill rating and MMR breakdown of current Rocket League ranking system. Find out when you will be promoted to the next tier or division.'
       }
