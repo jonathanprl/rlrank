@@ -46,8 +46,8 @@
               td.text-center
                 span(ng-if="playlist.playlist != 0") {{ playlist.matches_played || 0 }} 
               td.text-right(style="white-space: pre;")
-                a.sp__table-threshold(href="/rank-tiers" ng-class="{'text-success': playlist.threshold > 0, 'text-danger': playlist.threshold < 0}" ng-show="playlist.threshold" title="Based on global statistics, you may be close to a {{ playlist.threshold > 0 ? 'promotion' : 'demotion' }}.")
-                  i.fa(ng-class="{'fa-caret-up': playlist.threshold > 0, 'fa-caret-down': playlist.threshold < 0}")
+                //- a.sp__table-threshold(href="/rank-tiers" ng-class="{'text-success': playlist.threshold > 0, 'text-danger': playlist.threshold < 0}" ng-show="playlist.threshold" title="Based on global statistics, you may be close to a {{ playlist.threshold > 0 ? 'promotion' : 'demotion' }}.")
+                //-   i.fa(ng-class="{'fa-caret-up': playlist.threshold > 0, 'fa-caret-down': playlist.threshold < 0}")
                 span.sp__table-mmr
                   | {{ playlist.mmr || 100 }}
                 rank-graph.sp_profile-graph(ng-if="vm.players[0].playlistsHistorical" playlists="vm.players[0].playlistsHistorical" playlist="playlist")
