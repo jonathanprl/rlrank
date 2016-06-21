@@ -52,18 +52,17 @@ function getPlayerRanksById(id, callback)
 
         swiftping.logger('info', 'ranks', 'Found recent ranks in DB [' + id + ']');
 
-        // return _getRankThresholds(docs,
-        //   function(err, ranks)
-        //   {
-        //     if (err)
-        //     {
-        //       callback(err);
-        //     }
-        //
-        //     callback(null, ranks);
-        //   }
-        // );
-        callback(null, docs);
+        return _getRankThresholds(docs,
+          function(err, ranks)
+          {
+            if (err)
+            {
+              callback(err);
+            }
+
+            callback(null, ranks);
+          }
+        );
       }
 
       return getUpdatedPlayerRanks(id, function(err, ranks) {
@@ -150,17 +149,17 @@ function getUpdatedPlayerRanks(rlrank_id, callback)
             }
           );
 
-          // _getRankThresholds(ranks,
-          //   function(err, ranks)
-          //   {
-          //     if (err)
-          //     {
-          //       return callback(error);
-          //     }
-          //
-          //     return callback(null, ranks);
-          //   }
-          // );
+          _getRankThresholds(ranks,
+            function(err, ranks)
+            {
+              if (err)
+              {
+                return callback(error);
+              }
+
+              return callback(null, ranks);
+            }
+          );
         }
       );
     }
@@ -217,34 +216,34 @@ function _getRankThresholds(playlists, callback)
       var ranks = playlists.map(
         function(playlist) {
 
-          if (!(playlist.tier+1 in tiers))
-          {
-            return {};
-          }
+          // if (!(playlist.tier+1 in tiers))
+          // {
+          //   return {};
+          // }
+          //
+          // if (!playlist.tier || tiers[playlist.tier+1].tier != playlist.tier)
+          // {
+          //   return playlist;
+          // }
 
-          if (!playlist.tier || tiers[playlist.tier+1].tier != playlist.tier)
-          {
-            return playlist;
-          }
+          // var divisions = tiers[playlist.tier+1].divisions;
+          // divisions.sort(function(a,b) {
+          //   return (a.division > b.division) ? 1 : ((b.division > a.division) ? -1 : 0);
+          // });
 
-          var divisions = tiers[playlist.tier+1].divisions;
-          divisions.sort(function(a,b) {
-            return (a.division > b.division) ? 1 : ((b.division > a.division) ? -1 : 0);
-          });
-
-          var max = tiers[playlist.tier+1].divisions[playlist.division].maxMMR;
-          var min = tiers[playlist.tier+1].divisions[playlist.division].minMMR;
-          var mmr = playlist.mmr;
-
-          var threshold = (max - min) / 4;
-          if (mmr >= (max - threshold))
-          {
-            playlist.threshold = 1;
-          }
-          else if (mmr <= (min + threshold))
-          {
-            playlist.threshold = -1;
-          }
+          // var max = tiers[playlist.tier+1].divisions[playlist.division].maxMMR;
+          // var min = tiers[playlist.tier+1].divisions[playlist.division].minMMR;
+          // var mmr = playlist.mmr;
+          //
+          // var threshold = (max - min) / 4;
+          // if (mmr >= (max - threshold))
+          // {
+          //   playlist.threshold = 1;
+          // }
+          // else if (mmr <= (min + threshold))
+          // {
+          //   playlist.threshold = -1;
+          // }
 
           return playlist;
         }
