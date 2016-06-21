@@ -26,9 +26,12 @@
         }
 
         angular.forEach(vm.posts, function(post, index) {
-          AmazonSvc.shortcodes(post.content, function(err, content) {
-            vm.posts[index].content = content;
-          });
+          if (~post.tags.indexOf('mm'))
+          {
+            AmazonSvc.shortcodes(post.content, function(err, content) {
+              vm.posts[index].content = content;
+            });
+          }
         });
       })
       .catch(function(err) {

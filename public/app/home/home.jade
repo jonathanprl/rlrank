@@ -60,7 +60,7 @@
       .row
         .col-sm-4
           h2 Site Updates
-          .panel.sp__panel-trans.sp__news(ng-repeat="post in vm.siteUpdates")
+          .panel.sp__panel-trans.sp__news(ng-repeat="post in vm.siteUpdates | orderBy: '-published_at'")
             .panel-body
               header
                 h4 {{ post.title }}
@@ -130,7 +130,7 @@
                 a(href="/u/76561198076736523/76561198025037610", title="Try it out..." target="_blank") Try it out...
         .col-md-7.col-md-offset-1
           h2 Rocket League News
-          article.sp__blog-post(itemscope itemtype="http://schema.org/NewsArticle" ng-repeat="post in vm.blogPosts | limitTo: 5")
+          article.sp__blog-post(itemscope itemtype="http://schema.org/NewsArticle" ng-repeat="post in vm.blogPosts | limitTo: 5 | orderBy: '-published_at'")
             header
               h2(itemprop="name") {{ post.title }}
               p
@@ -145,6 +145,7 @@
             div
               div(itemprop="disambiguatingDescription" markdown-to-html="post.short_content")
             a.btn.btn-primary.btn-block(itemprop="mainEntityOfPage" ng-href="/blog/{{ post.seo_title }}") Read More
+            adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="6884330847" ad-format="auto" css-style="display:block;" full-width="true")
           .panel.sp__panel-trans.sp__news
             .panel-body
               header
@@ -169,7 +170,6 @@
                 li <strong>Crown & Jewels Blaze:</strong> Yeezy / xXKhaelanXx
               p.lead.text-right
                 a(href="https://www.reddit.com/r/RocketLeague/comments/4m9im0/esports_eu_power_rankings_week_of_531/", title="Read more..." target="_blank") Read more...
-          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="6884330847" ad-format="auto" css-style="display:block;" full-width="true")
           .panel.sp__panel-trans.sp__news
             .panel-body
               header
