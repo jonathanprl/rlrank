@@ -28,7 +28,7 @@ function getPlayerRanks(req, res)
 
 function getPlayerRanksById(id, callback)
 {
-  db.findWhere('ranks', {rlrank_id: id}, {_id: 0, rlrank_id: 0},
+  db.findWhere('ranks', {rlrank_id: id, season: 3}, {_id: 0, rlrank_id: 0},
     function(err, docs)
     {
       if (err)
