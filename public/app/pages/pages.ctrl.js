@@ -13,7 +13,7 @@
     vm.pageTitle = TitleSvc.currentPage;
 
     (function() {
-      ApiSvc.getRankTiers()
+      ApiSvc.getRankTiers(3)
         .then(
           function(response)
           {

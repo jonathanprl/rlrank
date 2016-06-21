@@ -173,7 +173,7 @@ function getUpdatedPlayerRanks(rlrank_id, callback)
  */
 function getRankTiers(req, res)
 {
-  _getRankTiers(
+  _getRankTiers(req.query.season,
     function(err, docs)
     {
       if (err)
@@ -186,10 +186,10 @@ function getRankTiers(req, res)
   );
 };
 
-function _getRankTiers(callback)
+function _getRankTiers(season, callback)
 {
   console.log('[RANK_TIERS] Getting ranking tiers from ranksHistorical.');
-  db.aggregate('ranksHistorical', [{$group: {_id: {tier: '$tier',division: '$division'},minMMR: { $min: '$mmr' },maxMMR: { $max: '$mmr'}}},{$group: {_id: '$_id.tier', divisions: {$push: {division: '$_id.division', minMMR: '$minMMR', maxMMR: '$maxMMR' } } } }, { $sort: { _id: 1 } }, { $project: { _id: 0, divisions: '$divisions', tier: '$_id' } } ],
+  db.aggregate('ranksHistorical', [{$match: {season: parseInt(season)}}, {$group: {_id: {tier: '$tier',division: '$division'},minMMR: { $min: '$mmr' },maxMMR: { $max: '$mmr'}}},{$group: {_id: '$_id.tier', divisions: {$push: {division: '$_id.division', minMMR: '$minMMR', maxMMR: '$maxMMR' } } } }, { $sort: { _id: 1 } }, { $project: { _id: 0, divisions: '$divisions', tier: '$_id' } } ],
     function(err, docs)
     {
       if (err)

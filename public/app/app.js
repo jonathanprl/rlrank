@@ -78,7 +78,7 @@ function app($routeProvider, $locationProvider, $compileProvider)
       data: {
         activeSection: 'ranks',
         pageTitle: 'Rocket League Ranking Tiers',
-        pageDescription: 'Skill rating and MMR breakdown of current Rocket League ranking system. Find out when you will be promoted to the next tier or division.'
+        pageDescription: 'Season 3 skill rating and MMR breakdown of current Rocket League ranking system. Find out when you will be promoted to the next tier or division.'
       }
     })
     .when('/statistics', {

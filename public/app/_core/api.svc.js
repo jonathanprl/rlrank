@@ -76,9 +76,9 @@
       return $http.get('/api/statistics/tierThresholds');
     }
 
-    function getRankTiers()
+    function getRankTiers(season)
     {
-      return $http.get('/api/rank/tiers');
+      return $http.get('/api/rank/tiers?season=' + season);
     }
 
     function postPlayerRanksLive(id, ranks)
