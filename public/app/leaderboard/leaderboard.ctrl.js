@@ -12,12 +12,7 @@
 
         vm.leaderboards = {};
         vm.limit = 50;
-        vm.sort = {
-          10: '-mmr',
-          11: '-mmr',
-          12: '-mmr',
-          13: '-mmr'
-        };
+        vm.sort = '-mmr';
 
         ApiSvc.getLeaderboards(3)
           .then(function(response)
@@ -39,15 +34,15 @@
           );
         }
 
-        function sortLeaderboard(playlist, column)
+        function sortLeaderboard(column)
         {
-          if (vm.sort[playlist] == column && vm.sort[playlist].indexOf('-') === -1)
+          if (vm.sort == column && vm.sort.indexOf('-') === -1)
           {
-            vm.sort[playlist] = '-' + column;
+            vm.sort = '-' + column;
           }
           else
           {
-            vm.sort[playlist] = column;
+            vm.sort = column;
           }
         }
 

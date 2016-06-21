@@ -5,19 +5,20 @@
       .row
         .col-lg-3.col-md-4.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:4")
           h3 {{ playlist.playlist | rlPlaylist }}
+          {{ vm.sort }}
           table.table.table-responsive.sp__table
             thead
               tr
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, 'position')" href="#") Pos
+                  a(ng-click="vm.sortLeaderboard('position')" href="#") Pos
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, 'tier')" href="#") Rank
+                  a(ng-click="vm.sortLeaderboard('tier')" href="#") Rank
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, 'username')" href="#") Username
+                  a(ng-click="vm.sortLeaderboard('username')" href="#") Username
                 th
-                  a(ng-click="vm.sortLeaderboard(playlist, 'mmr')" href="#") MMR
+                  a(ng-click="vm.sortLeaderboard('mmr')" href="#") MMR
             tbody
-              tr(ng-repeat="player in playlist.players | orderBy: vm.sort[playlist] | limitTo: 10")
+              tr(ng-repeat="player in playlist.players | orderBy: vm.sort | limitTo: 10")
                 td
                   strong {{ '#' + ($index + 1) }}
                 td
@@ -31,7 +32,7 @@
         .col-lg-3.col-md-4.col-sm-6(ng-repeat="playlist in vm.leaderboards | orderBy: 'playlist' | limitTo:4")
           table.table.table-responsive.sp__table
             tbody
-              tr(ng-repeat="player in playlist.players | orderBy: vm.sort[playlist] | limitTo: vm.limit:10")
+              tr(ng-repeat="player in playlist.players | orderBy: vm.sort | limitTo: vm.limit:10")
                 td
                   strong {{ '#' + ($index + 11) }}
                 td
