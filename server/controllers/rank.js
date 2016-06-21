@@ -205,7 +205,7 @@ function _getRankTiers(season, callback)
 
 function _getRankThresholds(playlists, callback)
 {
-  _getRankTiers(
+  _getRankTiers(3,
     function(err, tiers)
     {
       if (err)
