@@ -98,16 +98,16 @@
                 player.playlists = ranks.playlists;
                 player.lastUpdated = ranks.lastUpdated;
 
-                ApiSvc.getPlayerRanksHistorical(rlrank_id, 3)
-                  .then(function(response) {
-                    player.playlistsHistorical = response.data.results;
-                  })
-                  .catch(function(err) {
-                    if (err)
-                    {
-                      return vm.errors.push(err);
-                    }
-                  });
+                // ApiSvc.getPlayerRanksHistorical(rlrank_id, 3)
+                //   .then(function(response) {
+                //     player.playlistsHistorical = response.data.results;
+                //   })
+                //   .catch(function(err) {
+                //     if (err)
+                //     {
+                //       return vm.errors.push(err);
+                //     }
+                //   });
 
                 getPlayerStats(player.profile,
                   function(err, stats)
