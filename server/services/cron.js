@@ -74,7 +74,7 @@ function leaderboards()
               season: 3
             };
 
-            db.upsert('leaderboards', {playlist: leaderboardEntry.playlist, rlrank_id: leaderboardEntry.rlrank_id}, leaderboardEntry,
+            db.upsert('leaderboards', {playlist: leaderboardEntry.playlist, rlrank_id: leaderboardEntry.rlrank_id, season: leaderboardEntry.season}, leaderboardEntry,
               function(err, doc)
               {
                 if (doc.upserted)
