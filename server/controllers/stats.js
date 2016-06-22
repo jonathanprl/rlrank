@@ -153,7 +153,7 @@ function getUpdatedPlayerStats(req, res)
   if (config.psyonix.bypass)
   {
     console.log('[STATS] Bypassed... [%s]', req.params.id);
-    return callback(null, []);
+    return swiftping.apiResponse('error', res, []);
   }
 
   db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
