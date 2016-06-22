@@ -14,15 +14,15 @@
               th(colspan="2")
                 | Rank
               th.text-right
-                | Division I
-              th.text-right
-                | Division II
-              th.text-right
-                | Division III
+                | Division V
               th.text-right
                 | Division IV
               th.text-right
-                | Division V
+                | Division III
+              th.text-right
+                | Division II
+              th.text-right
+                | Division I
           tbody
             tr(ng-repeat="range in vm.tierRanges[vm.currentTab] | orderBy: '-' + range.tier" ng-if="range.tier || range.tier === 0")
               td
