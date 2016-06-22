@@ -37,7 +37,9 @@ gulp.task('inject', ['templates'], function() {
 gulp.task('concat-app', ['concat-vendor'], function() {
   var stream = gulp.src(['./public/app/**/*.js', '!./public/js/rlrank-templates-min.js'])
     .pipe(concat('rlrank.js'))
-    .pipe(uglify())
+    .pipe(minify({
+      ignoreFiles: ['-min.js']
+    }))
     .pipe(gulp.dest('./public/js'));
   return stream;
 });
@@ -45,14 +47,18 @@ gulp.task('concat-app', ['concat-vendor'], function() {
 gulp.task('concat-vendor', ['concat-templates'], function() {
   var stream = gulp.src(bowerFiles({"filter": "**/*.js"}))
     .pipe(concat('rlrank-vendor.js'))
-    .pipe(uglify())
+    .pipe(minify({
+      ignoreFiles: ['-min.js']
+    }))
     .pipe(gulp.dest('./public/js'));
   return stream;
 });
 
 gulp.task('concat-templates', ['templates'], function() {
   var stream = gulp.src('./public/js/rlrank-templates.js')
-    .pipe(uglify())
+    .pipe(minify({
+      ignoreFiles: ['-min.js']
+    }))
     .pipe(gulp.dest('./public/js'));
   return stream;
 });
