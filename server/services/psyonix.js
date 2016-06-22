@@ -267,13 +267,18 @@ function callProc(procUrl, procData, callback)
       return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
     }
 
+    if (doc.bypass)
+    {
+      return callback({'code':'bypass'});
+    }
+
     var headers = {
       'SessionID': token,
       'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F',
       'Cache-Control': 'no-cache',
       'Environment': 'Prod',
       'User-Agent': 'UE3-TA,UE3Ver(10897)',
-      'BuildID': '636774701'
+      'BuildID': '186761134'
     };
 
     var time = new Date();
@@ -287,10 +292,12 @@ function callProc(procUrl, procData, callback)
         if (data.indexOf('SessionNotActive') > -1)
         {
           console.log('[PSYONIX] SessionNotActive - Token needs refreshing.');
+          return callback({'code':'session_lost'});
         }
         else if (data.indexOf('403 Sorry...') > -1)
         {
           console.log('[PSYONIX] [ERROR] Psyonix is throttling requests...');
+          return callback({'code':'throttling'});
         }
         else
         {
@@ -307,7 +314,7 @@ function refreshToken(callback)
     'PlayerName': '',
     'PlayerID': '1',
     'Platform': 'PS4',
-    'BuildID': '636774701',
+    'BuildID': '186761134',
     'BuildRegion': '',
     'AuthCode': '',
     'AuthTicket': '',
@@ -319,7 +326,7 @@ function refreshToken(callback)
     'Cache-Control': 'no-cache',
     'Environment': 'Prod',
     'User-Agent': 'UE3-TA,UE3Ver(10897)',
-    'BuildID': '636774701'
+    'BuildID': '186761134'
   };
 
   restler.post('https://psyonix-rl.appspot.com/auth/', {data: data, headers: headers})
@@ -330,6 +337,12 @@ function refreshToken(callback)
       {
         console.log('[PSYONIX] [ERROR] There was an error authing with Psyonix', data);
         return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
+      }
+
+      if (data.indexOf('403 Sorry...') > -1)
+      {
+        console.log('[PSYONIX] [ERROR] Psyonix is throttling requests...');
+        return callback({'code':'throttling'});
       }
 
       console.log('[PSYONIX] Got new token from Psyonix', res.headers.sessionid);

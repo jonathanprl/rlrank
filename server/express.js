@@ -33,7 +33,10 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-discord.start();
+if (config.discord.enabled)
+{
+  discord.start();
+}
 
 if (config.env == 'dev')
 {

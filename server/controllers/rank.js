@@ -1,6 +1,7 @@
 var db = require('../db');
 var swiftping = require('../helpers/swiftping');
 var psyonix = require('../services/psyonix');
+var config = require('../../config');
 
 module.exports = {
   getPlayerRanks,
@@ -42,7 +43,7 @@ function getPlayerRanksById(id, callback)
         var timeDiff = Math.abs(now.getTime() - docs[0].created_at.getTime());
         var diffMins = Math.ceil(timeDiff / (1000 * 60));
 
-        if (diffMins > 15)
+        if (diffMins > 15 && !config.psyonix.bypass)
         {
           swiftping.logger('info', 'ranks', 'Found outdated ranks in DB [' + id + ']');
           return getUpdatedPlayerRanks(id, function(err, ranks) {
@@ -75,6 +76,12 @@ function getPlayerRanksById(id, callback)
 function getUpdatedPlayerRanks(rlrank_id, callback)
 {
   swiftping.logger('info', 'ranks', 'Getting latest player ranks from Psyonix [' + rlrank_id + ']');
+
+  if (config.psyonix.bypass)
+  {
+    swiftping.logger('info', 'ranks', 'Bypassed... [' + rlrank_id + ']');
+    return callback(null, []);
+  }
 
   db.findOneWhere('profiles', {rlrank_id: rlrank_id}, {},
     function(err, doc)

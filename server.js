@@ -8,6 +8,7 @@ require('./server/db.js');
 
 var cron = require('./server/services/cron.js');
 var swiftping = require('./server/helpers/swiftping');
+var config = require('./config');
 var CronJob = require('cron').CronJob;
 
 cron.serverStatus();
@@ -19,6 +20,11 @@ new CronJob('* * * * *',
   }, function(){}, true
 );
 
+if (config.psyonix.bypass)
+{
+  return false;
+}
+
 new CronJob('30 1 * * *',
   function()
   {
@@ -26,7 +32,7 @@ new CronJob('30 1 * * *',
     cron.serverList();
   }, function(){}, true
 );
-
+cron.refreshToken();
 new CronJob('*/20 * * * *',
   function()
   {

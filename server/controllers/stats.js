@@ -1,6 +1,7 @@
 var db = require('../db');
 var swiftping = require('../helpers/swiftping');
 var psyonix = require('../services/psyonix');
+var config = require('../../config');
 
 module.exports = {
   getPlayerStats
@@ -130,7 +131,7 @@ function getPlayerStats(req, res)
         var timeDiff = Math.abs(now.getTime() - docs[0].created_at.getTime());
         var diffHours = Math.ceil(timeDiff / (1000 * 3600));
 
-        if (diffHours > 24)
+        if (diffHours > 24 && !config.psyonix.bypass)
         {
           console.log('[STATS] Found outdated stats in DB [%s]', req.params.id);
           return getUpdatedPlayerStats(req, res);
@@ -148,6 +149,12 @@ function getPlayerStats(req, res)
 function getUpdatedPlayerStats(req, res)
 {
   console.log('[STATS] Getting latest player stats from Psyonix [%s]', req.params.id);
+
+  if (config.psyonix.bypass)
+  {
+    console.log('[STATS] Bypassed... [%s]', req.params.id);
+    return callback(null, []);
+  }
 
   db.findOneWhere('profiles', {rlrank_id: req.params.id}, {},
     function(err, doc)
