@@ -1,6 +1,6 @@
 .sp__wrapper
   .container
-    sp-header(page-title="Rocket League Rank Tiers" sub-title="Season 3 MMR range for each tier and division")
+    sp-header(page-title="Rocket League Rank Tiers" sub-title="The MMR ranges for each tier and division (including total players)")
     adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1220220447" ad-format="auto" css-style="display:block;" full-width="true")
     .sp__tabs
       ul
@@ -23,8 +23,6 @@
                 | Division IV
               th.text-right
                 | Division V
-              th.text-right
-                | # of ranks
           tbody
             tr(ng-repeat="range in vm.tierRanges[vm.currentTab] | orderBy: '-' + range.tier" ng-if="range.tier || range.tier === 0")
               td
@@ -32,17 +30,25 @@
               td.text-uppercase
                 {{ range.tier | rlTier }}
               td.text-right
-                span(ng-repeat="division in range.divisions" ng-if="division.division == 4") {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }}
+                div(ng-repeat="division in range.divisions" ng-if="division.division == 4")
+                  div {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }} 
+                  div {{ division.count | multiplier:range.tier }}
               td.text-right
-                span(ng-repeat="division in range.divisions" ng-if="division.division == 3") {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }}
+                div(ng-repeat="division in range.divisions" ng-if="division.division == 3")
+                  div {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }} 
+                  div {{ division.count | multiplier:range.tier }}
               td.text-right
-                span(ng-repeat="division in range.divisions" ng-if="division.division == 2") {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }}
+                div(ng-repeat="division in range.divisions" ng-if="division.division == 2")
+                  div {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }} 
+                  div {{ division.count | multiplier:range.tier }}
               td.text-right
-                span(ng-repeat="division in range.divisions" ng-if="division.division == 1") {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }}
+                div(ng-repeat="division in range.divisions" ng-if="division.division == 1")
+                  div {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }} 
+                  div {{ division.count | multiplier:range.tier }}
               td.text-right
-                span(ng-repeat="division in range.divisions" ng-if="division.division == 0") {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }}
-              td.text-right
-                {{ range.count }}
+                div(ng-repeat="division in range.divisions" ng-if="division.division == 0")
+                  div {{ ::division.maxMMR }} <i class="fa fa-long-arrow-right" style="font-size: 11px;"></i> {{ ::division.minMMR }} 
+                  div {{ division.count | multiplier:range.tier }}
       .col-md-2
         adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="6179653649" ad-format="auto" css-style="display:block;" full-width="true")
     adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="3507108447" ad-format="auto" css-style="display:block;" full-width="true")

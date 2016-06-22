@@ -189,6 +189,14 @@ function getRankTiers(req, res)
 function _getRankTiers(season, callback)
 {
   swiftping.logger('info', 'Getting S' + season + ' ranking tiers from ranksHistorical.');
+
+  var multiplier = 1;
+
+  if (season == 2)
+  {
+    multiplier = 7;
+  }
+
   db.aggregate('ranksHistorical', [
     {
       $match: {
@@ -215,10 +223,10 @@ function _getRankTiers(season, callback)
             division: '$_id.division',
             minMMR: '$minMMR',
             maxMMR: '$maxMMR',
-            count: { $sum: { $multiply : ['$count', 7 - parseInt(season)] } }
+            count: { $sum: { $multiply : ['$count', multiplier] } }
           }
         },
-        count: { $sum: { $multiply : ['$count', 7 - parseInt(season)] } }
+        count: { $sum: { $multiply : ['$count', multiplier] } }
       }
     }, {
       $sort: {
