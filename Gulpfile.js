@@ -6,20 +6,11 @@ var gulp = require('gulp'),
     bowerFiles = require('main-bower-files'),
     nodemon = require('gulp-nodemon'),
     less = require('gulp-less'),
-    minifyCss = require('gulp-minify-css')
-    concat = require('gulp-concat')
-    minify = require('gulp-minify')
-    series = require('stream-series');;
-
-// gulp.task('inject', function() {
-//   var sources = gulp.src(['./public/app/**/*.js', '!./public/vendor/**/*.js'], {read: false});
-//
-//   gulp.src(['./public/app/index.jade'])
-//     .pipe(inject(sources, {name: 'app', ignorePath: '/public'}))
-//     .pipe(inject(gulp.src(bowerFiles(), {read: false, cwd: __dirname + '/public'}), {name: 'bower'}))
-//     .pipe(inject(gulp.src(['./public/css/*.css'], {read: false}), {ignorePath: '/public'}))
-//     .pipe(gulp.dest('./public/app'));
-// });
+    cleanCSS = require('gulp-clean-css'),
+    concat = require('gulp-concat'),
+    minify = require('gulp-minify'),
+    uglify = require('gulp-uglify'),
+    series = require('stream-series');
 
 gulp.task('inject-production', ['concat-app'], function() {
   var vendorStream = gulp.src(['./public/js/rlrank-vendor-min.js'], {read: false});
@@ -46,9 +37,7 @@ gulp.task('inject', ['templates'], function() {
 gulp.task('concat-app', ['concat-vendor'], function() {
   var stream = gulp.src(['./public/app/**/*.js', '!./public/js/rlrank-templates-min.js'])
     .pipe(concat('rlrank.js'))
-    .pipe(minify({
-      ignoreFiles: ['-min.js']
-    }))
+    .pipe(uglify())
     .pipe(gulp.dest('./public/js'));
   return stream;
 });
@@ -56,18 +45,14 @@ gulp.task('concat-app', ['concat-vendor'], function() {
 gulp.task('concat-vendor', ['concat-templates'], function() {
   var stream = gulp.src(bowerFiles({"filter": "**/*.js"}))
     .pipe(concat('rlrank-vendor.js'))
-    .pipe(minify({
-      ignoreFiles: ['-min.js']
-    }))
+    .pipe(uglify())
     .pipe(gulp.dest('./public/js'));
   return stream;
 });
 
 gulp.task('concat-templates', ['templates'], function() {
   var stream = gulp.src('./public/js/rlrank-templates.js')
-    .pipe(minify({
-      ignoreFiles: ['-min.js']
-    }))
+    .pipe(uglify())
     .pipe(gulp.dest('./public/js'));
   return stream;
 });
@@ -78,7 +63,7 @@ gulp.task('less', function() {
     .pipe(less({
       paths: ['./public/app/themes/default/']
     }))
-    // .pipe(minifyCss())
+    .pipe(cleanCSS())
     .pipe(gulp.dest('./public/css'));
   return stream;
 });
