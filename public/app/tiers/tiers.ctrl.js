@@ -70,7 +70,7 @@
         players = input * 32.6;
       }
 
-      return Math.round(players) + ' players';
+      return Math.ceil(players) + ' players';
     }
   }
 })();
