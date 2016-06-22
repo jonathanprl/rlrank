@@ -1,8 +1,8 @@
 var restler = require('restler');
 
 module.exports = {
-  callProc,
-  refreshToken
+  callProc: callProc,
+  refreshToken: refreshToken
 };
 
 function callProc(req, res)
