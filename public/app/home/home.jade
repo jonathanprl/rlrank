@@ -128,7 +128,7 @@
               p We are planning on building on this feature very shortly, with easier comparison via graphs.
               p.lead.text-right
                 a(href="/u/76561198076736523/76561198025037610", title="Try it out..." target="_blank") Try it out...
-        .col-md-7.col-md-offset-1
+        .col-md-8
           h2 Rocket League News
           article.sp__blog-post(itemscope itemtype="http://schema.org/NewsArticle" ng-repeat="post in vm.blogPosts | limitTo: 5 | orderBy: '-published_at'")
             header
@@ -145,7 +145,7 @@
             div
               div(itemprop="disambiguatingDescription" markdown-to-html="post.short_content")
             a.btn.btn-primary.btn-block(itemprop="mainEntityOfPage" ng-href="/blog/{{ post.seo_title }}") Read More
-            adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="6884330847" ad-format="auto" css-style="display:block;" full-width="true")
+            adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="6884330847" ad-format="auto" css-style="display:block;" full-width="true" ng-if="$index == 0")
           .panel.sp__panel-trans.sp__news
             .panel-body
               header

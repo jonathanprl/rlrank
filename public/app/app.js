@@ -95,7 +95,13 @@ function app($routeProvider, $locationProvider, $compileProvider)
       activeSection: 'profile',
       showMMR: true
     })
-    .when('/u/:rlrank_id/:rlrank_id2?', {
+    .when('/u/:rlrank_id/:rlrank_id2', {
+      templateUrl: '/views/profile/compare',
+      controller: 'ProfileController as vm',
+      activeSection: 'profile',
+      showMMR: true
+    })
+    .when('/u/:rlrank_id', {
       templateUrl: '/views/profile/profile',
       controller: 'ProfileController as vm',
       activeSection: 'profile',

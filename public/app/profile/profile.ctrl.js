@@ -1,9 +1,9 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', 'BlogSvc', ProfileController]);
+    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', ProfileController]);
 
-  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics, BlogSvc)
+  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics)
   {
     'use strict';
 
@@ -69,14 +69,6 @@
         }
       }
     );
-
-    BlogSvc.getPosts(['rocketleague'])
-      .then(function(response) {
-        vm.latestPost = response.data[0];
-      })
-      .catch(function(err) {
-        console.log(err);
-      });
 
     function getPlayerDetails(rlrank_id, callback)
     {

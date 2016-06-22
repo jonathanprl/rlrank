@@ -1,0 +1,6 @@
+aside.sp__blog-side
+  ul
+    li(ng-repeat="post in posts | orderBy: '-published_at'")
+      a(href="/blog/{{ post.seo_title }}") {{ post.title }}&nbsp;
+      | By {{ post.author }} /&nbsp;
+      | {{ post.published_at | amTimeAgo }}

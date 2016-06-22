@@ -5,7 +5,7 @@
       .col-md-2
         h4.text-center Advertisement
         adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="2304733649" ad-format="auto" css-style="display:block;" full-width="true")
-      .col-md-7
+      .col-md-8
         article.sp__blog-post(itemscope itemtype="http://schema.org/NewsArticle" ng-repeat="post in vm.posts | orderBy: '-published_at'")
           header
             h1(itemprop="name") {{ post.title }}
@@ -17,17 +17,12 @@
               | <a twitter data-lang="en" data-count="horizontal" data-url="/blog/best-controller-rocket-league" data-via='rlrank' data-text="What is the best controller for Rocket League? https://rocketleaguerank.com/blog/best-controller-rocket-league #rocketleague" data-hashtags="rocketleague" data-size="medium" data-text='Tweet' ></a>
             .sp__blog-social
               | <a facebook class="facebookShare" data-url='/blog/best-controller-rocket-league'>4</a>
-            adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4961992049" ad-format="auto" css-style="display:block;")
             h2(itemprop="headline") {{ post.sub_title }}
           section
             div(itemprop="articleBody" markdown-to-html="post.content")
-      .col-md-3
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4961992049" ad-format="auto" css-style="display:block;" full-width="true" ng-if="$index == 0")
+      .col-md-2
         h4.text-center More Articles
-        aside.sp__blog-side
-          ul
-            li(ng-repeat="post in vm.posts | orderBy: '-published_at'")
-              a(href="/blog/{{ post.seo_title }}") {{ post.title }}&nbsp;
-              | By {{ post.author }} /&nbsp;
-              | {{ post.published_at | amTimeAgo }}
+        sp-blog-posts(tags="rocketleague")
         h4.text-center Advertisement
         adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5258200048" ad-format="auto" css-style="display:block;" full-width="true")

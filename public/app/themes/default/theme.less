@@ -26,6 +26,7 @@ body {
 
 h1,h2,h3,h4,h5,h6 {
   color: #fff;
+  letter-spacing: -0.01em;
   a,
   a:hover {
     text-decoration: none;
@@ -48,7 +49,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 #home section {
-  padding: 6rem 0;
+  padding: 3rem 0;
   overflow:hidden;
 
   &.sp__landing {
@@ -204,6 +205,7 @@ h1,h2,h3,h4,h5,h6 {
 .sp__table {
   color: #D6D6D6;
   background-color: rgba(45, 45, 45, 0.98);
+  letter-spacing: -0.01em;
 
   > thead > tr > th {
     border-bottom: 2px solid #525252;
@@ -268,7 +270,10 @@ h1,h2,h3,h4,h5,h6 {
 
 .sp__tabs {
   margin: 15px 0 5px 0;
-  ul { list-style: none; margin: 0; padding: 0}
+  ul {
+    display: inline-block;
+    list-style: none; margin: 0; padding: 0
+  }
   li {
     color: #5d5d5d;
     background-color: rgba(255, 255, 255, 0.85);
@@ -286,11 +291,12 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .sp__compare {
-  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .sp__share-btn {
-  margin-top: 6px;
+  margin-right: 5px;
+  display: inline-block;
   &:first-child {
     float: left;
     margin-right: 10px;
@@ -343,7 +349,7 @@ h1,h2,h3,h4,h5,h6 {
   }
   h2 {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 26px;
   }
   h3 {
     font-weight: 600;
@@ -369,9 +375,12 @@ h1,h2,h3,h4,h5,h6 {
     li {
       color: #fff;
       font-size: 11px;
-      margin-bottom: 10px;
-      font-weight: bold;
+      margin-bottom: 15px;
       text-align: right;
+      text-transform: uppercase;
+    }
+    li:last-child {
+      margin-bottom: 0;
     }
   }
   h1,h2,h3,h4,h5,h6 {
@@ -380,10 +389,11 @@ h1,h2,h3,h4,h5,h6 {
     font-weight: 700;
   }
   a {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: normal;
     display: block;
-    text-align: left;
+    line-height: 23px;
+    margin-bottom: 5px;
   }
 }
 

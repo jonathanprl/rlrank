@@ -5,7 +5,30 @@
       .module('app')
       .directive('sparkline', [sparkline])
       .directive('discordButton', ['$window', 'Analytics', discordButton])
-      .directive('steamOpenid', ['$window', 'Analytics', steamOpenid]);
+      .directive('steamOpenid', ['$window', 'Analytics', steamOpenid])
+      .directive('spBlogPosts', ['BlogSvc', spBlogPosts]);
+
+      function spBlogPosts(BlogSvc)
+      {
+        var directive = {
+          restrict: 'E',
+          templateUrl: '/views/blog/posts',
+          link: linkFn
+        };
+
+        return directive;
+
+        function linkFn(scope, element, attrs)
+        {
+          BlogSvc.getPosts(attrs.tags.split(','))
+            .then(function(response) {
+              scope.posts = response.data;
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+        }
+      }
 
   function sparkline()
   {

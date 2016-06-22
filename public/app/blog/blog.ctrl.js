@@ -18,6 +18,7 @@
 
         if ($routeParams.seo_title)
         {
+          vm.allPosts = vm.posts;
           vm.posts = vm.posts.filter(function(post) {
             return post.seo_title == $routeParams.seo_title;
           });
