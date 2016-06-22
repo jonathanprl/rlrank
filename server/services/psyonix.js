@@ -4,6 +4,7 @@ var Url = require('url');
 var querystring = require('querystring');
 var swiftping = require('../helpers/swiftping');
 var restler = require('restler');
+var config = require('../../config');
 
 module.exports = {
   getPlayerRanks,
@@ -267,28 +268,15 @@ function callProc(procUrl, procData, callback)
       return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
     }
 
-    if (doc.bypass)
-    {
-      return callback({'code':'bypass'});
-    }
-
-    var headers = {
-      'SessionID': token,
-      'CallProcKey': 'pX9pn8F4JnBpoO8Aa219QC6N7g18FJ0F',
-      'Cache-Control': 'no-cache',
-      'Environment': 'Prod',
-      'User-Agent': 'UE3-TA,UE3Ver(10897)',
-      'BuildID': '186761134'
-    };
-
     var time = new Date();
 
     console.log(time.toTimeString() + ' [PSYONIX] Sending callProc to Psyonix [%s]', JSON.stringify(procData));
 
-    restler.post(procUrl, {data: procData, headers: headers})
+    restler.postJson(config.psyonix_url + '/api/callProc', {token: token, procUrl: procUrl, procData: procData})
       .on('complete',
       function(data, res)
       {
+        console.log(data);
         if (data.indexOf('SessionNotActive') > -1)
         {
           console.log('[PSYONIX] SessionNotActive - Token needs refreshing.');
@@ -329,9 +317,9 @@ function refreshToken(callback)
     'BuildID': '186761134'
   };
 
-  restler.post('https://psyonix-rl.appspot.com/auth/', {data: data, headers: headers})
+  restler.get(config.psyonix_url + '/api/auth/')
     .on('complete',
-    function(data, res)
+    function(data, response)
     {
       if (!data)
       {
@@ -339,15 +327,9 @@ function refreshToken(callback)
         return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
       }
 
-      if (data.indexOf('403 Sorry...') > -1)
-      {
-        console.log('[PSYONIX] [ERROR] Psyonix is throttling requests...');
-        return callback({'code':'throttling'});
-      }
+      console.log('[PSYONIX] Got new token from Psyonix', data.token);
 
-      console.log('[PSYONIX] Got new token from Psyonix', res.headers.sessionid);
-
-      db.modify('config', {name: 'token'}, {$set: {value: res.headers.sessionid}},
+      db.modify('config', {name: 'token'}, {$set: {value: data.token}},
         function(err, doc)
         {
           if (err)
@@ -356,8 +338,8 @@ function refreshToken(callback)
             return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
           }
 
-          console.log('[PSYONIX] Saved token to DB', res.headers.sessionid);
-          callback(null, res.headers.sessionid);
+          console.log('[PSYONIX] Saved token to DB', data.token);
+          callback(null, data.token);
         }
       );
     }
