@@ -51,6 +51,11 @@ module.exports = function(app)
   app.get('/steam/auth', passport.authenticate('steam'), function(req, res) {});
   app.get('/steam/return', passport.authenticate('steam', { failureRedirect: '/' }), profile.steamOpenid);
 
+  app.use('/api/*', function(req, res, next) {
+    swiftping.logger('info', 'http', `${req.method} ${req.originalUrl} - ${req.ip} - Referer: "${req.header('Referer')}" - ${req.header('User-Agent')}`);
+    next();
+  });
+
   app.get('/api/alerts', alerts.getAlerts);
 
   app.get('/api/profile/:input/:platform', profile.getProfile);

@@ -1,12 +1,10 @@
 (function() {
   angular
     .module('app')
-    .controller('StatusController', ['ApiSvc', 'RouteSvc', 'moment', '$interval', function(ApiSvc, RouteSvc, moment, $interval) {
+    .controller('StatusController', ['ApiSvc', 'moment', '$interval', function(ApiSvc, moment, $interval) {
         'use strict';
 
         var vm = this;
-
-        vm.goToProfile = goToProfile;
 
         (function()
         {
@@ -22,19 +20,6 @@
             .then(function(response)
             {
               vm.regions = response.data.results;
-            }
-          );
-        }
-
-        function goToProfile(url)
-        {
-          vm.showLoader = true;
-
-          RouteSvc.goToProfile(url,
-            function(err)
-            {
-              vm.profileError = err.message;
-              vm.showLoader = false;
             }
           );
         }

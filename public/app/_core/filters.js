@@ -82,8 +82,8 @@ angular.module('app')
         'nrt': 320,
         'OCE': 300,
         'SAM': 200,
-        'USE': 80,
-        'USW': 120
+        'USE': 100,
+        'USW': 140
       };
 
       return $sce.trustAsHtml(ping > (regions[region] * 1.2) ? '<span style="color:#CA4A4A"><i class="fa fa-exclamation-triangle"></i>&nbsp;High</span>' : 'Normal');

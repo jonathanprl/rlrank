@@ -18,12 +18,14 @@ console.log(config.env);
 
 app.set('views', path.normalize(__dirname + '/../public/app'));
 app.set('view engine', 'jade');
+app.enable('trust proxy');
+app.disable('x-powered-by');
 // if (config.env == 'prod') app.use(require('express-sslify').HTTPS({ trustProtoHeader: true }));
 // app.use(require('prerender-node').set('prerenderToken', 'It894S0HIa5KY4kogyI2'));
 app.use(bodyParser.json());
 app.use(express.static(path.normalize(__dirname + '/../public')));
 app.use(compression());
-app.enable('trust proxy');
+
 
 app.use(passport.initialize());
 passport.serializeUser(function(user, done) {

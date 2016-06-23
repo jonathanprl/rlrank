@@ -12,7 +12,7 @@ var config = require('./config');
 var CronJob = require('cron').CronJob;
 
 cron.serverStatus();
-new CronJob('* * * * *',
+new CronJob('*/5 * * * *',
   function()
   {
     swiftping.logger('info', 'cron', 'Running serverStatus cronjob...', (new Date()).toTimeString());
