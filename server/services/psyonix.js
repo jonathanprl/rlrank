@@ -272,11 +272,17 @@ function callProc(procUrl, procData, callback)
 
     console.log(time.toTimeString() + ' [PSYONIX] Sending callProc to Psyonix [%s]', JSON.stringify(procData));
 
-    restler.postJson(config.psyonix_url + '/api/callProc', {token: token, procUrl: procUrl, procData: procData})
+    restler.postJson('http://' + doc.server + '/api/callProc', {token: token, procUrl: procUrl, procData: procData})
       .on('complete',
       function(data, res)
       {
         console.log(data);
+        if (!data)
+        {
+          console.log('[PSYONIX] [ERROR] There was an error authing with Psynode', data);
+          return callback({'code': 'server_error', 'message': 'There was a server error. Please try again in a few minutes.'});
+        }
+
         if (data.indexOf('SessionNotActive') > -1)
         {
           console.log('[PSYONIX] SessionNotActive - Token needs refreshing.');
@@ -298,52 +304,55 @@ function callProc(procUrl, procData, callback)
 
 function refreshToken(callback)
 {
-  var data = {
-    'PlayerName': '',
-    'PlayerID': '1',
-    'Platform': 'PS4',
-    'BuildID': '186761134',
-    'BuildRegion': '',
-    'AuthCode': '',
-    'AuthTicket': '',
-    'IssuerID': '0'
-  };
+  db.findOneWhere('config', {name: 'token'}, {}, function(err, doc)
+  {
+    var data = {
+      'PlayerName': '',
+      'PlayerID': '1',
+      'Platform': 'PS4',
+      'BuildID': '186761134',
+      'BuildRegion': '',
+      'AuthCode': '',
+      'AuthTicket': '',
+      'IssuerID': '0'
+    };
 
-  var headers = {
-    'LoginSecretKey': 'dUe3SE4YsR8B0c30E6r7F2KqpZSbGiVx',
-    'Cache-Control': 'no-cache',
-    'Environment': 'Prod',
-    'User-Agent': 'UE3-TA,UE3Ver(10897)',
-    'BuildID': '186761134'
-  };
+    var headers = {
+      'LoginSecretKey': 'dUe3SE4YsR8B0c30E6r7F2KqpZSbGiVx',
+      'Cache-Control': 'no-cache',
+      'Environment': 'Prod',
+      'User-Agent': 'UE3-TA,UE3Ver(10897)',
+      'BuildID': '186761134'
+    };
 
-  restler.get(config.psyonix_url + '/api/auth/')
-    .on('complete',
-    function(data, response)
-    {
-      if (!data)
+    restler.get('http://' + doc.server + '/api/auth/')
+      .on('complete',
+      function(data, response)
       {
-        console.log('[PSYONIX] [ERROR] There was an error authing with Psyonix', data);
-        return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
-      }
-
-      console.log('[PSYONIX] Got new token from Psyonix', data.token);
-
-      db.modify('config', {name: 'token'}, {$set: {value: data.token}},
-        function(err, doc)
+        if (!data)
         {
-          if (err)
-          {
-            console.log('[PSYONIX] [ERROR] There was an error saving token to DB', err);
-            return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
-          }
-
-          console.log('[PSYONIX] Saved token to DB', data.token);
-          callback(null, data.token);
+          console.log('[PSYONIX] [ERROR] There was an error authing with Psyonix', data);
+          return callback({'code': 'server_error', 'message': 'There was a server error. Please try again in a few minutes.'});
         }
-      );
-    }
-  );
+
+        console.log('[PSYONIX] Got new token from Psyonix', data.token);
+
+        db.modify('config', {name: 'token'}, {$set: {value: data.token}},
+          function(err, doc)
+          {
+            if (err)
+            {
+              console.log('[PSYONIX] [ERROR] There was an error saving token to DB', err);
+              return callback({'code': 'server_error', 'message': 'There was a server error. We have been notified.'});
+            }
+
+            console.log('[PSYONIX] Saved token to DB', data.token);
+            callback(null, data.token);
+          }
+        );
+      }
+    );
+  });
 }
 
 function parseResults(results)
