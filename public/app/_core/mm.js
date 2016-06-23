@@ -23,36 +23,29 @@ ngAdSense.service('AdsenseTracker', [function()
  */
 ngAdSense.controller('AdsenseController', ['SCRIPT_URL', 'AdsenseTracker', 'MmSvc', '$scope', function(SCRIPT_URL, AdsenseTracker, MmSvc, $scope) {
 
-  MmSvc.getStatus()
-    .then(function(response) {
-      if (!response.data.google)
-      {
-        return false;
-      }
 
-      $scope.disabled = false;
+  $scope.disabled = false;
 
-      if (AdsenseTracker.isLoaded)
-      {
-        $('script[src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]').remove();
-      }
+  if (AdsenseTracker.isLoaded)
+  {
+    $('script[src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]').remove();
+  }
 
-      if (AdsenseTracker.mobileAd == false)
-      {
-        (window.adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: 'ca-pub-6993069428952088',
-          enable_page_level_ads: true
-        });
-        AdsenseTracker.mobileAd = true;
-      }
-
-      var s = document.createElement('script');
-      s.src = SCRIPT_URL;
-      document.body.appendChild(s);
-      AdsenseTracker.isLoaded = true;
-
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+  if (AdsenseTracker.mobileAd == false)
+  {
+    (window.adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: 'ca-pub-6993069428952088',
+      enable_page_level_ads: true
     });
+    AdsenseTracker.mobileAd = true;
+  }
+
+  var s = document.createElement('script');
+  s.src = SCRIPT_URL;
+  document.body.appendChild(s);
+  AdsenseTracker.isLoaded = true;
+
+  (window.adsbygoogle = window.adsbygoogle || []).push({});
 }]);
 /**
  * @directive adsenseDirective
@@ -64,7 +57,7 @@ ngAdSense.directive('adsenseDirective', function() {
     return {
         restrict : 'E',
         replace : true,
-        template : '<div><div ng-class="{\'sp__mm-full\': fullWidth}" ng-if="!disabled"><ins class="adsbygoogle" style="{{cssStyle}}" data-ad-client="{{adClient}}" data-ad-slot="{{adSlot}}" data-ad-format="{{adFormat}}"></ins></div></div>',
+        template : '<div><div ng-class="{\'sp__mm-full\': fullWidth}"><ins class="adsbygoogle" style="{{cssStyle}}" data-ad-client="{{adClient}}" data-ad-slot="{{adSlot}}" data-ad-format="{{adFormat}}"></ins></div></div>',
         scope : {
             adClient : '@',
             adSlot : '@',

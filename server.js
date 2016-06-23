@@ -25,13 +25,14 @@ if (config.psyonix.bypass)
   return false;
 }
 
-new CronJob('30 1 * * *',
+new CronJob('30 * * * *',
   function()
   {
     swiftping.logger('info', 'cron', 'Running serverList cronjob...', (new Date()).toTimeString());
     cron.serverList();
   }, function(){}, true
 );
+
 cron.refreshToken();
 new CronJob('*/20 * * * *',
   function()
@@ -58,7 +59,7 @@ new CronJob('*/20 * * * *',
 // );
 //
 
-new CronJob('0 */4 * * *',
+new CronJob('0 */2 * * *',
   function()
   {
     console.log('[CRON] Running leaderboards cronjob...', (new Date()).toTimeString());

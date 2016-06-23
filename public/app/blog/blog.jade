@@ -8,7 +8,8 @@
       .col-md-8
         article.sp__blog-post(itemscope itemtype="http://schema.org/NewsArticle" ng-repeat="post in vm.posts | orderBy: '-published_at'")
           header
-            h1(itemprop="name") {{ post.title }}
+            a(ng-href="/blog/{{ post.seo_title }}" title="View {{ post.title }} on Rocket League Rank Blog" style="text-decoration: none;") 
+              h1(itemprop="name") {{ post.title }}
             p
               span(itemprop="by-author") By {{ post.author }}
               | &nbsp;/&nbsp;
