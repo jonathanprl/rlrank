@@ -150,7 +150,7 @@ function getUpdatedPlayerStats(req, res)
 {
   console.log('[STATS] Getting latest player stats from Psyonix [%s]', req.params.id);
 
-  if (config.psyonix.bypass)
+  if (config.psyonix.bypass || config.psyonix.bypassStats)
   {
     console.log('[STATS] Bypassed... [%s]', req.params.id);
     return swiftping.apiResponse('error', res, []);
