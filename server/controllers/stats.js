@@ -131,7 +131,7 @@ function getPlayerStats(req, res)
         var timeDiff = Math.abs(now.getTime() - docs[0].created_at.getTime());
         var diffHours = Math.ceil(timeDiff / (1000 * 3600));
 
-        if (diffHours > 24 && !config.psyonix.bypass)
+        if (diffHours > 24 && !config.psyonix.bypass && !config.psyonix.bypassStats)
         {
           console.log('[STATS] Found outdated stats in DB [%s]', req.params.id);
           return getUpdatedPlayerStats(req, res);
