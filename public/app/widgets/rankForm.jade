@@ -25,7 +25,7 @@ div(ng-class="{'row': steamLogin}")
         | {{ profileError }}
       button.btn.btn-primary.btn-block(ng-click="goToProfile()")
         | {{ buttonText }}
-        span.sp__spinner.sp__spinner-mini.pull-right(ng-if="showLoader")
+        span.sp__spinner.sp__spinner-mini.pull-right(ng-if="showLoader" style="width: 16px;height: 16px;")
   .col-md-3(ng-if="steamLogin")
     p(style="margin-top:5px;") - OR -
     steam-openid
