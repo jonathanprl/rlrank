@@ -13,7 +13,7 @@
           | {{ error }}
     .sp__spinner(ng-hide="(vm.compare && vm.players.length == 2) || !vm.compare || vm.errors.length > 0")
     .row(ng-if="vm.players.length > 0")
-      .col-md-6(ng-repeat="player in vm.players" ng-if="player.stats")
+      .col-md-6(ng-repeat="player in vm.players" ng-if="player.playlists")
         section
           h1
             a(ng-href="{{ '/u/' + player.profile.rlrank_id }}" title="{{ player.profile.display_name }}") {{ player.profile.display_name }}

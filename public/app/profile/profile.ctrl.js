@@ -106,7 +106,8 @@
                   {
                     if (err)
                     {
-                      return vm.errors.push(err);
+                      player.stats = true;
+                      // return vm.errors.push(err);
                     }
 
                     player.stats = stats;
