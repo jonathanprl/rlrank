@@ -15,8 +15,8 @@
               tr
                 th
                   a(ng-click="vm.sortLeaderboard('position')" href="#") Pos
-                th
-                  a(ng-click="vm.sortLeaderboard('tier')" href="#") Rank
+                //- th
+                //-   a(ng-click="vm.sortLeaderboard('tier')" href="#") Rank
                 th
                   a(ng-click="vm.sortLeaderboard('username')" href="#") Username
                 th
@@ -25,8 +25,8 @@
               tr(ng-repeat="player in playlist.players | orderBy: vm.sort | limitTo: vm.limit")
                 td
                   strong {{ '#' + ($index + 1) }}
-                td
-                  img.sp__table-rank(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
+                //- td
+                //-   img.sp__table-rank(ng-src="/img/ranks/{{ player.tier }}_w.png" ng-title="player.tier | rlPlaylist")
                 td
                   a(ng-if="player.username" ng-title="player.username" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
                 td

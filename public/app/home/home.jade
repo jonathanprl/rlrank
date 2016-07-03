@@ -36,8 +36,8 @@
               tr
                 td
                   strong Pos
-                td
-                  strong Rank
+                //- td
+                //-   strong Rank
                 td
                   strong Username
                 td
@@ -45,8 +45,8 @@
               tr(ng-repeat="player in playlist.players | orderBy:'-mmr' | limitTo:10")
                 td
                   strong {{ '#' + ($index + 1) }}
-                td
-                  img.sp__table-rank(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
+                //- td
+                //-   img.sp__table-rank(ng-src="/img/ranks/{{ player.tier }}_w.png" title="{{ player.tier | rlTier }}")
                 td
                   a(ng-if="player.username" title="{{ player.username }}" ng-href="/u/{{ player.rlrank_id }}") {{ player.username }}
                 td

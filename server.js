@@ -10,8 +10,9 @@ var cron = require('./server/services/cron.js');
 var swiftping = require('./server/helpers/swiftping');
 var config = require('./config');
 var CronJob = require('cron').CronJob;
+cron.leaderboardProfiles();
 
-cron.serverStatus();
+
 new CronJob('*/5 * * * *',
   function()
   {
@@ -20,7 +21,15 @@ new CronJob('*/5 * * * *',
   }, function(){}, true
 );
 
-if (config.psyonix.bypass)
+new CronJob('0 10 * * *',
+  function()
+  {
+    console.log('[CRON] Running leaderboard profiles cronjob...', (new Date()).toTimeString());
+    cron.leaderboardProfiles();
+  }, function(){}, true
+);
+
+if (true || config.psyonix.bypass)
 {
   return false;
 }

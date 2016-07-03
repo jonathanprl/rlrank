@@ -1,5 +1,6 @@
 var db = require('../db');
 var profile = require('../controllers/profile');
+var leaderboard = require('../controllers/leaderboard');
 var psyonix = require('./psyonix');
 var swiftping = require('../helpers/swiftping');
 var ping = require('ping');
@@ -7,6 +8,7 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 
 module.exports = {
+  leaderboardProfiles,
   leaderboards,
   serverStatus,
   serverList,
@@ -22,6 +24,11 @@ function refreshToken()
     console.log(err);
     console.log(token);
   });
+}
+
+function leaderboardProfiles()
+{
+  leaderboard.generateProfiles();
 }
 
 function leaderboards()
