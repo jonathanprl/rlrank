@@ -49,7 +49,7 @@
     "maxmind": "^1.1.0",
     "moment": "^2.13.0",
     "mongodb": "^2.1.4",
-    "mongojs": "^2.2.2",
+    "mongojs": "^2.4.0",
     "node-rest-client": "^1.5.1",
     "passport": "^0.3.2",
     "passport-steam": "^1.0.2",

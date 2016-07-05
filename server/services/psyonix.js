@@ -273,14 +273,18 @@ function callProc(procUrl, procData, callback)
     console.log(time.toTimeString() + ' [PSYONIX] Sending callProc to Psyonix [%s]', JSON.stringify(procData));
 
     restler.postJson('http://' + doc.server + '/api/callProc', {token: token, procUrl: procUrl, procData: procData})
-      .on('complete',
-      function(data, res)
-      {
-        console.log(data);
+      .on('complete', function(data, res) {
+
         if (!data)
         {
           console.log('[PSYONIX] [ERROR] There was an error authing with Psynode', data);
           return callback({'code': 'server_error', 'message': 'There was a server error. Please try again in a few minutes.'});
+        }
+
+        if (data.code && data.code == 'ECONNREFUSED')
+        {
+          logger('critical', 'psyonix', 'No Psynode available.', {err: data});
+          return callback({'code':'server_error'});
         }
 
         if (data.indexOf('SessionNotActive') > -1)
@@ -297,8 +301,9 @@ function callProc(procUrl, procData, callback)
         {
           callback(null, data);
         }
-      }
-    );
+      }).on('error', function(err) {
+        console.log(err);
+      });
   });
 }
 

@@ -14,38 +14,35 @@ ngAdSense.constant('SCRIPT_URL', '//pagead2.googlesyndication.com/pagead/js/adsb
 ngAdSense.service('AdsenseTracker', [function()
 {
   this.isLoaded = false;
-  this.mobileAd = false;
+  this.mobileAdLoaded = false;
 }]);
 /**
  * This controller is necessary for handling the DOM manipulation.
  * @controller
  * @since 1.0
  */
-ngAdSense.controller('AdsenseController', ['SCRIPT_URL', 'AdsenseTracker', 'MmSvc', '$scope', function(SCRIPT_URL, AdsenseTracker, MmSvc, $scope) {
+ngAdSense.controller('AdsenseController', ['SCRIPT_URL', 'AdsenseTracker', 'MmSvc', '$timeout', function(SCRIPT_URL, AdsenseTracker, MmSvc, $timeout) {
 
-
-  $scope.disabled = false;
-
-  if (AdsenseTracker.isLoaded)
-  {
-    $('script[src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]').remove();
-  }
-
-  if (AdsenseTracker.mobileAd == false)
+  if (AdsenseTracker.mobileAdLoaded == false)
   {
     (window.adsbygoogle = window.adsbygoogle || []).push({
       google_ad_client: 'ca-pub-6993069428952088',
       enable_page_level_ads: true
     });
-    AdsenseTracker.mobileAd = true;
+    AdsenseTracker.mobileAdLoaded = true;
   }
 
-  var s = document.createElement('script');
-  s.src = SCRIPT_URL;
-  document.body.appendChild(s);
-  AdsenseTracker.isLoaded = true;
+  if (!AdsenseTracker.isLoaded)
+  {
+    $timeout(function () {
+      var s = document.createElement('script');
+      s.src = SCRIPT_URL;
+      document.body.appendChild(s);
+      AdsenseTracker.isLoaded = true;
 
-  (window.adsbygoogle = window.adsbygoogle || []).push({});
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }, '1500');
+  }
 }]);
 /**
  * @directive adsenseDirective
@@ -71,6 +68,6 @@ ngAdSense.directive('adsenseDirective', function() {
 
     function linkFn(scope)
     {
-      scope.disabled = true;
+      // scope.disabled = true;
     }
 });

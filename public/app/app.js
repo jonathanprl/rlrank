@@ -177,7 +177,7 @@ function run($rootScope, TitleSvc, Analytics, $FB) {
         TitleSvc.setDefault();
       }
 
-      Object.keys(window).filter(function(k) { return k.indexOf('google') >= 0 }).forEach(
+      Object.keys(window).filter(function(k) { return /google/.test(k) }).forEach(
         function(key) {
           delete(window[key]);
         }

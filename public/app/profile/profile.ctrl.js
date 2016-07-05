@@ -10,6 +10,7 @@
     var vm = this;
 
     vm.compare = false;
+    vm.currentTab = ['s3', 's3'];
     vm.errors = [];
     vm.getPlayerRanks = getPlayerRanks;
     vm.leaderboards = {};
@@ -79,6 +80,8 @@
           {
             player.profile = response.data;
 
+            var seasons = [2, 3];
+
             getPlayerRanks(player.profile,
               function(err, ranks)
               {
@@ -87,12 +90,20 @@
                   return vm.errors.push(err);
                 }
 
-                player.playlists = ranks.playlists;
-                player.lastUpdated = ranks.lastUpdated;
+                player.s2 = {};
+                player.s3 = {};
 
-                ApiSvc.getPlayerRanksHistorical(rlrank_id, 3)
+                player.s2.playlists = ranks.playlists.s2;
+                player.s2.lastUpdated = ranks.lastUpdated.s2;
+
+                player.s3.playlists = ranks.playlists.s3;
+                player.s3.lastUpdated = ranks.lastUpdated.s3;
+
+                ApiSvc.getPlayerRanksHistorical(rlrank_id)
                   .then(function(response) {
-                    player.playlistsHistorical = response.data.results;
+                    player.s2.playlistsHistorical = response.data.results.s2;
+                    player.s3.playlistsHistorical = response.data.results.s3;
+                    callback(null, player);
                   })
                   .catch(function(err) {
                     if (err)
@@ -100,20 +111,6 @@
                       return vm.errors.push(err);
                     }
                   });
-
-                getPlayerStats(player.profile,
-                  function(err, stats)
-                  {
-                    if (err)
-                    {
-                      player.stats = true;
-                      // return vm.errors.push(err);
-                    }
-
-                    player.stats = stats;
-                    callback(null, player);
-                  }
-                );
               }
             );
 
@@ -151,28 +148,38 @@
       ApiSvc.getPlayerRanks(profile.rlrank_id, profile.platform)
         .then(function(response)
         {
-          var playlists = {};
+          var playlists = {
+            s2: {},
+            s3: {}
+          };
           angular.forEach(vm.playlists,
             function(playlist)
             {
               angular.forEach(response.data.results,
-                function(result)
+                function(results, season)
                 {
-                  if (result.playlist == playlist) playlists[playlist] = result;
+                  angular.forEach(results,
+                    function(result)
+                    {
+                      if (result.playlist == playlist) playlists[season][playlist] = result;
+                    }
+                  );
+
+                  if (!playlists[season][playlist]) playlists[season][playlist] = {playlist: playlist};
                 }
               );
-
-              if (!playlists[playlist]) playlists[playlist] = {playlist: playlist};
             }
           );
 
-          var lastUpdated = null;
-          angular.forEach(response.data.results, function(result) {
-            if ('created_at' in result)
-            {
-              lastUpdated = result.created_at;
-              return false;
-            }
+          var lastUpdated = {};
+          angular.forEach(response.data.results, function(results, season) {
+            angular.forEach(results, function(result) {
+              if ('created_at' in result)
+              {
+                lastUpdated[season] = result.created_at;
+                return false;
+              }
+            });
           });
 
           callback(null, {

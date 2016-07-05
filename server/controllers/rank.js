@@ -17,19 +17,59 @@ module.exports = {
  */
 function getPlayerRanks(req, res)
 {
-  getPlayerRanksById(req.params.id, function(err, ranks) {
+  if (!config.psyonix.season)
+  {
+    swiftping.logger('warning', 'config', 'Missing Psyonix season');
+    config.psyonix.season = 3;
+  }
+
+  getPlayerOldRanksById(req.params.id, config.psyonix.season - 1, function(err, oldRanks) {
     if (err)
     {
       return swiftping.apiResponse('error', res, err);
     }
 
-    return swiftping.apiResponse('ok', res, ranks);
+    getPlayerRanksById(req.params.id, function(err, ranks) {
+      if (err)
+      {
+        return swiftping.apiResponse('error', res, err);
+      }
+
+      return swiftping.apiResponse('ok', res, {s2: oldRanks, s3: ranks});
+    });
   });
 }
 
+function getPlayerOldRanksById(id, season, callback)
+{
+  db.findWhereSortLimit('ranksHistorical', {rlrank_id: id, season: season}, {_id: 0, rlrank_id: 0}, {created_at: -1}, 12, function(err, docs) {
+    if (err)
+    {
+      swiftping.logger('info', 'ranks', 'Error fetching ranks from DB', {id: id, mongoError: err});
+    }
+
+    var playlists = [];
+    var oldRanks = docs.filter(function(rank) {
+      if (~playlists.indexOf(rank.playlist))
+      {
+        return false;
+      }
+      playlists.push(rank.playlist);
+      return true;
+    });
+
+    return callback(null, oldRanks);
+  });
+}
 function getPlayerRanksById(id, callback)
 {
-  db.findWhere('ranks', {rlrank_id: id, season: 3}, {_id: 0, rlrank_id: 0},
+  if (!config.psyonix.season)
+  {
+    swiftping.logger('warning', 'config', 'Missing Psyonix season');
+    config.psyonix.season = 3;
+  }
+
+  db.findWhere('ranks', {rlrank_id: id, season: config.psyonix.season}, {_id: 0, rlrank_id: 0},
     function(err, docs)
     {
       if (err)
@@ -53,7 +93,7 @@ function getPlayerRanksById(id, callback)
 
         swiftping.logger('info', 'ranks', 'Found recent ranks in DB [' + id + ']');
 
-        return _getRankThresholds(docs,
+        return _getRankThresholds(docs, 3,
           function(err, ranks)
           {
             if (err)
@@ -156,7 +196,7 @@ function getUpdatedPlayerRanks(rlrank_id, callback)
             }
           );
 
-          _getRankThresholds(ranks,
+          _getRankThresholds(ranks, 3,
             function(err, ranks)
             {
               if (err)
@@ -258,9 +298,9 @@ function _getRankTiers(season, callback)
   });
 }
 
-function _getRankThresholds(playlists, callback)
+function _getRankThresholds(playlists, season, callback)
 {
-  _getRankTiers(3,
+  _getRankTiers(season,
     function(err, tiers)
     {
       if (err)

@@ -12,21 +12,21 @@
           strong Sorry!&nbsp;
           | {{ error }}
     .sp__spinner(ng-hide="(vm.compare && vm.players.length == 2) || !vm.compare || vm.errors.length > 0")
-    .row(ng-if="vm.players.length > 0")
-      .col-md-6(ng-repeat="player in vm.players" ng-if="player.playlists")
-        section
+    adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;" full-width="true")
+    section(ng-show="vm.players.length > 0")
+      .row
+        .col-md-6(ng-repeat="player in vm.players" ng-if="player[vm.currentTab[$index]].playlists")
           h1
             a(ng-href="{{ '/u/' + player.profile.rlrank_id }}" title="{{ player.profile.display_name }}") {{ player.profile.display_name }}
             span.pull-right(ng-if="vm.players.length == 2 && $index == 0" ) vs
           span.sp__sub-header
             | Last updated&nbsp;
-            span(am-time-ago="player.lastUpdated")
-            | &nbsp;(Updated every 15 minutes)
+            span(am-time-ago="player[vm.currentTab[$index]].lastUpdated")
           h4.text-uppercase Ranks
           .sp__tabs
             ul
-              li.active(ng-class="{'active': vm.currentTab == 3}" ng-click="vm.currentTab = 3") Season 3
-              //- li(ng-class="{'active': vm.currentTab == 99}" ng-click="vm.currentTab = 3") Season 2
+              li(ng-class="{'active': vm.currentTab[$index] == 's3'}" ng-click="vm.currentTab[$index] = 's3'") Season 3
+              li(ng-class="{'active': vm.currentTab[$index] == 's2'}" ng-click="vm.currentTab[$index] = 's2'" ng-show="player.s2.lastUpdated") Season 2
           table.table.table-responsive.sp__table
             thead
               tr
@@ -39,7 +39,7 @@
                 th(colspan="2").text-center
                   | MMR
             tbody
-              tr(ng-repeat="playlist in player.playlists")
+              tr(ng-repeat="playlist in player[vm.currentTab[$index]].playlists")
                 td.text-uppercase
                   span {{ playlist.playlist | rlPlaylist }}
                 td 
@@ -67,31 +67,24 @@
             tbody
               tr
                 td(ng-repeat="stat in player.stats")
-                 | {{ stat.value }}
-                 
-      .col-md-4
-        .sp__compare(ng-if="!vm.compare")
-          h4.m-t-0 Compare with another player! 
-            span.label.label-danger NEW
-          rank-form(button-text="Compare!" compare="vm.players[0].profile.rlrank_id" platform="vm.players[0].profile.platform")
-        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;" full-width="true")
-        .sp__share
-          h4.text-uppercase Share
-            .row
-              .col-md-5
-                .form-group
-                  input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
-              .col-md-7
-                .sp__share-btn
-                  | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
-                .sp__share-btn
-                  | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'>0</a>
-          //- mm-product(code="STRATUSXL")
-            //- div(ng-class="{'col-md-8': vm.compare}" style="margin-top: 54px;")
-      .col-md-2
-        sp-blog-posts(tags="rocketleague")
-        adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="5064677246" ad-format="auto" css-style="display:block;" full-width="true")
-    adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="4506274043" ad-format="auto" css-style="display:block;" full-width="true")
-      //- .col-md-3
-        //- mm-banner(code="LOOTARENA")
+                 | {{ stat.value }}   
+          adsense-directive(ng-if="$index == 0" ad-client="ca-pub-6993069428952088" ad-slot="4506274043" ad-format="auto" css-style="display:block;" full-width="true")
+        .col-md-4.col-md-offset-2(ng-if="!vm.compare && vm.players[0]")
+          .sp__compare
+            h4.m-t-0 Compare with another player! 
+              span.label.label-danger NEW
+            rank-form(button-text="Compare!" compare="vm.players[0].profile.rlrank_id" platform="vm.players[0].profile.platform")
+          sp-blog-posts(tags="rocketleague")
+          adsense-directive(ad-client="ca-pub-6993069428952088" ad-slot="1126148844" ad-format="auto" css-style="display:block;" full-width="true")  
+          .sp__share
+            h4.text-uppercase Share
+              .row
+                .col-md-5
+                  .form-group
+                    input.form-control.input-sm(ng-model="vm.shareUrl" readonly)
+                .col-md-7
+                  .sp__share-btn
+                    | <a twitter  data-lang="en" data-count='horizontal' data-url='{{ vm.shareUrl }}' data-via='rlrank' data-text="{{ vm.shareText }}" data-hashtags="rocketleaguerank,rocketleague" data-size="medium" data-text='Tweet' ></a>
+                  .sp__share-btn
+                    | <a facebook class="facebookShare" data-url='{{ vm.shareUrl }}'>0</a>
     .sp__spinner(ng-hide="vm.players.length > 0 || vm.errors.length > 0")

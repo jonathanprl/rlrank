@@ -4,6 +4,7 @@ var mongodb = require('mongojs')(config.mongodb.connection);
 module.exports = {
   find,
   findWhere,
+  findWhereSortLimit,
   findOne,
   findOneWhere,
   insert,
@@ -43,6 +44,26 @@ function find(collectionName, callback)
 function findWhere(collectionName, query, projection, callback)
 {
   mongodb.collection(collectionName).find(query, projection, function (err, docs)
+  {
+    if (err)
+    {
+      console.log(err);
+      callback(err, null);
+      return;
+    }
+
+    callback(null, docs);
+  });
+}
+
+/**
+ * Finds record in the collection where
+ * @param {string} collectionName - MongoDB collection name
+ * @param {function} callback - Success or error callback function
+ */
+function findWhereSortLimit(collectionName, query, projection, sort, limit, callback)
+{
+  mongodb.collection(collectionName).find(query, projection).sort(sort).limit(limit).toArray(function (err, docs)
   {
     if (err)
     {
