@@ -10,7 +10,7 @@ var cron = require('./server/services/cron.js');
 var swiftping = require('./server/helpers/swiftping');
 var config = require('./config');
 var CronJob = require('cron').CronJob;
-cron.leaderboardProfiles();
+// cron.generateLeaderboards();
 
 
 new CronJob('*/5 * * * *',
@@ -25,7 +25,7 @@ new CronJob('0 10 * * *',
   function()
   {
     console.log('[CRON] Running leaderboard profiles cronjob...', (new Date()).toTimeString());
-    cron.leaderboardProfiles();
+    cron.generateLeaderboards();
   }, function(){}, true
 );
 

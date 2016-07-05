@@ -1,3 +1,5 @@
+var rest = require('restler');
+var cheerio = require('cheerio');
 var db = require('../db');
 var swiftping = require('../helpers/swiftping');
 var profile = require('./profile');
@@ -5,7 +7,7 @@ var psyonix = require('../services/psyonix');
 
 module.exports = {
   getLeaderboards,
-  generateProfiles
+  generateLeaderboards
 };
 
 /**
@@ -69,11 +71,31 @@ $('#DataTables_Table_3').dataTable().api().data().filter(function(entry) {
 copy(leaderboards);
 */
 
-function generateProfiles()
+function generateLeaderboards()
 {
-  db.find('leaderboards', function(err, leaderboard) {
-    leaderboard.forEach(function(leader, index) {
-      console.log(leader._id);
+  rest.get('https://rocketleaguestats.com').on('complete', function(data) {
+    var $ = cheerio.load(data);
+
+    var playlists = [10, 11, 12, 13];
+    var leaderboards = [];
+
+    playlists.forEach(function(playlist) {
+      $('#playlist_' + playlist + ' tbody tr').each(function(i,v) {
+        if (i<200)
+        {
+          leaderboards.push({
+            input: $(v).find('a').attr('href').split('/')[3],
+            platform: $(v).children('td').eq(2).html().split(' alt=\"\"> ')[1].toLowerCase().replace('ps4', 'psn').replace('xboxone', 'xbox'),
+            mmr: $(v).children('td').eq(3).text(),
+            playlist: 10
+          });
+        }
+      });
+    });
+
+    swiftping.logger('info', 'leaderboards', 'Getting new leaderboards from RLS. ' + leaderboards.length + ' entries.');
+
+    leaderboards.forEach(function(leader, index) {
       var input = leader.input;
       var platform = leader.platform;
 

@@ -39,35 +39,35 @@
 
       if (tier >= 12)
       {
-        players = input / 4;
+        players = input;
       }
       else if (tier >= 11)
       {
-        players = input / 4;
+        players = input;
       }
       else if (tier >= 9)
       {
-        players = input / 2;
+        players = input;
       }
       else if (tier >= 8)
       {
-        players = input * 3.4;
+        players = input * 2;
       }
       else if (tier >= 7)
       {
-        players = input * 7.4;
+        players = input * 4;
       }
       else if (tier >= 3)
       {
-        players = input * 12.3;
+        players = input * 5;
       }
       else if (tier >= 1)
       {
-        players = input * 7.4;
+        players = input * 4;
       }
       else
       {
-        players = input * 32.6;
+        players = input * 6;
       }
 
       return Math.ceil(players) + ' players';

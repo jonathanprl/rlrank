@@ -8,7 +8,7 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 
 module.exports = {
-  leaderboardProfiles,
+  generateLeaderboards,
   leaderboards,
   serverStatus,
   serverList,
@@ -26,9 +26,9 @@ function refreshToken()
   });
 }
 
-function leaderboardProfiles()
+function generateLeaderboards()
 {
-  leaderboard.generateProfiles();
+  leaderboard.generateLeaderboards();
 }
 
 function leaderboards()
