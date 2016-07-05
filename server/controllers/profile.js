@@ -162,7 +162,7 @@ function getSteamProfile(input, callback) {
   else
   {
     swiftping.logger('info', 'profile', 'Invalid Steam profile syntax.', {input: input});
-    return res.status(500).send({code: 'invalid_syntax', msg: 'Invalid Steam profile. Use the numbers/text after "/id/" or "/profiles/" in your steamcommunity.com URL, or just input the entire URL.'});
+    return callback({code: 'invalid_syntax', msg: 'Invalid Steam profile. Use the numbers/text after "/id/" or "/profiles/" in your steamcommunity.com URL, or just input the entire URL.'});
   }
 }
 
