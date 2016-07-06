@@ -2,7 +2,7 @@ angular
   .module('app', ['rlrank-templates', 'ngRoute', 'btford.socket-io', 'angular-google-analytics', 'angularMoment', 'djds4rce.angular-socialshare', 'ng-showdown', 'ngSanitize'])
   .config(['$routeProvider', '$locationProvider', '$compileProvider', app])
   .config(['AnalyticsProvider', analyticsProvider])
-  .run(['$rootScope', 'TitleSvc', 'Analytics', '$FB', run]);
+  .run(['$rootScope', 'TitleSvc', 'Analytics', '$FB', 'AdsenseTracker', run]);
 
 function app($routeProvider, $locationProvider, $compileProvider)
 {
@@ -159,7 +159,7 @@ function analyticsProvider(AnalyticsProvider)
     .disableAnalytics(window.location.hostname == 'localhost');
 }
 
-function run($rootScope, TitleSvc, Analytics, $FB) {
+function run($rootScope, TitleSvc, Analytics, $FB, AdsenseTracker) {
   $rootScope.$on('$routeChangeStart',
     function(event, next, current)
     {
@@ -177,6 +177,7 @@ function run($rootScope, TitleSvc, Analytics, $FB) {
         TitleSvc.setDefault();
       }
 
+      AdsenseTracker.isLoaded = false;
       Object.keys(window).filter(function(k) { return /google/.test(k) }).forEach(
         function(key) {
           delete(window[key]);

@@ -34,6 +34,7 @@ ngAdSense.controller('AdsenseController', ['SCRIPT_URL', 'AdsenseTracker', 'MmSv
 
   if (!AdsenseTracker.isLoaded)
   {
+    $('script[src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]').remove();
     $timeout(function () {
       var s = document.createElement('script');
       s.src = SCRIPT_URL;
