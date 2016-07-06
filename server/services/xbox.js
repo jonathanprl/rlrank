@@ -29,6 +29,11 @@ function getProfileByGamertag(gamertag, callback)
       if (err) return callback(err);
       getProfileByXuid(xuid, function(err, profile) {
         if (err) return callback(err);
+        if (!profile.Gamertag)
+        {
+          swiftping.logger('critical', 'xbox', 'No Gamertag in Xbox profile.', err);
+          return callback({code: 'server_error', msg: 'There was a problem fetching your Xbox profile. Devs have been notified!'});
+        }
         profile.Gamertag = profile.Gamertag.toLowerCase();
         db.insert('xboxProfiles', profile, function(err, doc) {
           if (err)
