@@ -1,14 +1,15 @@
 (function() {
   angular
     .module('app')
-    .controller('ProfileController', ['$interval', '$timeout', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', ProfileController]);
+    .controller('ProfileController', ['$interval', '$timeout', '$scope', 'ApiSvc', 'RouteSvc', '$routeParams', '$location', 'TitleSvc', 'Analytics', ProfileController]);
 
-  function ProfileController($interval, $timeout, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics)
+  function ProfileController($interval, $timeout, $scope, ApiSvc, RouteSvc, $routeParams, $location, TitleSvc, Analytics)
   {
     'use strict';
 
     var vm = this;
 
+    vm.changeTab = changeTab;
     vm.compare = false;
     vm.currentTab = ['s3', 's3'];
     vm.errors = [];
@@ -206,6 +207,15 @@
           callback('Stats could not be retrieved for  "' + profile.display_name + '". Please try again later. Our developers have been notified.');
         }
       );
+    }
+
+    function changeTab(index, tab)
+    {
+      $timeout(function() {
+        $scope.$apply(function() {
+          vm.currentTab[index] = tab;
+        });
+      });
     }
   };
 })();

@@ -113,7 +113,7 @@ function rankGraph()
       return moment(parseInt(rank._id.substring(0, 8), 16) * 1000).fromNow();
     });
 
-    if (values.length < 3)
+    if (values.length < 2)
     {
       return false;
     }

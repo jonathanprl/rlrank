@@ -362,7 +362,7 @@ function getPlayerRanksHistorical(req, res)
   db.aggregate('ranksHistorical', [{
     $match: {
       rlrank_id: req.params.id,
-      season: parseInt(req.query.season)
+      season: parseInt(config.psyonix.season)
     }
   }, {
     $group: {
@@ -374,12 +374,34 @@ function getPlayerRanksHistorical(req, res)
         }
       }
     }
-  }], function(err, docs) {
+  }], function(err, ranks) {
       if (err)
       {
         swiftping.logger('critical', 'rank_historical', 'Error fetching ranksHistorical from DB', err);
       }
 
-      return swiftping.apiResponse('ok', res, docs);
+      db.aggregate('ranksHistorical', [{
+        $match: {
+          rlrank_id: req.params.id,
+          season: parseInt(config.psyonix.season - 1)
+        }
+      }, {
+        $group: {
+          _id: '$playlist',
+          ranks: {
+            $push: {
+              '_id': '$_id',
+              'mmr': '$mmr'
+            }
+          }
+        }
+      }], function(err, oldRanks) {
+          if (err)
+          {
+            swiftping.logger('critical', 'rank_historical', 'Error fetching ranksHistorical from DB', err);
+          }
+
+          return swiftping.apiResponse('ok', res, {s2: oldRanks, s3: ranks});
+        });
     });
 }

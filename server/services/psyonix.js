@@ -283,7 +283,7 @@ function callProc(procUrl, procData, callback)
 
         if (data.code && data.code == 'ECONNREFUSED')
         {
-          logger('critical', 'psyonix', 'No Psynode available.', {err: data});
+          swiftping.logger('critical', 'psyonix', 'No Psynode available.', {err: data});
           return callback({'code':'server_error'});
         }
 

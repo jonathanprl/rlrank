@@ -46,9 +46,9 @@
       return $http.get('/api/rank/' + encodeURIComponent(id));
     }
 
-    function getPlayerRanksHistorical(id, season)
+    function getPlayerRanksHistorical(id)
     {
-      return $http.get('/api/rank/' + encodeURIComponent(id) + '/historical' + '?season=' + season);
+      return $http.get('/api/rank/' + encodeURIComponent(id) + '/historical');
     }
 
     function getStatus()
