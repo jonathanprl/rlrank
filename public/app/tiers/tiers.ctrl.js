@@ -70,7 +70,7 @@
         players = input * 6;
       }
 
-      return Math.ceil(players) + ' players';
+      return Math.ceil(players) + ' lookups';
     }
   }
 })();
