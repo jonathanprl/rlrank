@@ -24,7 +24,7 @@ new CronJob('*/5 * * * *',
 new CronJob('0 10 * * *',
   function()
   {
-    console.log('[CRON] Running leaderboard profiles cronjob...', (new Date()).toTimeString());
+    swiftping.logger('info', 'cron', 'Running leaderboard profiles cronjob...', (new Date()).toTimeString());
     cron.generateLeaderboards();
   }, function(){}, true
 );
