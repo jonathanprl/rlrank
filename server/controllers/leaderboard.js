@@ -116,7 +116,8 @@ function generateLeaderboards()
               platform: platform,
               rlrank_id: rlProfile.rlrank_id,
               playlist: leader.playlist,
-              season: 3
+              season: 3,
+              updated_at: new Date()
             };
 
             db.upsert('leaderboards', {
